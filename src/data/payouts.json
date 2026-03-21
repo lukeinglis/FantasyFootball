@@ -1,0 +1,10 @@
+{
+  "buyIn": 150,
+  "totalPot": 1350,
+  "yearly": {
+    "first": 800,
+    "second": 340,
+    "third": 200
+  },
+  "weeklyPayouts": []
+}

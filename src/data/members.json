@@ -1,0 +1,20 @@
+{
+  "active": [
+    { "name": "Austin", "teamName": "Cammy Cam Juice" },
+    { "name": "Colin", "teamName": "Fitzmagic Time" },
+    { "name": "Damaso", "teamName": "The Grove Groper" },
+    { "name": "Evan", "teamName": "Gretzky Knows" },
+    { "name": "Kyle", "teamName": "Pre Sugar Bowl Falco" },
+    { "name": "Luke", "teamName": "The Glorious Return" },
+    { "name": "Phil", "teamName": "The Implication" },
+    { "name": "Rob", "teamName": "Its Da Robbery" },
+    { "name": "Ross", "teamName": "Pound the Brown(s)" },
+    { "name": "Trey", "teamName": "Beauxnersnatchers" },
+    { "name": "Tyler", "teamName": "Ghost of Cinmeon Bowers" },
+    { "name": "Zach", "teamName": "Bend Over and Floss" }
+  ],
+  "emeritus": [
+    { "name": "Bryan", "teamName": "A Team Has No Name" },
+    { "name": "John", "teamName": "Fuggin Filled Up" }
+  ]
+}
