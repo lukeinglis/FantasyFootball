@@ -1,5 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTeamMatchups } from "@/lib/yahoo/client";
+import { errorResponse } from "@/lib/api-helpers";
+
+export const runtime = "nodejs";
+
+const TEAM_KEY_RE = /^[a-z0-9]+\.l\.\d+\.t\.\d+$/i;
 
 export async function GET(request: NextRequest) {
   const teamKey = request.nextUrl.searchParams.get("teamKey");
@@ -10,15 +15,17 @@ export async function GET(request: NextRequest) {
       { status: 400 }
     );
   }
+  if (!TEAM_KEY_RE.test(teamKey)) {
+    return NextResponse.json(
+      { error: "teamKey is not a valid Yahoo team key" },
+      { status: 400 }
+    );
+  }
 
   try {
     const matchups = await getTeamMatchups(teamKey);
     return NextResponse.json(matchups);
   } catch (error) {
-    console.error("Error fetching matchups:", error);
-    return NextResponse.json(
-      { error: "Failed to fetch matchups" },
-      { status: 500 }
-    );
+    return errorResponse(error, "matchups");
   }
 }
