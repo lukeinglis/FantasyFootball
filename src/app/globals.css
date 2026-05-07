@@ -1,1 +1,59 @@
 @import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+@theme {
+  --color-navy-900: #0f1f3a;
+  --color-navy-800: #14284a;
+  --color-navy-700: #1a3155;
+  --color-navy-600: #234074;
+  --color-navy-500: #2c5092;
+  --color-gold-400: #f0c75e;
+  --color-gold-500: #e6b94a;
+  --color-gold-600: #c39a36;
+}
+
+:root {
+  color-scheme: dark;
+}
+
+html, body {
+  background-color: #0f1f3a;
+  color: #f3f4f6;
+}
+
+/* Subtle gold focus ring used across all interactive elements */
+*:focus-visible {
+  outline: 2px solid #f0c75e;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+/* Article prose tweaks */
+.prose-league {
+  color: #e5e7eb;
+}
+.prose-league h1,
+.prose-league h2,
+.prose-league h3 {
+  color: #f0c75e;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+.prose-league a {
+  color: #f0c75e;
+  text-decoration: underline;
+}
+.prose-league strong {
+  color: #ffffff;
+}
+.prose-league code {
+  background: rgba(255, 255, 255, 0.08);
+  padding: 0.1em 0.3em;
+  border-radius: 4px;
+}
+.prose-league blockquote {
+  border-left: 3px solid #f0c75e;
+  padding-left: 1rem;
+  color: #d1d5db;
+  font-style: italic;
+}
