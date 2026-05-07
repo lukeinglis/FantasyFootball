@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import {
+  getLeagueSettings,
   getStandings,
   getScoreboard,
   getTransactions,
@@ -48,6 +49,7 @@ export async function GET(request: NextRequest) {
   const results: Record<string, string> = {};
 
   const fetches: { name: string; fn: () => Promise<unknown> }[] = [
+    { name: "settings", fn: () => getLeagueSettings() },
     { name: "standings", fn: () => getStandings() },
     { name: "scoreboard", fn: () => getScoreboard() },
     { name: "transactions", fn: () => getTransactions() },

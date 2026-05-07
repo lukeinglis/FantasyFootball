@@ -1,0 +1,64 @@
+{
+  "leagueName": "Greybushes & Chili Dogs",
+  "platform": "Yahoo Fantasy Sports",
+  "scoring": "Head-to-Head Points",
+  "sections": [
+    {
+      "title": "General",
+      "rules": [
+        "12-team league, head-to-head scoring format",
+        "Regular season runs Weeks 1 through 14",
+        "Playoffs run Weeks 15 through 17 (top 6 qualify)",
+        "Consolation bracket for eliminated teams",
+        "Commissioner has final say on disputes"
+      ]
+    },
+    {
+      "title": "Roster & Lineup",
+      "rules": [
+        "Roster positions: QB, WR, WR, RB, RB, TE, FLEX, K, DEF, BN (6), IR (1)",
+        "Lineup locks at individual game kickoff times",
+        "Players on bye must be benched or moved to an open slot",
+        "Failure to set your lineup is your own fault"
+      ]
+    },
+    {
+      "title": "Waivers & Free Agency",
+      "rules": [
+        "Waiver priority resets weekly (inverse of standings)",
+        "Waivers process Wednesday at 12:00 AM PT",
+        "After waivers clear, free agents are first-come-first-served",
+        "No FAAB in this league (standard waiver priority)"
+      ]
+    },
+    {
+      "title": "Trades",
+      "rules": [
+        "Trade deadline: Week 12",
+        "Trades are subject to a 2-day review period",
+        "Commissioner can veto only in cases of obvious collusion",
+        "No trade-backs within the same week"
+      ]
+    },
+    {
+      "title": "Payouts",
+      "rules": [
+        "$150 buy-in per team",
+        "1st Place: $800",
+        "2nd Place: $340",
+        "3rd Place: $200",
+        "All dues must be paid before the draft"
+      ]
+    },
+    {
+      "title": "Last Place Punishment",
+      "rules": [
+        "Last place finisher in the consolation bracket receives a punishment",
+        "Punishments are decided by league vote before the season",
+        "The loser must complete the punishment within 30 days of season end",
+        "Photographic or video evidence is required and will be posted to the Wall of Shame"
+      ]
+    }
+  ],
+  "notes": "Rules are updated annually before the draft. Edit this file to reflect your league's actual rules."
+}

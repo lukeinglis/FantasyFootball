@@ -76,7 +76,7 @@ export default function Home() {
       </Container>
 
       {/* Two-column previews */}
-      <Container className="!pt-0">
+      <Container className="pt-0">
         <div className="grid gap-6 lg:grid-cols-2">
           <Suspense fallback={<PreviewSkeleton />}>
             <StandingsPreview />
@@ -88,7 +88,7 @@ export default function Home() {
       </Container>
 
       {/* Articles */}
-      <Container className="!pt-0">
+      <Container className="pt-0">
         <ArticlesPreview />
       </Container>
     </>

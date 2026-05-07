@@ -11,11 +11,13 @@ const NAV_ITEMS: { href: string; label: string }[] = [
   { href: "/teams", label: "Teams" },
   { href: "/draft", label: "Draft" },
   { href: "/transactions", label: "Transactions" },
-  { href: "/articles", label: "Articles" },
-  { href: "/members", label: "Members" },
+  { href: "/records", label: "Records" },
   { href: "/history", label: "History" },
-  { href: "/payouts", label: "Payouts" },
   { href: "/wall-of-shame", label: "Wall of Shame" },
+  { href: "/rules", label: "Rules" },
+  { href: "/members", label: "Members" },
+  { href: "/payouts", label: "Payouts" },
+  { href: "/articles", label: "Articles" },
 ];
 
 function isActive(currentPath: string, href: string): boolean {

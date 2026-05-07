@@ -1,0 +1,68 @@
+{
+  "allTime": {
+    "mostPointsSeason": {
+      "holder": "",
+      "value": 0,
+      "season": "",
+      "description": "Most total points scored in a single regular season"
+    },
+    "mostPointsWeek": {
+      "holder": "",
+      "value": 0,
+      "week": "",
+      "season": "",
+      "description": "Highest single-week score in league history"
+    },
+    "fewestPointsWeek": {
+      "holder": "",
+      "value": 0,
+      "week": "",
+      "season": "",
+      "description": "Lowest single-week score in league history"
+    },
+    "longestWinStreak": {
+      "holder": "",
+      "value": 0,
+      "season": "",
+      "description": "Most consecutive regular-season wins"
+    },
+    "longestLosingStreak": {
+      "holder": "",
+      "value": 0,
+      "season": "",
+      "description": "Most consecutive regular-season losses"
+    },
+    "bestRecord": {
+      "holder": "",
+      "value": "",
+      "season": "",
+      "description": "Best regular-season win percentage"
+    },
+    "worstRecord": {
+      "holder": "",
+      "value": "",
+      "season": "",
+      "description": "Worst regular-season win percentage"
+    },
+    "biggestBlowout": {
+      "winner": "",
+      "loser": "",
+      "margin": 0,
+      "score": "",
+      "week": "",
+      "season": "",
+      "description": "Largest margin of victory in a single matchup"
+    },
+    "closestGame": {
+      "winner": "",
+      "loser": "",
+      "margin": 0,
+      "score": "",
+      "week": "",
+      "season": "",
+      "description": "Smallest margin of victory in a single matchup"
+    }
+  },
+  "championships": {},
+  "notes": "Fill in records as you dig through league history. All fields are optional until populated."
+}
