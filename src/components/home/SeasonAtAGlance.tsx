@@ -38,7 +38,10 @@ export default async function SeasonAtAGlance() {
       (sum, t) => sum + toFiniteNumber(t.pointsFor, 0),
       0
     );
-    const avgPoints = totalGames > 0 ? totalPoints / totalGames : 0;
+    // Guard against division by zero when no games have been played.
+    // Also guard against NaN/Infinity from malformed data.
+    const rawAvg = totalGames > 0 ? totalPoints / totalGames : 0;
+    const avgPoints = Number.isFinite(rawAvg) ? rawAvg : 0;
 
     const leader = [...teams].sort(
       (a, b) => toFiniteNumber(b.pointsFor, 0) - toFiniteNumber(a.pointsFor, 0)

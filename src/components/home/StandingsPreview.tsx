@@ -3,6 +3,7 @@ import { apiFetch } from "@/lib/fetcher";
 import type { LeagueStandings } from "@/lib/yahoo/types";
 import { Card, CardBody, CardHeader } from "@/components/Card";
 import NotConnected, { ApiError } from "@/components/NotConnected";
+import OffseasonState from "@/components/OffseasonState";
 import { formatPoints, formatRecord } from "@/lib/format";
 
 export default async function StandingsPreview() {
@@ -26,6 +27,8 @@ export default async function StandingsPreview() {
         {!result.ok ? (
           result.notConfigured ? (
             <NotConnected resource="standings" />
+          ) : result.offseason ? (
+            <OffseasonState resource="standings" />
           ) : (
             <ApiError resource="standings" detail={result.message} />
           )

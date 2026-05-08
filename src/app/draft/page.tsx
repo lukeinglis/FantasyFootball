@@ -4,6 +4,7 @@ import type { DraftResult, Team } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
+import OffseasonState from "@/components/OffseasonState";
 import { Card } from "@/components/Card";
 import EmptyState from "@/components/EmptyState";
 
@@ -122,6 +123,8 @@ export default async function DraftPage() {
         <Container>
           {draftRes.notConfigured ? (
             <NotConnected resource="draft results" />
+          ) : draftRes.offseason ? (
+            <OffseasonState resource="draft results" />
           ) : (
             <ApiError resource="draft results" detail={draftRes.message} />
           )}

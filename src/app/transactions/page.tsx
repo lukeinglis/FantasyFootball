@@ -4,6 +4,7 @@ import type { Transaction } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
+import OffseasonState from "@/components/OffseasonState";
 import TransactionList from "@/components/transactions/TransactionList";
 
 export const metadata: Metadata = {
@@ -27,6 +28,8 @@ export default async function TransactionsPage() {
         {!result.ok ? (
           result.notConfigured ? (
             <NotConnected resource="transactions" />
+          ) : result.offseason ? (
+            <OffseasonState resource="transactions" />
           ) : (
             <ApiError resource="transactions" detail={result.message} />
           )

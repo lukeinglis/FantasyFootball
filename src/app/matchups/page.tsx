@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { apiFetch } from "@/lib/fetcher";
-import type { Matchup, Scoreboard } from "@/lib/yahoo/types";
+import type { LeagueSettings, Matchup, Scoreboard } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
+import OffseasonState from "@/components/OffseasonState";
 import { Card, CardBody } from "@/components/Card";
 import EmptyState from "@/components/EmptyState";
 import WeekSelector from "@/components/WeekSelector";
@@ -61,9 +62,13 @@ export default async function MatchupsPage({
   const requestedWeek = parseWeek(params?.week);
   const query =
     requestedWeek !== undefined ? `?week=${requestedWeek}` : "";
-  const result = await apiFetch<Scoreboard>(
-    `/api/yahoo/scoreboard${query}`
-  );
+  const [result, settingsResult] = await Promise.all([
+    apiFetch<Scoreboard>(`/api/yahoo/scoreboard${query}`),
+    apiFetch<LeagueSettings>("/api/yahoo/settings"),
+  ]);
+
+  // Use league settings for endWeek instead of hardcoded 18
+  const endWeek = settingsResult.ok ? settingsResult.data.endWeek : 18;
 
   return (
     <>
@@ -78,7 +83,7 @@ export default async function MatchupsPage({
           <WeekSelector
             current={result.data.week}
             startWeek={1}
-            endWeek={Math.max(result.data.week, 18)}
+            endWeek={Math.max(result.data.week, endWeek)}
           />
         )}
       </PageHeader>
@@ -86,6 +91,8 @@ export default async function MatchupsPage({
         {!result.ok ? (
           result.notConfigured ? (
             <NotConnected resource="matchups" />
+          ) : result.offseason ? (
+            <OffseasonState resource="matchups" />
           ) : (
             <ApiError resource="matchups" detail={result.message} />
           )

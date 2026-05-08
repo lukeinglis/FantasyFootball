@@ -37,6 +37,8 @@ export type FetchResult<T> =
       message: string;
       /** True when the API returned a config-related error (Yahoo not connected). */
       notConfigured: boolean;
+      /** True when the API is connected but no active season data exists (offseason). */
+      offseason: boolean;
     };
 
 /** Best-effort detection that the API is reporting a config issue. */
@@ -49,6 +51,17 @@ function looksLikeConfigError(status: number, message: string): boolean {
     lower.includes("no yahoo tokens") ||
     lower.includes("authorize") ||
     lower.includes("not configured")
+  );
+}
+
+/** Detect offseason/no-active-season errors from structured API responses. */
+function looksLikeOffseasonError(status: number, body: Record<string, unknown> | null): boolean {
+  if (status === 503 && body?.offseason === true) return true;
+  const message = String(body?.error ?? body?.detail ?? "").toLowerCase();
+  return (
+    message.includes("no active season") ||
+    message.includes("(400)") ||
+    message.includes("failed to resolve nfl game key")
   );
 }
 
@@ -69,10 +82,11 @@ export async function apiFetch<T>(
 
     if (!res.ok) {
       let message = `Request failed (${res.status})`;
+      let body: Record<string, unknown> | null = null;
       try {
-        const body = await res.json();
+        body = (await res.json()) as Record<string, unknown>;
         if (body && typeof body === "object" && "error" in body) {
-          message = String((body as { error: unknown }).error ?? message);
+          message = String(body.error ?? message);
         }
       } catch {
         // ignore body parse errors
@@ -82,6 +96,7 @@ export async function apiFetch<T>(
         status: res.status,
         message,
         notConfigured: looksLikeConfigError(res.status, message),
+        offseason: looksLikeOffseasonError(res.status, body),
       };
     }
 
@@ -94,6 +109,7 @@ export async function apiFetch<T>(
       status: 0,
       message,
       notConfigured: looksLikeConfigError(0, message),
+      offseason: false,
     };
   }
 }

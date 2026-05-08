@@ -203,16 +203,74 @@ export async function getTeamMatchups(teamKey: string): Promise<Matchup[]> {
 }
 
 /**
- * Get draft results
+ * Get draft results with player details.
+ * Uses the /players subresource to fetch player name, position, and NFL team
+ * in the same call (avoids N+1 lookups).
  */
 export async function getDraftResults(): Promise<DraftResult[]> {
   const leagueKey = await getLeagueKey();
-  const raw = await yahooFetch<Record<string, unknown>>(
-    `/league/${leagueKey}/draftresults`,
-    `yahoo:draft:${leagueKey}`,
-    CACHE_TTL.DRAFT
-  );
-  return parseDraftResults(raw);
+
+  // First, try to get draft results with player details in a single call.
+  // The ;players subresource tells Yahoo to embed player info with each pick.
+  try {
+    const raw = await yahooFetch<Record<string, unknown>>(
+      `/league/${leagueKey}/draftresults;out=players`,
+      `yahoo:draft_full:${leagueKey}`,
+      CACHE_TTL.DRAFT
+    );
+    const results = parseDraftResults(raw);
+
+    // If player names are populated, return as-is
+    if (results.length > 0 && results[0].playerName) {
+      return results;
+    }
+  } catch {
+    // Fall through to enrichment strategy
+  }
+
+  // Fallback: fetch draft results and teams separately, then enrich
+  // with a bulk player lookup
+  const [raw, teams] = await Promise.all([
+    yahooFetch<Record<string, unknown>>(
+      `/league/${leagueKey}/draftresults`,
+      `yahoo:draft:${leagueKey}`,
+      CACHE_TTL.DRAFT
+    ),
+    getTeams().catch(() => [] as Team[]),
+  ]);
+
+  const results = parseDraftResults(raw);
+
+  // Build team lookup for enrichment
+  const teamMap = new Map(teams.map((t) => [t.teamKey, t]));
+  for (const pick of results) {
+    const team = teamMap.get(pick.teamKey);
+    if (team) {
+      pick.teamName = team.teamName;
+      pick.managerName = team.managerName;
+    }
+  }
+
+  // Attempt to fetch player details for all drafted players
+  const playerKeys = results.map((r) => r.playerKey).filter(Boolean);
+  if (playerKeys.length > 0) {
+    try {
+      const playerMap = await fetchPlayerDetails(playerKeys);
+      for (const pick of results) {
+        const player = playerMap.get(pick.playerKey);
+        if (player) {
+          pick.playerName = player.name;
+          pick.position = player.position;
+          pick.nflTeam = player.nflTeam;
+          pick.playerId = player.playerId;
+        }
+      }
+    } catch (e) {
+      console.warn("Failed to fetch player details for draft:", e);
+    }
+  }
+
+  return results;
 }
 
 /**
@@ -226,6 +284,51 @@ export async function getTransactions(): Promise<Transaction[]> {
     CACHE_TTL.TRANSACTIONS
   );
   return parseTransactions(raw);
+}
+
+// ============================================================
+// Player Detail Fetcher
+//
+// Fetches player metadata (name, position, NFL team) in batches.
+// Yahoo limits player lookups to ~25 keys per request.
+// ============================================================
+
+interface PlayerInfo {
+  playerKey: string;
+  playerId: number;
+  name: string;
+  position: string;
+  nflTeam: string;
+}
+
+async function fetchPlayerDetails(
+  playerKeys: string[]
+): Promise<Map<string, PlayerInfo>> {
+  const result = new Map<string, PlayerInfo>();
+  const gameKey = await getGameKey();
+
+  // Yahoo allows comma-separated player keys, but limit batch size
+  const BATCH_SIZE = 25;
+  for (let i = 0; i < playerKeys.length; i += BATCH_SIZE) {
+    const batch = playerKeys.slice(i, i + BATCH_SIZE);
+    const keysParam = batch.join(",");
+
+    try {
+      const raw = await yahooFetch<Record<string, unknown>>(
+        `/players;player_keys=${keysParam}`,
+        `yahoo:players:${gameKey}:${i}`,
+        CACHE_TTL.DRAFT
+      );
+      const players = parsePlayerBatch(raw);
+      for (const p of players) {
+        result.set(p.playerKey, p);
+      }
+    } catch (e) {
+      console.warn(`Failed to fetch player batch ${i}:`, e);
+    }
+  }
+
+  return result;
 }
 
 // ============================================================
@@ -266,6 +369,8 @@ function parseLeagueSettings(raw: any): LeagueSettings {
     currentWeek: meta?.current_week || 1,
     startWeek: meta?.start_week || 1,
     endWeek: meta?.end_week || 17,
+    playoffStartWeek: meta?.playoff_start_week || settingsObj?.playoff_start_week || 15,
+    numPlayoffTeams: meta?.num_playoff_teams || settingsObj?.num_playoff_teams || 6,
     isFinished: meta?.is_finished === 1 || meta?.is_finished === true,
     rosterPositions: (settingsObj?.roster_positions || []).map((rp: any) => ({
       position: rp?.roster_position?.position || "",
@@ -544,17 +649,75 @@ function parseDraftResults(raw: any): DraftResult[] {
     const pick = draftData[i]?.draft_result;
     if (!pick) continue;
 
+    // Check for embedded player data (when using ;out=players subresource)
+    let playerName = "";
+    let position = "";
+    let nflTeam = "";
+    let playerId = 0;
+
+    // Yahoo may embed player info in the draft_result when ;out=players is used
+    const playerData = pick.players?.[0]?.player;
+    if (playerData) {
+      const pInfo = Array.isArray(playerData) ? playerData[0] : playerData;
+      const pInfoArray = Array.isArray(pInfo) ? pInfo : [pInfo];
+      const pFlat: Record<string, any> = {};
+      for (const item of pInfoArray) {
+        if (typeof item === "object" && item !== null) {
+          Object.assign(pFlat, item);
+        }
+      }
+      playerName = pFlat.name?.full || "";
+      position = pFlat.display_position || "";
+      nflTeam = pFlat.editorial_team_abbr || "";
+      playerId = pFlat.player_id || 0;
+    }
+
     results.push({
       pick: pick.pick || i + 1,
       round: pick.round || 0,
       teamKey: pick.team_key || "",
-      teamName: "", // Not included in draft_results; resolve via getTeams()
+      teamName: "",
       managerName: "",
       playerKey: pick.player_key || "",
-      playerId: 0,
-      playerName: "", // Not included; would need player lookup
-      position: "",
-      nflTeam: "",
+      playerId,
+      playerName,
+      position,
+      nflTeam,
+    });
+  }
+
+  return results;
+}
+
+function parsePlayerBatch(raw: any): PlayerInfo[] {
+  const content = dig(raw, "fantasy_content");
+  if (!content) return [];
+
+  // Yahoo returns players in different structures depending on the query.
+  // Try the common shapes.
+  const playersRoot = content.players || content.league?.[1]?.players || {};
+  const count = playersRoot?.count || 0;
+  const results: PlayerInfo[] = [];
+
+  for (let i = 0; i < count; i++) {
+    const playerData = playersRoot[i]?.player;
+    if (!playerData) continue;
+
+    const pInfo = Array.isArray(playerData) ? playerData[0] : playerData;
+    const pInfoArray = Array.isArray(pInfo) ? pInfo : [pInfo];
+    const pFlat: Record<string, any> = {};
+    for (const item of pInfoArray) {
+      if (typeof item === "object" && item !== null) {
+        Object.assign(pFlat, item);
+      }
+    }
+
+    results.push({
+      playerKey: pFlat.player_key || "",
+      playerId: pFlat.player_id || 0,
+      name: pFlat.name?.full || "",
+      position: pFlat.display_position || "",
+      nflTeam: pFlat.editorial_team_abbr || "",
     });
   }
 

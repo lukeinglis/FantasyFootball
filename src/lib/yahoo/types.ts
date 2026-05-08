@@ -14,6 +14,8 @@ export interface LeagueSettings {
   currentWeek: number;
   startWeek: number;
   endWeek: number;
+  playoffStartWeek: number;
+  numPlayoffTeams: number;
   isFinished: boolean;
   rosterPositions: RosterPosition[];
   statCategories: StatCategory[];

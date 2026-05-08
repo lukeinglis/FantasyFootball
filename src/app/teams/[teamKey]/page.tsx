@@ -5,6 +5,7 @@ import type { Matchup, Roster, Team } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
+import OffseasonState from "@/components/OffseasonState";
 import { Card, CardBody, CardHeader } from "@/components/Card";
 import { formatPoints, formatRecord } from "@/lib/format";
 
@@ -60,12 +61,15 @@ export default async function TeamDetailPage({
 
   if (!allTeams.ok && !roster.ok) {
     const notConfigured = allTeams.notConfigured || roster.notConfigured;
+    const offseason = (!allTeams.ok && allTeams.offseason) || (!roster.ok && roster.offseason);
     return (
       <>
         <PageHeader title="Team" subtitle="Roster and team detail." />
         <Container>
           {notConfigured ? (
             <NotConnected resource="team detail" />
+          ) : offseason ? (
+            <OffseasonState resource="team detail" />
           ) : (
             <ApiError
               resource="team detail"

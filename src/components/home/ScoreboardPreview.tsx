@@ -3,6 +3,7 @@ import { apiFetch } from "@/lib/fetcher";
 import type { Scoreboard } from "@/lib/yahoo/types";
 import { Card, CardBody, CardHeader } from "@/components/Card";
 import NotConnected, { ApiError } from "@/components/NotConnected";
+import OffseasonState from "@/components/OffseasonState";
 import { formatPoints } from "@/lib/format";
 
 export default async function ScoreboardPreview() {
@@ -28,6 +29,8 @@ export default async function ScoreboardPreview() {
         {!result.ok ? (
           result.notConfigured ? (
             <NotConnected resource="matchups" />
+          ) : result.offseason ? (
+            <OffseasonState resource="matchups" />
           ) : (
             <ApiError resource="matchups" detail={result.message} />
           )

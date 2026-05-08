@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import { apiFetch } from "@/lib/fetcher";
-import type { LeagueStandings } from "@/lib/yahoo/types";
+import type { LeagueSettings, LeagueStandings } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
+import OffseasonState from "@/components/OffseasonState";
 import { Card } from "@/components/Card";
 import { formatPercent, formatPoints, formatRecord } from "@/lib/format";
 
@@ -14,11 +15,18 @@ export const metadata: Metadata = {
 
 export const dynamic = "force-dynamic";
 
-// Top 6 of 12 typically make playoffs in this format. We mark the cutoff visually.
-const PLAYOFF_CUTOFF = 6;
+// Default playoff cutoff when settings are unavailable
+const DEFAULT_PLAYOFF_CUTOFF = 6;
 
 export default async function StandingsPage() {
-  const result = await apiFetch<LeagueStandings>("/api/yahoo/standings");
+  const [result, settingsResult] = await Promise.all([
+    apiFetch<LeagueStandings>("/api/yahoo/standings"),
+    apiFetch<LeagueSettings>("/api/yahoo/settings"),
+  ]);
+
+  const PLAYOFF_CUTOFF = settingsResult.ok
+    ? settingsResult.data.numPlayoffTeams
+    : DEFAULT_PLAYOFF_CUTOFF;
 
   return (
     <>
@@ -31,6 +39,8 @@ export default async function StandingsPage() {
         {!result.ok ? (
           result.notConfigured ? (
             <NotConnected resource="standings" />
+          ) : result.offseason ? (
+            <OffseasonState resource="standings" />
           ) : (
             <ApiError resource="standings" detail={result.message} />
           )

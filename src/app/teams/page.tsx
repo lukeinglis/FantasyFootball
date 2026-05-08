@@ -5,6 +5,7 @@ import type { Team } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
+import OffseasonState from "@/components/OffseasonState";
 import { Card } from "@/components/Card";
 import { formatPoints, formatRecord } from "@/lib/format";
 
@@ -34,6 +35,8 @@ export default async function TeamsPage() {
         {!result.ok ? (
           result.notConfigured ? (
             <NotConnected resource="teams" />
+          ) : result.offseason ? (
+            <OffseasonState resource="teams" />
           ) : (
             <ApiError resource="teams" detail={result.message} />
           )
