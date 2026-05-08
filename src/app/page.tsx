@@ -276,7 +276,7 @@ export default async function Home() {
               const initials = m.name.split(/\s+/).map((s) => s.charAt(0).toUpperCase()).slice(0, 2).join("");
               const titleCount = stats.titles[m.name] || 0;
               return (
-                <div key={m.name} className="group flex flex-col items-center gap-1.5 transition-transform duration-300 hover:scale-110">
+                <Link key={m.name} href={`/managers/${encodeURIComponent(m.name.toLowerCase())}`} className="group flex flex-col items-center gap-1.5 transition-transform duration-300 hover:scale-110">
                   <div className={`relative flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold text-white shadow-lg transition-shadow group-hover:shadow-[#DD550C]/40 ${
                     titleCount > 0
                       ? "bg-gradient-to-br from-[#DD550C] to-[#a33d08] shadow-[#DD550C]/30"
@@ -292,7 +292,7 @@ export default async function Home() {
                   <span className="text-[10px] text-gray-400 group-hover:text-[#DD550C] transition-colors">
                     {m.name}
                   </span>
-                </div>
+                </Link>
               );
             })}
           </div>
