@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { apiFetch } from "@/lib/fetcher";
-import type { LeagueSettings, LeagueStandings } from "@/lib/yahoo/types";
+import { fetchStandings, fetchSettings } from "@/lib/server-data";
+
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
@@ -20,8 +20,8 @@ const DEFAULT_PLAYOFF_CUTOFF = 6;
 
 export default async function StandingsPage() {
   const [result, settingsResult] = await Promise.all([
-    apiFetch<LeagueStandings>("/api/yahoo/standings"),
-    apiFetch<LeagueSettings>("/api/yahoo/settings"),
+    fetchStandings(),
+    fetchSettings(),
   ]);
 
   const PLAYOFF_CUTOFF = settingsResult.ok

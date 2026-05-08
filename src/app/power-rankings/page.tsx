@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { apiFetch } from "@/lib/fetcher";
-import type { LeagueStandings, Scoreboard, LeagueSettings } from "@/lib/yahoo/types";
+import { fetchStandings, fetchSettings, fetchScoreboard } from "@/lib/server-data";
+import type { Scoreboard } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
@@ -42,8 +42,8 @@ interface RankedTeam {
 
 export default async function PowerRankingsPage() {
   const [standingsResult, settingsResult] = await Promise.all([
-    apiFetch<LeagueStandings>("/api/yahoo/standings"),
-    apiFetch<LeagueSettings>("/api/yahoo/settings"),
+    fetchStandings(),
+    fetchSettings(),
   ]);
 
   if (!standingsResult.ok) {
@@ -93,7 +93,7 @@ export default async function PowerRankingsPage() {
   const recentScoreboards: Scoreboard[] = [];
   if (recentWeeks > 0) {
     const fetches = Array.from({ length: recentWeeks }, (_, i) =>
-      apiFetch<Scoreboard>(`/api/yahoo/scoreboard?week=${currentWeek - recentWeeks + i}`)
+      fetchScoreboard(currentWeek - recentWeeks + i)
     );
     const results = await Promise.all(fetches);
     for (const r of results) {

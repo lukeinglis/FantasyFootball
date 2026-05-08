@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { apiFetch } from "@/lib/fetcher";
+import { fetchDraft, fetchTeams } from "@/lib/server-data";
 import type { DraftResult, Team } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
@@ -108,8 +108,8 @@ function buildBoard(
 
 export default async function DraftPage() {
   const [draftRes, teamsRes] = await Promise.all([
-    apiFetch<DraftResult[]>("/api/yahoo/draft"),
-    apiFetch<Team[]>("/api/yahoo/teams"),
+    fetchDraft(),
+    fetchTeams(),
   ]);
 
   if (!draftRes.ok) {

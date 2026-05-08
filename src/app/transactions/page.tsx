@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { apiFetch } from "@/lib/fetcher";
-import type { Transaction } from "@/lib/yahoo/types";
+import { fetchTransactions } from "@/lib/server-data";
+
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 export default async function TransactionsPage() {
-  const result = await apiFetch<Transaction[]>("/api/yahoo/transactions");
+  const result = await fetchTransactions();
 
   return (
     <>

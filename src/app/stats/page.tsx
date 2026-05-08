@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { apiFetch } from "@/lib/fetcher";
-import type { LeagueStandings, Scoreboard, LeagueSettings } from "@/lib/yahoo/types";
+import { fetchStandings, fetchSettings, fetchScoreboard } from "@/lib/server-data";
+import type { LeagueStandings, Scoreboard } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
@@ -34,8 +34,8 @@ interface MatchupStat {
 
 export default async function StatsPage() {
   const [standingsResult, settingsResult] = await Promise.all([
-    apiFetch<LeagueStandings>("/api/yahoo/standings"),
-    apiFetch<LeagueSettings>("/api/yahoo/settings"),
+    fetchStandings(),
+    fetchSettings(),
   ]);
 
   // Fetch all week scoreboards to compute stats
@@ -45,7 +45,7 @@ export default async function StatsPage() {
   const scoreboards: Scoreboard[] = [];
   if (weeksToFetch > 0) {
     const fetches = Array.from({ length: weeksToFetch }, (_, i) =>
-      apiFetch<Scoreboard>(`/api/yahoo/scoreboard?week=${i + 1}`)
+      fetchScoreboard(i + 1)
     );
     const results = await Promise.all(fetches);
     for (const r of results) {

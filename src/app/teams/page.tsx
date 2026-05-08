@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { apiFetch } from "@/lib/fetcher";
-import type { Team } from "@/lib/yahoo/types";
+import { fetchTeams } from "@/lib/server-data";
+
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
@@ -22,7 +22,7 @@ function teamSlug(teamKey: string): string {
 }
 
 export default async function TeamsPage() {
-  const result = await apiFetch<Team[]>("/api/yahoo/teams");
+  const result = await fetchTeams();
 
   return (
     <>

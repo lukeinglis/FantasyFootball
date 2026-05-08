@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { apiFetch } from "@/lib/fetcher";
+import { fetchTeams, fetchRoster, fetchTeamMatchups } from "@/lib/server-data";
 import type { Matchup, Roster, Team } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
@@ -27,7 +27,7 @@ export async function generateMetadata({
 }): Promise<Metadata> {
   const { teamKey } = await params;
   const decoded = decodeURIComponent(teamKey);
-  const result = await apiFetch<Team[]>("/api/yahoo/teams");
+  const result = await fetchTeams();
   const team = result.ok
     ? result.data.find((t) => t.teamKey === decoded)
     : null;
@@ -48,11 +48,9 @@ export default async function TeamDetailPage({
   const teamKey = decodeURIComponent(rawKey);
 
   const [allTeams, roster, matchupsRes] = await Promise.all([
-    apiFetch<Team[]>("/api/yahoo/teams"),
-    apiFetch<Roster>(`/api/yahoo/teams?teamKey=${encodeURIComponent(teamKey)}`),
-    apiFetch<Matchup[]>(
-      `/api/yahoo/matchups?teamKey=${encodeURIComponent(teamKey)}`
-    ),
+    fetchTeams(),
+    fetchRoster(teamKey),
+    fetchTeamMatchups(teamKey),
   ]);
 
   const team = allTeams.ok

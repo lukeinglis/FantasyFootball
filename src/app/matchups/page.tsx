@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
-import { apiFetch } from "@/lib/fetcher";
-import type { LeagueSettings, Matchup, Scoreboard } from "@/lib/yahoo/types";
+import { fetchScoreboard, fetchSettings } from "@/lib/server-data";
+import type { Matchup } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
@@ -63,8 +63,8 @@ export default async function MatchupsPage({
   const query =
     requestedWeek !== undefined ? `?week=${requestedWeek}` : "";
   const [result, settingsResult] = await Promise.all([
-    apiFetch<Scoreboard>(`/api/yahoo/scoreboard${query}`),
-    apiFetch<LeagueSettings>("/api/yahoo/settings"),
+    fetchScoreboard(requestedWeek),
+    fetchSettings(),
   ]);
 
   // Use league settings for endWeek instead of hardcoded 18
