@@ -10,10 +10,39 @@
   --color-auburn-400: #DD550C;
   --color-auburn-500: #c44a0a;
   --color-auburn-600: #a33d08;
+
+  --animate-fade-in-up: fade-in-up 0.6s ease-out both;
+  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
+  --animate-shimmer: shimmer 2.5s linear infinite;
+  --animate-float: float 6s ease-in-out infinite;
+}
+
+@keyframes fade-in-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse-glow {
+  0%, 100% { box-shadow: 0 0 8px rgba(221, 85, 12, 0.3); }
+  50% { box-shadow: 0 0 24px rgba(221, 85, 12, 0.6); }
+}
+
+@keyframes shimmer {
+  from { background-position: -200% center; }
+  to { background-position: 200% center; }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-6px); }
 }
 
 :root {
   color-scheme: dark;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 html, body {
@@ -21,14 +50,43 @@ html, body {
   color: #f3f4f6;
 }
 
-/* Subtle gold focus ring used across all interactive elements */
 *:focus-visible {
   outline: 2px solid #DD550C;
   outline-offset: 2px;
   border-radius: 4px;
 }
 
-/* Article prose tweaks */
+/* Texture overlays */
+.stripe-pattern {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    transparent 0 10px,
+    rgba(221, 85, 12, 0.04) 10px 20px
+  );
+}
+
+.dot-pattern {
+  background-image: radial-gradient(#DD550C 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Glassmorphism */
+.glass {
+  background: rgba(17, 45, 78, 0.5);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Gradient text */
+.text-gradient {
+  background: linear-gradient(135deg, #DD550C, #ff8a3d);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Article prose */
 .prose-league {
   color: #e5e7eb;
 }
@@ -38,6 +96,7 @@ html, body {
   color: #DD550C;
   font-weight: 700;
   letter-spacing: -0.01em;
+  text-shadow: 0 0 20px rgba(221, 85, 12, 0.2);
 }
 .prose-league a {
   color: #DD550C;

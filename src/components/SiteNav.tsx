@@ -63,14 +63,14 @@ export default function SiteNav() {
   const isMoreActive = MORE_ITEMS.some((item) => isActive(pathname, item.href));
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0C2340]/95 backdrop-blur supports-[backdrop-filter]:bg-[#0C2340]/80">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0C2340]/95 backdrop-blur supports-[backdrop-filter]:bg-[#0C2340]/80 shadow-lg shadow-black/20 relative">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           href="/"
           className="flex items-center gap-2 text-[#DD550C] hover:text-orange-400 transition-colors"
         >
           <span aria-hidden className="text-xl">🏈</span>
-          <span className="font-bold tracking-tight text-base sm:text-lg">
+          <span className="font-[family-name:var(--font-heading)] font-bold uppercase tracking-wide text-base sm:text-lg">
             Greybushes <span className="text-white/70">&amp;</span> Chili Dogs
           </span>
         </Link>
@@ -213,6 +213,7 @@ export default function SiteNav() {
           </ul>
         </nav>
       )}
+      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#DD550C]/30 to-transparent" aria-hidden />
     </header>
   );
 }

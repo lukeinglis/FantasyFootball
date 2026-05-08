@@ -14,17 +14,22 @@ export default function EmptyState({
   action,
 }: EmptyStateProps) {
   return (
-    <div className="flex flex-col items-center justify-center rounded-xl border border-dashed border-white/15 bg-[#112d4e]/40 px-6 py-12 text-center">
-      {icon && (
-        <div className="mb-4 text-4xl text-[#DD550C]" aria-hidden>
-          {icon}
-        </div>
-      )}
-      <h3 className="text-lg font-semibold text-white">{title}</h3>
-      {description && (
-        <p className="mt-2 max-w-md text-sm text-gray-400">{description}</p>
-      )}
-      {action && <div className="mt-4">{action}</div>}
+    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#112d4e]/40 px-6 py-12 text-center">
+      <div className="stripe-pattern pointer-events-none absolute inset-0 opacity-30" aria-hidden />
+      <div className="relative">
+        {icon && (
+          <div className="mb-4 text-4xl text-[#DD550C]" aria-hidden>
+            {icon}
+          </div>
+        )}
+        <h3 className="font-[family-name:var(--font-heading)] text-lg font-semibold uppercase tracking-wide text-white">
+          {title}
+        </h3>
+        {description && (
+          <p className="mt-2 max-w-md mx-auto text-sm text-gray-400">{description}</p>
+        )}
+        {action && <div className="mt-4">{action}</div>}
+      </div>
     </div>
   );
 }
