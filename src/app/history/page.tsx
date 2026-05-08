@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import historyData from "@/data/history.json";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
-import { Card } from "@/components/Card";
+import { Card, CardBody } from "@/components/Card";
 import EmptyState from "@/components/EmptyState";
 
 export const metadata: Metadata = {
@@ -32,6 +32,16 @@ function nameAndTeam(name?: string, team?: string): string {
   return name || team || "—";
 }
 
+function getTitleCounts(seasons: SeasonRecord[]): { name: string; count: number }[] {
+  const counts: Record<string, number> = {};
+  for (const s of seasons) {
+    if (s.champion) counts[s.champion] = (counts[s.champion] || 0) + 1;
+  }
+  return Object.entries(counts)
+    .map(([name, count]) => ({ name, count }))
+    .sort((a, b) => b.count - a.count);
+}
+
 export default function HistoryPage() {
   const seasons = [...data.seasons].sort((a, b) => {
     const ay = Number(a.year) || 0;
@@ -39,14 +49,47 @@ export default function HistoryPage() {
     return by - ay;
   });
 
+  const titleCounts = getTitleCounts(seasons);
+  const uniqueChamps = titleCounts.length;
+
   return (
     <>
       <PageHeader
         eyebrow="The Annals"
         title="League History"
-        subtitle="Every champion. Every runner-up. Every year someone wouldn't shut up about it."
+        subtitle={`${seasons.length} seasons. ${uniqueChamps} unique champions. No repeat winners.`}
       />
       <Container>
+        {/* Dynasty Summary */}
+        {seasons.length > 0 && (
+          <div className="mb-8 grid gap-4 sm:grid-cols-3">
+            <Card variant="glass">
+              <CardBody>
+                <div className="text-center">
+                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Seasons</p>
+                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-gradient">{seasons.length}</p>
+                </div>
+              </CardBody>
+            </Card>
+            <Card variant="glass">
+              <CardBody>
+                <div className="text-center">
+                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Unique Champions</p>
+                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-gradient">{uniqueChamps}</p>
+                </div>
+              </CardBody>
+            </Card>
+            <Card variant="glass">
+              <CardBody>
+                <div className="text-center">
+                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Defending Champ</p>
+                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-gradient">{seasons[0]?.champion || "—"}</p>
+                </div>
+              </CardBody>
+            </Card>
+          </div>
+        )}
+
         {seasons.length === 0 ? (
           <EmptyState
             icon={<span>🏆</span>}
@@ -70,14 +113,16 @@ export default function HistoryPage() {
                   {seasons.map((s, i) => (
                     <tr
                       key={`${s.year}-${i}`}
-                      className="bg-[#112d4e]/40 hover:bg-[#112d4e]"
+                      className={`hover:bg-[#112d4e] transition-colors ${
+                        i === 0 ? "bg-[#DD550C]/5" : "bg-[#112d4e]/40"
+                      }`}
                     >
-                      <td className="px-3 py-3 font-mono text-[#DD550C]">
+                      <td className="px-3 py-3 font-[family-name:var(--font-heading)] font-mono text-lg font-bold text-[#DD550C]">
                         {s.year}
                       </td>
                       <td className="px-3 py-3">
                         <span className="mr-1.5 text-base" aria-hidden>
-                          🥇
+                          {i === 0 ? "🏆" : "🥇"}
                         </span>
                         <span className="font-semibold text-white">
                           {nameAndTeam(s.champion, s.championTeam)}
