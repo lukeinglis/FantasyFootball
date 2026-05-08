@@ -7,8 +7,7 @@ import ArticlesPreview from "@/components/home/ArticlesPreview";
 import SeasonAtAGlance from "@/components/home/SeasonAtAGlance";
 import SeasonCountdown from "@/components/SeasonCountdown";
 import { Card, CardBody } from "@/components/Card";
-import { apiFetch } from "@/lib/fetcher";
-import type { LeagueSettings } from "@/lib/yahoo/types";
+import { fetchSettings } from "@/lib/server-data";
 
 export const dynamic = "force-dynamic";
 
@@ -31,7 +30,7 @@ function PreviewSkeleton({ lines = 5 }: { lines?: number }) {
 
 export default async function Home() {
   // Fetch settings to determine if we're in-season or offseason
-  const settingsResult = await apiFetch<LeagueSettings>("/api/yahoo/settings");
+  const settingsResult = await fetchSettings();
   const isOffseason = !settingsResult.ok;
   const season = settingsResult.ok ? settingsResult.data.season : null;
 

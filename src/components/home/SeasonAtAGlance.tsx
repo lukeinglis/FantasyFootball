@@ -1,5 +1,4 @@
-import { apiFetch } from "@/lib/fetcher";
-import type { LeagueStandings, Scoreboard } from "@/lib/yahoo/types";
+import { fetchStandings, fetchScoreboard } from "@/lib/server-data";
 import { Card, CardBody, CardHeader } from "@/components/Card";
 import { formatPoints, toFiniteNumber } from "@/lib/format";
 
@@ -11,8 +10,8 @@ interface Stat {
 
 export default async function SeasonAtAGlance() {
   const [standings, scoreboard] = await Promise.all([
-    apiFetch<LeagueStandings>("/api/yahoo/standings"),
-    apiFetch<Scoreboard>("/api/yahoo/scoreboard"),
+    fetchStandings(),
+    fetchScoreboard(),
   ]);
 
   const stats: Stat[] = [];

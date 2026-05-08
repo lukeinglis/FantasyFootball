@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { apiFetch } from "@/lib/fetcher";
-import type { Scoreboard } from "@/lib/yahoo/types";
+import { fetchScoreboard } from "@/lib/server-data";
 import { Card, CardBody, CardHeader } from "@/components/Card";
 import NotConnected, { ApiError } from "@/components/NotConnected";
 import OffseasonState from "@/components/OffseasonState";
 import { formatPoints } from "@/lib/format";
 
 export default async function ScoreboardPreview() {
-  const result = await apiFetch<Scoreboard>("/api/yahoo/scoreboard");
+  const result = await fetchScoreboard();
 
   return (
     <Card>

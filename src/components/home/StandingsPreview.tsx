@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { apiFetch } from "@/lib/fetcher";
-import type { LeagueStandings } from "@/lib/yahoo/types";
+import { fetchStandings } from "@/lib/server-data";
 import { Card, CardBody, CardHeader } from "@/components/Card";
 import NotConnected, { ApiError } from "@/components/NotConnected";
 import OffseasonState from "@/components/OffseasonState";
 import { formatPoints, formatRecord } from "@/lib/format";
 
 export default async function StandingsPreview() {
-  const result = await apiFetch<LeagueStandings>("/api/yahoo/standings");
+  const result = await fetchStandings();
 
   return (
     <Card>
