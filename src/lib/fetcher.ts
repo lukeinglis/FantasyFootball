@@ -55,13 +55,16 @@ function looksLikeConfigError(status: number, message: string): boolean {
 }
 
 /** Detect offseason/no-active-season errors from structured API responses. */
-function looksLikeOffseasonError(status: number, body: Record<string, unknown> | null): boolean {
-  if (status === 503 && body?.offseason === true) return true;
-  const message = String(body?.error ?? body?.detail ?? "").toLowerCase();
+function looksLikeOffseasonError(status: number, body: Record<string, unknown> | null, message: string): boolean {
+  if (body?.offseason === true) return true;
+  const bodyText = String(body?.error ?? body?.detail ?? "").toLowerCase();
+  const msgLower = (message || "").toLowerCase();
+  const combined = `${bodyText} ${msgLower}`;
   return (
-    message.includes("no active season") ||
-    message.includes("(400)") ||
-    message.includes("failed to resolve nfl game key")
+    combined.includes("no active season") ||
+    combined.includes("temporary problem") ||
+    combined.includes("failed to resolve nfl game key") ||
+    (status >= 400 && combined.includes("yahoo api error (400)"))
   );
 }
 
@@ -96,7 +99,7 @@ export async function apiFetch<T>(
         status: res.status,
         message,
         notConfigured: looksLikeConfigError(res.status, message),
-        offseason: looksLikeOffseasonError(res.status, body),
+        offseason: looksLikeOffseasonError(res.status, body, message),
       };
     }
 
@@ -109,7 +112,7 @@ export async function apiFetch<T>(
       status: 0,
       message,
       notConfigured: looksLikeConfigError(0, message),
-      offseason: false,
+      offseason: looksLikeOffseasonError(0, null, message),
     };
   }
 }

@@ -36,8 +36,8 @@ function isOffseasonError(err: unknown): boolean {
       : "";
   const lower = msg.toLowerCase();
 
-  // Yahoo returns 400 when there is no active season for the game key
-  if (lower.includes("(400)")) return true;
+  // Yahoo returns 400 with "temporary problem" when there is no active season
+  if (lower.includes("(400)") || lower.includes("temporary problem")) return true;
 
   // "Invalid" league/game key errors from Yahoo
   if (
