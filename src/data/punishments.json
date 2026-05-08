@@ -1,3 +1,9 @@
 {
-  "punishments": []
+  "punishments": [
+    {
+      "season": 2025,
+      "loser": "Patrick",
+      "team": "Stable of Stars"
+    }
+  ]
 }

@@ -1,3 +1,20 @@
 {
-  "seasons": []
+  "seasons": [
+    {
+      "year": 2025,
+      "champion": "Patrick",
+      "championTeam": "Stable of Stars",
+      "runnerUp": "Ross",
+      "runnerUpTeam": "Rob's thumb print",
+      "third": "luke",
+      "thirdTeam": "The Glorious Return"
+    },
+    {
+      "year": 2015,
+      "championTeam": "First&Goal",
+      "runnerUpTeam": "Scott's Team",
+      "thirdTeam": "Captain Morgan",
+      "notes": "Manager names hidden by Yahoo privacy settings"
+    }
+  ]
 }
