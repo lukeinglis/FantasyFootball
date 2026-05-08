@@ -35,14 +35,10 @@ function getRedirectUri(): string {
  * Redirect the user here to authorize the app.
  */
 export function getAuthUrl(): string {
-  const params = new URLSearchParams({
-    client_id: getClientId(),
-    redirect_uri: getRedirectUri(),
-    response_type: "code",
-    language: "en-us",
-  });
-
-  return `${YAHOO_AUTH_URL}?${params.toString()}`;
+  // Build manually: URLSearchParams encodes the trailing "&" in Yahoo's
+  // client IDs to "%26", which Yahoo's OAuth server rejects.
+  const redirectUri = encodeURIComponent(getRedirectUri());
+  return `${YAHOO_AUTH_URL}?client_id=${getClientId()}&redirect_uri=${redirectUri}&response_type=code&language=en-us`;
 }
 
 /**
