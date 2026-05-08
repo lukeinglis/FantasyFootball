@@ -21,6 +21,7 @@ const PRIMARY_ITEMS: NavItem[] = [
 
 const MORE_ITEMS: NavItem[] = [
   { href: "/draft-history", label: "Draft History" },
+  { href: "/draft-insights", label: "Draft Insights" },
   { href: "/transactions", label: "Transactions" },
   { href: "/records", label: "Records" },
   { href: "/history", label: "History" },
