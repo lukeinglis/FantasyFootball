@@ -15,7 +15,8 @@ const TOKEN_CACHE_TTL = 365 * 24 * 60 * 60; // 1 year
 function getClientId(): string {
   const id = process.env.YAHOO_CLIENT_ID;
   if (!id) throw new Error("YAHOO_CLIENT_ID is not set");
-  return id;
+  // Yahoo displays Client IDs with a trailing "&" (OAuth 1.0 artifact). Strip it.
+  return id.replace(/&$/, "");
 }
 
 function getClientSecret(): string {
@@ -35,10 +36,13 @@ function getRedirectUri(): string {
  * Redirect the user here to authorize the app.
  */
 export function getAuthUrl(): string {
-  // Build manually: URLSearchParams encodes the trailing "&" in Yahoo's
-  // client IDs to "%26", which Yahoo's OAuth server rejects.
-  const redirectUri = encodeURIComponent(getRedirectUri());
-  return `${YAHOO_AUTH_URL}?client_id=${getClientId()}&redirect_uri=${redirectUri}&response_type=code&language=en-us`;
+  const params = new URLSearchParams({
+    client_id: getClientId(),
+    redirect_uri: getRedirectUri(),
+    response_type: "code",
+    language: "en-us",
+  });
+  return `${YAHOO_AUTH_URL}?${params.toString()}`;
 }
 
 /**
