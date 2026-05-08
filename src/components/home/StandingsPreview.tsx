@@ -17,7 +17,7 @@ export default async function StandingsPreview() {
         action={
           <Link
             href="/standings"
-            className="text-xs font-medium text-[#f0c75e] hover:underline"
+            className="text-xs font-medium text-[#DD550C] hover:underline"
           >
             View all →
           </Link>
@@ -37,10 +37,10 @@ export default async function StandingsPreview() {
             {result.data.teams.slice(0, 5).map((team) => (
               <li
                 key={team.teamKey}
-                className="flex items-center justify-between gap-3 rounded-lg bg-[#0f1f3a]/60 px-3 py-2"
+                className="flex items-center justify-between gap-3 rounded-lg bg-[#0C2340]/60 px-3 py-2"
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#f0c75e] text-xs font-bold text-[#0f1f3a]">
+                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#DD550C] text-xs font-bold text-[#0C2340]">
                     {team.rank}
                   </span>
                   <div className="min-w-0">
@@ -56,7 +56,7 @@ export default async function StandingsPreview() {
                   <span className="font-mono text-gray-300">
                     {formatRecord(team.wins, team.losses, team.ties)}
                   </span>
-                  <span className="font-mono text-[#f0c75e]">
+                  <span className="font-mono text-[#DD550C]">
                     {formatPoints(team.pointsFor, 1)}
                   </span>
                 </div>

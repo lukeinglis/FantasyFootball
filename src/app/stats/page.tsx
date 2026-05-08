@@ -261,13 +261,13 @@ function MatchupSuperlatives({ scoreboards }: { scoreboards: Scoreboard[] }) {
           {stats.map((s) => (
             <div
               key={s.label}
-              className="rounded-lg bg-[#0f1f3a]/60 p-4"
+              className="rounded-lg bg-[#0C2340]/60 p-4"
             >
               <div className="flex items-center gap-2">
                 <span className="text-xl" aria-hidden>
                   {s.icon}
                 </span>
-                <p className="text-xs font-semibold uppercase tracking-widest text-[#f0c75e]/80">
+                <p className="text-xs font-semibold uppercase tracking-widest text-[#DD550C]/80">
                   {s.label}
                 </p>
               </div>
@@ -335,7 +335,7 @@ function ScoringLeaders({ scoreboards }: { scoreboards: Scoreboard[] }) {
       <CardBody className="!p-0">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-[#0f1f3a] text-xs uppercase tracking-wider text-gray-400">
+            <thead className="bg-[#0C2340] text-xs uppercase tracking-wider text-gray-400">
               <tr>
                 <th className="px-3 py-3">#</th>
                 <th className="px-3 py-3">Team</th>
@@ -350,13 +350,13 @@ function ScoringLeaders({ scoreboards }: { scoreboards: Scoreboard[] }) {
               {byAvg.map((t, i) => (
                 <tr
                   key={t.name}
-                  className="bg-[#14284a]/40 hover:bg-[#14284a]"
+                  className="bg-[#112d4e]/40 hover:bg-[#112d4e]"
                 >
                   <td className="px-3 py-3">
                     <span
                       className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
                         i < 3
-                          ? "bg-[#f0c75e] text-[#0f1f3a]"
+                          ? "bg-[#DD550C] text-[#0C2340]"
                           : "bg-white/10 text-gray-300"
                       }`}
                     >
@@ -367,7 +367,7 @@ function ScoringLeaders({ scoreboards }: { scoreboards: Scoreboard[] }) {
                     <p className="font-medium text-white">{t.name}</p>
                     <p className="text-xs text-gray-400">{t.manager}</p>
                   </td>
-                  <td className="px-3 py-3 text-right font-mono text-[#f0c75e]">
+                  <td className="px-3 py-3 text-right font-mono text-[#DD550C]">
                     {formatPoints(t.avg, 1)}
                   </td>
                   <td className="px-3 py-3 text-right font-mono text-emerald-300 hidden sm:table-cell">
@@ -408,13 +408,13 @@ function RankList({
       {items.map((item) => (
         <li
           key={`${item.rank}-${item.name}`}
-          className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-[#0f1f3a]/40"
+          className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-[#0C2340]/40"
         >
           <div className="flex items-center gap-3 min-w-0">
             <span
               className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold ${
                 item.highlight
-                  ? "bg-[#f0c75e] text-[#0f1f3a]"
+                  ? "bg-[#DD550C] text-[#0C2340]"
                   : "bg-white/10 text-gray-300"
               }`}
             >
@@ -425,7 +425,7 @@ function RankList({
               <p className="truncate text-xs text-gray-400">{item.detail}</p>
             </div>
           </div>
-          <span className="flex-shrink-0 font-mono text-sm text-[#f0c75e]">
+          <span className="flex-shrink-0 font-mono text-sm text-[#DD550C]">
             {item.value}
           </span>
         </li>

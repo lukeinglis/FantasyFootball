@@ -107,7 +107,7 @@ export default function RecordsPage() {
                           {icon}
                         </span>
                         <div className="min-w-0">
-                          <p className="text-xs font-semibold uppercase tracking-widest text-[#f0c75e]/80">
+                          <p className="text-xs font-semibold uppercase tracking-widest text-[#DD550C]/80">
                             {label}
                           </p>
                           {pop ? (
@@ -148,7 +148,7 @@ export default function RecordsPage() {
                         {icon}
                       </span>
                       <div className="min-w-0">
-                        <p className="text-xs font-semibold uppercase tracking-widest text-[#f0c75e]/80">
+                        <p className="text-xs font-semibold uppercase tracking-widest text-[#DD550C]/80">
                           {label}
                         </p>
                         {pop ? (
@@ -156,7 +156,7 @@ export default function RecordsPage() {
                             <p className="mt-1 text-lg font-bold text-white">
                               {sr.holder}
                             </p>
-                            <p className="mt-0.5 font-mono text-sm text-[#f0c75e]">
+                            <p className="mt-0.5 font-mono text-sm text-[#DD550C]">
                               {formatValue(sr.value)}{" "}
                               {sr.season && `· ${sr.season}`}{" "}
                               {sr.week && `Wk ${sr.week}`}

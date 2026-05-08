@@ -79,7 +79,7 @@ export default async function TeamDetailPage({
           <div className="mt-4">
             <Link
               href="/teams"
-              className="text-sm text-[#f0c75e] hover:underline"
+              className="text-sm text-[#DD550C] hover:underline"
             >
               Back to all teams
             </Link>
@@ -146,7 +146,7 @@ export default async function TeamDetailPage({
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="bg-[#0f1f3a] text-xs uppercase tracking-wider text-gray-400">
+                  <thead className="bg-[#0C2340] text-xs uppercase tracking-wider text-gray-400">
                     <tr>
                       <th className="px-3 py-3">Slot</th>
                       <th className="px-3 py-3">Player</th>
@@ -163,9 +163,9 @@ export default async function TeamDetailPage({
                       return (
                         <tr
                           key={p.playerKey}
-                          className="bg-[#14284a]/40 hover:bg-[#14284a]"
+                          className="bg-[#112d4e]/40 hover:bg-[#112d4e]"
                         >
-                          <td className="px-3 py-2 font-mono text-xs text-[#f0c75e]">
+                          <td className="px-3 py-2 font-mono text-xs text-[#DD550C]">
                             {p.selectedPosition}
                           </td>
                           <td className="px-3 py-2">
@@ -208,7 +208,7 @@ export default async function TeamDetailPage({
             />
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-[#0f1f3a] text-xs uppercase tracking-wider text-gray-400">
+                <thead className="bg-[#0C2340] text-xs uppercase tracking-wider text-gray-400">
                   <tr>
                     <th className="px-3 py-2">Week</th>
                     <th className="px-3 py-2">Opponent</th>
@@ -228,9 +228,9 @@ export default async function TeamDetailPage({
                     return (
                       <tr
                         key={m.matchupId}
-                        className="bg-[#14284a]/40 hover:bg-[#14284a]"
+                        className="bg-[#112d4e]/40 hover:bg-[#112d4e]"
                       >
-                        <td className="px-3 py-2 font-mono text-[#f0c75e]">
+                        <td className="px-3 py-2 font-mono text-[#DD550C]">
                           {m.week}
                         </td>
                         <td className="px-3 py-2 text-gray-300">
@@ -282,13 +282,13 @@ function StatCard({
   highlight?: boolean;
 }) {
   return (
-    <div className="rounded-xl border border-white/10 bg-[#14284a] p-4 text-center">
+    <div className="rounded-xl border border-white/10 bg-[#112d4e] p-4 text-center">
       <p className="text-[10px] font-semibold uppercase tracking-widest text-gray-400">
         {label}
       </p>
       <p
         className={`mt-1 font-mono text-xl font-bold ${
-          highlight ? "text-[#f0c75e]" : "text-white"
+          highlight ? "text-[#DD550C]" : "text-white"
         }`}
       >
         {value}

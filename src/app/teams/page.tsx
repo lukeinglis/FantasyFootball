@@ -52,7 +52,7 @@ export default async function TeamsPage() {
               <li key={t.teamKey}>
                 <Link
                   href={`/teams/${teamSlug(t.teamKey)}`}
-                  className="block h-full rounded-xl border border-white/10 bg-[#14284a] p-5 transition-colors hover:border-[#f0c75e]/40 hover:bg-[#1a3155]"
+                  className="block h-full rounded-xl border border-white/10 bg-[#112d4e] p-5 transition-colors hover:border-[#DD550C]/40 hover:bg-[#183558]"
                 >
                   <div className="flex items-start gap-3">
                     {t.logoUrl ? (
@@ -64,7 +64,7 @@ export default async function TeamsPage() {
                         loading="lazy"
                       />
                     ) : (
-                      <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-[#f0c75e]/20 text-lg font-bold text-[#f0c75e]">
+                      <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-[#DD550C]/20 text-lg font-bold text-[#DD550C]">
                         {t.teamName.charAt(0).toUpperCase()}
                       </div>
                     )}
@@ -86,7 +86,7 @@ export default async function TeamsPage() {
                     </div>
                     <div>
                       <dt className="text-gray-500">PF</dt>
-                      <dd className="mt-0.5 font-mono text-[#f0c75e]">
+                      <dd className="mt-0.5 font-mono text-[#DD550C]">
                         {formatPoints(t.pointsFor, 1)}
                       </dd>
                     </div>

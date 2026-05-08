@@ -73,8 +73,8 @@ export default function SeasonCountdown() {
   });
 
   return (
-    <div className="rounded-xl border border-[#f0c75e]/20 bg-[#0f1f3a]/80 p-6">
-      <p className="text-xs font-semibold uppercase tracking-widest text-[#f0c75e]/80">
+    <div className="rounded-xl border border-[#DD550C]/20 bg-[#0C2340]/80 p-6">
+      <p className="text-xs font-semibold uppercase tracking-widest text-[#DD550C]/80">
         Countdown to Kickoff
       </p>
       <p className="mt-1 text-sm text-gray-400">

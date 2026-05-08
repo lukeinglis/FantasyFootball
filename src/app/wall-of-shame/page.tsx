@@ -57,7 +57,7 @@ export default function WallOfShamePage() {
                   <CardBody>
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <p className="text-xs font-semibold uppercase tracking-widest text-[#f0c75e]">
+                        <p className="text-xs font-semibold uppercase tracking-widest text-[#DD550C]">
                           Season {p.season}
                         </p>
                         <h3 className="mt-1 text-lg font-bold text-white">
@@ -83,7 +83,7 @@ export default function WallOfShamePage() {
                         href={p.evidenceUrl}
                         target="_blank"
                         rel="noreferrer noopener"
-                        className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-[#f0c75e] hover:underline"
+                        className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-[#DD550C] hover:underline"
                       >
                         {p.evidenceLabel || "View the evidence"} →
                       </a>

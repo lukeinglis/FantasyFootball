@@ -49,7 +49,7 @@ function statusBadge(status: Matchup["status"]): string {
     case "postgame":
       return "bg-white/10 text-gray-300 border-white/20";
     default:
-      return "bg-[#f0c75e]/20 text-[#f0c75e] border-[#f0c75e]/30";
+      return "bg-[#DD550C]/20 text-[#DD550C] border-[#DD550C]/30";
   }
 }
 
@@ -113,7 +113,7 @@ export default async function MatchupsPage({
               const bWinner = isFinal && bPts > aPts;
               return (
                 <Card key={m.matchupId} className="overflow-hidden">
-                  <div className="flex items-center justify-between border-b border-white/10 bg-[#0f1f3a]/60 px-4 py-2">
+                  <div className="flex items-center justify-between border-b border-white/10 bg-[#0C2340]/60 px-4 py-2">
                     <span
                       className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide ${statusBadge(
                         m.status
@@ -178,7 +178,7 @@ function MatchupRow({
       <div className="min-w-0">
         <p
           className={`truncate font-semibold ${
-            winner ? "text-[#f0c75e]" : "text-white"
+            winner ? "text-[#DD550C]" : "text-white"
           }`}
         >
           {name}
@@ -189,7 +189,7 @@ function MatchupRow({
       <div className="text-right">
         <p
           className={`font-mono text-2xl font-bold ${
-            winner ? "text-[#f0c75e]" : "text-white"
+            winner ? "text-[#DD550C]" : "text-white"
           }`}
         >
           {formatPoints(points, 1)}

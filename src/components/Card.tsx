@@ -10,7 +10,7 @@ export function Card({ children, className = "", as = "div" }: CardProps) {
   const Tag = as;
   return (
     <Tag
-      className={`rounded-xl border border-white/10 bg-[#14284a] shadow-md shadow-black/20 ${className}`}
+      className={`rounded-xl border border-white/10 bg-[#112d4e] shadow-md shadow-black/20 ${className}`}
     >
       {children}
     </Tag>
@@ -27,7 +27,7 @@ export function CardHeader({ title, description, action }: CardHeaderProps) {
   return (
     <div className="flex items-start justify-between gap-3 border-b border-white/10 px-5 py-4">
       <div>
-        <h2 className="text-lg font-semibold text-[#f0c75e]">{title}</h2>
+        <h2 className="text-lg font-semibold text-[#DD550C]">{title}</h2>
         {description && (
           <p className="mt-1 text-xs text-gray-400">{description}</p>
         )}

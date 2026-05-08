@@ -34,9 +34,9 @@ export default function ArticlesPage() {
               <li key={a.slug}>
                 <Link
                   href={`/articles/${a.slug}`}
-                  className="block rounded-xl border border-white/10 bg-[#14284a] p-5 transition-colors hover:border-[#f0c75e]/40 hover:bg-[#1a3155]"
+                  className="block rounded-xl border border-white/10 bg-[#112d4e] p-5 transition-colors hover:border-[#DD550C]/40 hover:bg-[#183558]"
                 >
-                  <p className="text-[11px] font-semibold uppercase tracking-widest text-[#f0c75e]/80">
+                  <p className="text-[11px] font-semibold uppercase tracking-widest text-[#DD550C]/80">
                     {formatArticleDate(a.date)}
                     {a.author && ` · ${a.author}`}
                   </p>
@@ -46,7 +46,7 @@ export default function ArticlesPage() {
                   {a.excerpt && (
                     <p className="mt-2 text-sm text-gray-300">{a.excerpt}</p>
                   )}
-                  <p className="mt-3 inline-flex items-center text-xs font-medium text-[#f0c75e]">
+                  <p className="mt-3 inline-flex items-center text-xs font-medium text-[#DD550C]">
                     Read article →
                   </p>
                 </Link>

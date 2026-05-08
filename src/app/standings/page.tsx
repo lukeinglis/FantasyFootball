@@ -54,7 +54,7 @@ export default async function StandingsPage() {
           <Card className="overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-[#0f1f3a] text-xs uppercase tracking-wider text-gray-400">
+                <thead className="bg-[#0C2340] text-xs uppercase tracking-wider text-gray-400">
                   <tr>
                     <th scope="col" className="px-3 py-3">
                       Rank
@@ -99,18 +99,18 @@ export default async function StandingsPage() {
                       <tr
                         key={team.teamKey}
                         className={`${
-                          inPlayoffs ? "bg-[#14284a]" : "bg-[#14284a]/40"
+                          inPlayoffs ? "bg-[#112d4e]" : "bg-[#112d4e]/40"
                         } ${
                           isCutoff
-                            ? "border-b-2 border-[#f0c75e]/60"
+                            ? "border-b-2 border-[#DD550C]/60"
                             : ""
-                        } hover:bg-[#1a3155] transition-colors`}
+                        } hover:bg-[#183558] transition-colors`}
                       >
                         <td className="px-3 py-3">
                           <span
                             className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
                               inPlayoffs
-                                ? "bg-[#f0c75e] text-[#0f1f3a]"
+                                ? "bg-[#DD550C] text-[#0C2340]"
                                 : "bg-white/10 text-gray-300"
                             }`}
                           >
@@ -134,7 +134,7 @@ export default async function StandingsPage() {
                         <td className="px-3 py-3 text-right font-mono text-gray-300 hidden md:table-cell">
                           {formatPercent(team.percentage)}
                         </td>
-                        <td className="px-3 py-3 text-right font-mono text-[#f0c75e]">
+                        <td className="px-3 py-3 text-right font-mono text-[#DD550C]">
                           {formatPoints(team.pointsFor, 1)}
                         </td>
                         <td className="px-3 py-3 text-right font-mono text-gray-300 hidden md:table-cell">
@@ -149,8 +149,8 @@ export default async function StandingsPage() {
                 </tbody>
               </table>
             </div>
-            <div className="border-t border-white/10 bg-[#0f1f3a]/60 px-4 py-2 text-[11px] text-gray-400">
-              <span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#f0c75e]" />
+            <div className="border-t border-white/10 bg-[#0C2340]/60 px-4 py-2 text-[11px] text-gray-400">
+              <span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#DD550C]" />
               Playoff bracket cut-off after rank {PLAYOFF_CUTOFF}.
             </div>
           </Card>

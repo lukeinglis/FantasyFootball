@@ -14,7 +14,7 @@ export default function ArticlesPreview() {
         action={
           <Link
             href="/articles"
-            className="text-xs font-medium text-[#f0c75e] hover:underline"
+            className="text-xs font-medium text-[#DD550C] hover:underline"
           >
             All articles →
           </Link>
@@ -33,13 +33,13 @@ export default function ArticlesPreview() {
               <li key={a.slug}>
                 <Link
                   href={`/articles/${a.slug}`}
-                  className="block rounded-lg bg-[#0f1f3a]/60 px-3 py-2 transition-colors hover:bg-[#0f1f3a]"
+                  className="block rounded-lg bg-[#0C2340]/60 px-3 py-2 transition-colors hover:bg-[#0C2340]"
                 >
                   <p className="font-medium text-white">{a.title}</p>
                   <p className="mt-1 line-clamp-2 text-xs text-gray-400">
                     {a.excerpt || "Read the full article →"}
                   </p>
-                  <p className="mt-1 text-[11px] uppercase tracking-wide text-[#f0c75e]/70">
+                  <p className="mt-1 text-[11px] uppercase tracking-wide text-[#DD550C]/70">
                     {formatArticleDate(a.date)}
                     {a.author && ` · ${a.author}`}
                   </p>

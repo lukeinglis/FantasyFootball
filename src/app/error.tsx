@@ -17,7 +17,7 @@ export default function GlobalError({
 
   return (
     <Container className="text-center">
-      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#f0c75e]">
+      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#DD550C]">
         Something broke
       </p>
       <h1 className="mt-4 text-3xl sm:text-4xl font-bold text-white">
@@ -36,13 +36,13 @@ export default function GlobalError({
         <button
           type="button"
           onClick={() => reset()}
-          className="rounded-md bg-[#f0c75e] px-4 py-2 text-sm font-semibold text-[#0f1f3a] hover:bg-yellow-300"
+          className="rounded-md bg-[#DD550C] px-4 py-2 text-sm font-semibold text-[#0C2340] hover:bg-orange-500"
         >
           Try again
         </button>
         <Link
           href="/"
-          className="rounded-md border border-[#f0c75e]/40 px-4 py-2 text-sm font-semibold text-[#f0c75e] hover:bg-[#f0c75e]/10"
+          className="rounded-md border border-[#DD550C]/40 px-4 py-2 text-sm font-semibold text-[#DD550C] hover:bg-[#DD550C]/10"
         >
           Back to Home
         </Link>

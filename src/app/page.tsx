@@ -38,19 +38,19 @@ export default async function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-white/10 bg-gradient-to-br from-[#1a3155] via-[#14284a] to-[#0f1f3a]">
+      <section className="relative overflow-hidden border-b border-white/10 bg-gradient-to-br from-[#183558] via-[#112d4e] to-[#0C2340]">
         <div
           aria-hidden
-          className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:radial-gradient(#f0c75e_1px,transparent_1px)] [background-size:24px_24px]"
+          className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:radial-gradient(#DD550C_1px,transparent_1px)] [background-size:24px_24px]"
         />
         <Container className="relative py-16 sm:py-20 lg:py-28">
           <div className="flex flex-col gap-8 lg:flex-row lg:items-center lg:justify-between">
             <div>
-              <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-[#f0c75e]">
+              <p className="text-xs sm:text-sm font-semibold uppercase tracking-[0.25em] text-[#DD550C]">
                 {season ? `${season} Season` : "Est. 2013"}
               </p>
               <h1 className="mt-4 text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-white">
-                Greybushes <span className="text-[#f0c75e]">&amp;</span> Chili Dogs
+                Greybushes <span className="text-[#DD550C]">&amp;</span> Chili Dogs
               </h1>
               <p className="mt-4 max-w-2xl text-lg sm:text-xl italic text-gray-300">
                 A bunch of degenerates who claim to be extraordinary swindlers.
@@ -58,19 +58,19 @@ export default async function Home() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/standings"
-                  className="rounded-md bg-[#f0c75e] px-4 py-2 text-sm font-semibold text-[#0f1f3a] hover:bg-yellow-300 transition-colors"
+                  className="rounded-md bg-[#DD550C] px-4 py-2 text-sm font-semibold text-[#0C2340] hover:bg-orange-500 transition-colors"
                 >
                   View Standings
                 </Link>
                 <Link
                   href="/power-rankings"
-                  className="rounded-md border border-[#f0c75e]/40 px-4 py-2 text-sm font-semibold text-[#f0c75e] hover:bg-[#f0c75e]/10 transition-colors"
+                  className="rounded-md border border-[#DD550C]/40 px-4 py-2 text-sm font-semibold text-[#DD550C] hover:bg-[#DD550C]/10 transition-colors"
                 >
                   Power Rankings
                 </Link>
                 <Link
                   href="/matchups"
-                  className="rounded-md border border-[#f0c75e]/40 px-4 py-2 text-sm font-semibold text-[#f0c75e] hover:bg-[#f0c75e]/10 transition-colors"
+                  className="rounded-md border border-[#DD550C]/40 px-4 py-2 text-sm font-semibold text-[#DD550C] hover:bg-[#DD550C]/10 transition-colors"
                 >
                   This Week&apos;s Matchups
                 </Link>

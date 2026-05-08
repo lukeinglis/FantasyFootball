@@ -19,7 +19,7 @@ export default async function ScoreboardPreview() {
         action={
           <Link
             href="/matchups"
-            className="text-xs font-medium text-[#f0c75e] hover:underline"
+            className="text-xs font-medium text-[#DD550C] hover:underline"
           >
             View all →
           </Link>
@@ -45,13 +45,13 @@ export default async function ScoreboardPreview() {
               return (
                 <li
                   key={m.matchupId}
-                  className="rounded-lg bg-[#0f1f3a]/60 px-3 py-2"
+                  className="rounded-lg bg-[#0C2340]/60 px-3 py-2"
                 >
                   <div className="flex items-center justify-between gap-2 text-sm">
                     <span className="truncate font-medium text-white">
                       {a.teamName}
                     </span>
-                    <span className="font-mono text-[#f0c75e]">
+                    <span className="font-mono text-[#DD550C]">
                       {formatPoints(a.points, 1)}
                     </span>
                   </div>
@@ -59,7 +59,7 @@ export default async function ScoreboardPreview() {
                     <span className="truncate font-medium text-white">
                       {b.teamName}
                     </span>
-                    <span className="font-mono text-[#f0c75e]">
+                    <span className="font-mono text-[#DD550C]">
                       {formatPoints(b.points, 1)}
                     </span>
                   </div>

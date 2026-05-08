@@ -37,7 +37,7 @@ export default function RulesPage() {
           {data.sections.map((section) => (
             <Card key={section.title}>
               <div className="border-b border-white/10 px-5 py-4">
-                <h2 className="text-lg font-semibold text-[#f0c75e]">
+                <h2 className="text-lg font-semibold text-[#DD550C]">
                   {section.title}
                 </h2>
               </div>
@@ -45,7 +45,7 @@ export default function RulesPage() {
                 <ul className="space-y-2">
                   {section.rules.map((rule, i) => (
                     <li key={i} className="flex items-start gap-3 text-sm">
-                      <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#f0c75e]/60" />
+                      <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#DD550C]/60" />
                       <span className="text-gray-200">{rule}</span>
                     </li>
                   ))}

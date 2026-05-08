@@ -168,9 +168,9 @@ export default async function DraftPage() {
         <Card className="overflow-hidden">
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#0f1f3a] text-[10px] uppercase tracking-wider text-gray-400">
+              <thead className="bg-[#0C2340] text-[10px] uppercase tracking-wider text-gray-400">
                 <tr>
-                  <th className="sticky left-0 z-10 bg-[#0f1f3a] px-2 py-2">
+                  <th className="sticky left-0 z-10 bg-[#0C2340] px-2 py-2">
                     Rd
                   </th>
                   {teamOrder.map((t) => (
@@ -190,8 +190,8 @@ export default async function DraftPage() {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {rows.map((row) => (
-                  <tr key={row.round} className="bg-[#14284a]/40">
-                    <td className="sticky left-0 z-10 bg-[#0f1f3a] px-2 py-2 font-mono text-[#f0c75e]">
+                  <tr key={row.round} className="bg-[#112d4e]/40">
+                    <td className="sticky left-0 z-10 bg-[#0C2340] px-2 py-2 font-mono text-[#DD550C]">
                       R{row.round}
                     </td>
                     {row.cells.map((cell, idx) => {

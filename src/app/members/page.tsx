@@ -28,8 +28,8 @@ function MemberCard({ member }: { member: Member }) {
     .slice(0, 2)
     .join("");
   return (
-    <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-[#14284a] p-4 transition-colors hover:border-[#f0c75e]/40">
-      <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#f0c75e] text-base font-bold text-[#0f1f3a]">
+    <div className="flex items-center gap-4 rounded-xl border border-white/10 bg-[#112d4e] p-4 transition-colors hover:border-[#DD550C]/40">
+      <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-[#DD550C] text-base font-bold text-[#0C2340]">
         {initials || "?"}
       </div>
       <div className="min-w-0">
@@ -52,7 +52,7 @@ export default function MembersPage() {
       />
       <Container>
         <section>
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-[#f0c75e]">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-[#DD550C]">
             Active ({data.active.length})
           </h2>
           <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -65,7 +65,7 @@ export default function MembersPage() {
         </section>
         {data.emeritus.length > 0 && (
           <section className="mt-12">
-            <h2 className="text-xs font-semibold uppercase tracking-widest text-[#f0c75e]">
+            <h2 className="text-xs font-semibold uppercase tracking-widest text-[#DD550C]">
               Emeritus ({data.emeritus.length})
             </h2>
             <p className="mt-1 max-w-xl text-xs text-gray-500">

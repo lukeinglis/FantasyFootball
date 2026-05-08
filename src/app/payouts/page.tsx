@@ -139,7 +139,7 @@ export default function PayoutsPage() {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
-                    <thead className="bg-[#0f1f3a] text-xs uppercase tracking-wider text-gray-400">
+                    <thead className="bg-[#0C2340] text-xs uppercase tracking-wider text-gray-400">
                       <tr>
                         <th className="px-3 py-3">Week</th>
                         <th className="px-3 py-3">Description</th>
@@ -151,9 +151,9 @@ export default function PayoutsPage() {
                       {weekly.map((w, i) => (
                         <tr
                           key={`${w.week}-${i}`}
-                          className="bg-[#14284a]/40 hover:bg-[#14284a]"
+                          className="bg-[#112d4e]/40 hover:bg-[#112d4e]"
                         >
-                          <td className="px-3 py-3 font-mono text-[#f0c75e]">
+                          <td className="px-3 py-3 font-mono text-[#DD550C]">
                             {w.week}
                           </td>
                           <td className="px-3 py-3 text-gray-300">
@@ -173,7 +173,7 @@ export default function PayoutsPage() {
                               <span className="text-gray-500">TBD</span>
                             )}
                           </td>
-                          <td className="px-3 py-3 text-right font-mono text-[#f0c75e]">
+                          <td className="px-3 py-3 text-right font-mono text-[#DD550C]">
                             {formatUsd(toFiniteNumber(w.amount, 0))}
                           </td>
                         </tr>
@@ -210,7 +210,7 @@ function PrizeRow({
     3: "3rd",
   };
   return (
-    <li className="flex items-center justify-between gap-3 rounded-lg bg-[#0f1f3a]/60 px-4 py-3">
+    <li className="flex items-center justify-between gap-3 rounded-lg bg-[#0C2340]/60 px-4 py-3">
       <div className="flex items-center gap-3">
         <span className="text-2xl" aria-hidden>
           {medal}
@@ -222,7 +222,7 @@ function PrizeRow({
           </p>
         </div>
       </div>
-      <p className="font-mono text-xl font-bold text-[#f0c75e]">
+      <p className="font-mono text-xl font-bold text-[#DD550C]">
         {formatUsd(amount)}
       </p>
     </li>
@@ -243,7 +243,7 @@ function Row({
       <dt className="text-gray-400">{label}</dt>
       <dd
         className={`font-mono ${
-          emphasis ? "text-[#f0c75e] font-semibold" : "text-white"
+          emphasis ? "text-[#DD550C] font-semibold" : "text-white"
         }`}
       >
         {value}

@@ -2,14 +2,14 @@
 @plugin "@tailwindcss/typography";
 
 @theme {
-  --color-navy-900: #0f1f3a;
-  --color-navy-800: #14284a;
-  --color-navy-700: #1a3155;
-  --color-navy-600: #234074;
-  --color-navy-500: #2c5092;
-  --color-gold-400: #f0c75e;
-  --color-gold-500: #e6b94a;
-  --color-gold-600: #c39a36;
+  --color-navy-900: #0C2340;
+  --color-navy-800: #112d4e;
+  --color-navy-700: #183558;
+  --color-navy-600: #1e4060;
+  --color-navy-500: #245080;
+  --color-auburn-400: #DD550C;
+  --color-auburn-500: #c44a0a;
+  --color-auburn-600: #a33d08;
 }
 
 :root {
@@ -17,13 +17,13 @@
 }
 
 html, body {
-  background-color: #0f1f3a;
+  background-color: #0C2340;
   color: #f3f4f6;
 }
 
 /* Subtle gold focus ring used across all interactive elements */
 *:focus-visible {
-  outline: 2px solid #f0c75e;
+  outline: 2px solid #DD550C;
   outline-offset: 2px;
   border-radius: 4px;
 }
@@ -35,12 +35,12 @@ html, body {
 .prose-league h1,
 .prose-league h2,
 .prose-league h3 {
-  color: #f0c75e;
+  color: #DD550C;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
 .prose-league a {
-  color: #f0c75e;
+  color: #DD550C;
   text-decoration: underline;
 }
 .prose-league strong {
@@ -52,7 +52,7 @@ html, body {
   border-radius: 4px;
 }
 .prose-league blockquote {
-  border-left: 3px solid #f0c75e;
+  border-left: 3px solid #DD550C;
   padding-left: 1rem;
   color: #d1d5db;
   font-style: italic;

@@ -75,7 +75,7 @@ export default function TransactionList({
                 aria-pressed={filter === f.key}
                 className={`rounded-md px-2.5 py-1 text-[11px] font-medium uppercase tracking-wide transition-colors ${
                   filter === f.key
-                    ? "bg-[#f0c75e] text-[#0f1f3a]"
+                    ? "bg-[#DD550C] text-[#0C2340]"
                     : "bg-white/5 text-gray-300 hover:bg-white/10"
                 }`}
               >

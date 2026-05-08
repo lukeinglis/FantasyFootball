@@ -15,7 +15,7 @@ export default function Loading() {
           {Array.from({ length: 12 }).map((_, i) => (
             <li
               key={i}
-              className="rounded-xl border border-white/10 bg-[#14284a] p-5"
+              className="rounded-xl border border-white/10 bg-[#112d4e] p-5"
             >
               <div className="flex items-start gap-3">
                 <Skeleton className="h-12 w-12 rounded-md" />

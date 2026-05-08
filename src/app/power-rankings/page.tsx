@@ -216,9 +216,9 @@ export default async function PowerRankingsPage() {
                     <span
                       className={`flex h-10 w-10 items-center justify-center rounded-full text-lg font-bold ${
                         t.rank <= 3
-                          ? "bg-[#f0c75e] text-[#0f1f3a]"
+                          ? "bg-[#DD550C] text-[#0C2340]"
                           : t.rank <= 6
-                          ? "bg-[#f0c75e]/20 text-[#f0c75e]"
+                          ? "bg-[#DD550C]/20 text-[#DD550C]"
                           : "bg-white/10 text-gray-300"
                       }`}
                     >
@@ -272,7 +272,7 @@ export default async function PowerRankingsPage() {
 
                   {/* Power score */}
                   <div className="flex-shrink-0 text-center">
-                    <p className="font-mono text-3xl font-bold text-[#f0c75e]">
+                    <p className="font-mono text-3xl font-bold text-[#DD550C]">
                       {t.powerScore}
                     </p>
                     <p className="text-[10px] uppercase tracking-wider text-gray-500">
@@ -304,7 +304,7 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
       </div>
       <div className="h-1.5 rounded-full bg-white/10">
         <div
-          className="h-1.5 rounded-full bg-[#f0c75e]/60"
+          className="h-1.5 rounded-full bg-[#DD550C]/60"
           style={{ width: `${width}%` }}
         />
       </div>

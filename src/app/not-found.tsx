@@ -4,7 +4,7 @@ import Container from "@/components/Container";
 export default function NotFound() {
   return (
     <Container className="text-center">
-      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#f0c75e]">
+      <p className="text-xs font-semibold uppercase tracking-[0.25em] text-[#DD550C]">
         404
       </p>
       <h1 className="mt-4 text-4xl sm:text-5xl font-bold text-white">
@@ -17,13 +17,13 @@ export default function NotFound() {
       <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Link
           href="/"
-          className="rounded-md bg-[#f0c75e] px-4 py-2 text-sm font-semibold text-[#0f1f3a] hover:bg-yellow-300"
+          className="rounded-md bg-[#DD550C] px-4 py-2 text-sm font-semibold text-[#0C2340] hover:bg-orange-500"
         >
           Back to Home
         </Link>
         <Link
           href="/standings"
-          className="rounded-md border border-[#f0c75e]/40 px-4 py-2 text-sm font-semibold text-[#f0c75e] hover:bg-[#f0c75e]/10"
+          className="rounded-md border border-[#DD550C]/40 px-4 py-2 text-sm font-semibold text-[#DD550C] hover:bg-[#DD550C]/10"
         >
           View Standings
         </Link>

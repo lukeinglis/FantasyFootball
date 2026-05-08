@@ -57,7 +57,7 @@ export default function HistoryPage() {
           <Card className="overflow-hidden">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-[#0f1f3a] text-xs uppercase tracking-wider text-gray-400">
+                <thead className="bg-[#0C2340] text-xs uppercase tracking-wider text-gray-400">
                   <tr>
                     <th className="px-3 py-3">Year</th>
                     <th className="px-3 py-3">Champion</th>
@@ -70,9 +70,9 @@ export default function HistoryPage() {
                   {seasons.map((s, i) => (
                     <tr
                       key={`${s.year}-${i}`}
-                      className="bg-[#14284a]/40 hover:bg-[#14284a]"
+                      className="bg-[#112d4e]/40 hover:bg-[#112d4e]"
                     >
-                      <td className="px-3 py-3 font-mono text-[#f0c75e]">
+                      <td className="px-3 py-3 font-mono text-[#DD550C]">
                         {s.year}
                       </td>
                       <td className="px-3 py-3">

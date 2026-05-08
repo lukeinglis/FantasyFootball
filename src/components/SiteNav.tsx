@@ -63,13 +63,13 @@ export default function SiteNav() {
   const isMoreActive = MORE_ITEMS.some((item) => isActive(pathname, item.href));
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0f1f3a]/95 backdrop-blur supports-[backdrop-filter]:bg-[#0f1f3a]/80">
+    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0C2340]/95 backdrop-blur supports-[backdrop-filter]:bg-[#0C2340]/80">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           href="/"
-          className="flex items-center gap-2 text-[#f0c75e] hover:text-yellow-300 transition-colors"
+          className="flex items-center gap-2 text-[#DD550C] hover:text-orange-400 transition-colors"
         >
-          <span aria-hidden className="text-xl">🌭</span>
+          <span aria-hidden className="text-xl">🏈</span>
           <span className="font-bold tracking-tight text-base sm:text-lg">
             Greybushes <span className="text-white/70">&amp;</span> Chili Dogs
           </span>
@@ -86,8 +86,8 @@ export default function SiteNav() {
                 aria-current={active ? "page" : undefined}
                 className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                   active
-                    ? "bg-[#f0c75e] text-[#0f1f3a]"
-                    : "text-gray-200 hover:bg-white/5 hover:text-[#f0c75e]"
+                    ? "bg-[#DD550C] text-[#0C2340]"
+                    : "text-gray-200 hover:bg-white/5 hover:text-[#DD550C]"
                 }`}
               >
                 {item.label}
@@ -103,8 +103,8 @@ export default function SiteNav() {
               aria-expanded={moreOpen}
               className={`px-3 py-2 rounded-md text-sm font-medium transition-colors inline-flex items-center gap-1 ${
                 isMoreActive
-                  ? "bg-[#f0c75e] text-[#0f1f3a]"
-                  : "text-gray-200 hover:bg-white/5 hover:text-[#f0c75e]"
+                  ? "bg-[#DD550C] text-[#0C2340]"
+                  : "text-gray-200 hover:bg-white/5 hover:text-[#DD550C]"
               }`}
             >
               More
@@ -125,7 +125,7 @@ export default function SiteNav() {
               </svg>
             </button>
             {moreOpen && (
-              <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-white/10 bg-[#14284a] py-1 shadow-xl shadow-black/40">
+              <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-white/10 bg-[#112d4e] py-1 shadow-xl shadow-black/40">
                 {MORE_ITEMS.map((item) => {
                   const active = isActive(pathname, item.href);
                   return (
@@ -134,8 +134,8 @@ export default function SiteNav() {
                       href={item.href}
                       className={`block px-4 py-2 text-sm transition-colors ${
                         active
-                          ? "bg-[#f0c75e]/10 text-[#f0c75e] font-medium"
-                          : "text-gray-200 hover:bg-white/5 hover:text-[#f0c75e]"
+                          ? "bg-[#DD550C]/10 text-[#DD550C] font-medium"
+                          : "text-gray-200 hover:bg-white/5 hover:text-[#DD550C]"
                       }`}
                     >
                       {item.label}
@@ -154,7 +154,7 @@ export default function SiteNav() {
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
           onClick={() => setMobileOpen((v) => !v)}
-          className="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-[#f0c75e] hover:bg-white/5"
+          className="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-[#DD550C] hover:bg-white/5"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -189,7 +189,7 @@ export default function SiteNav() {
         <nav
           id="mobile-nav"
           aria-label="Primary mobile"
-          className="lg:hidden border-t border-white/10 bg-[#0f1f3a]"
+          className="lg:hidden border-t border-white/10 bg-[#0C2340]"
         >
           <ul className="flex flex-col gap-1 px-4 py-3 sm:px-6">
             {ALL_ITEMS.map((item) => {
@@ -201,8 +201,8 @@ export default function SiteNav() {
                     aria-current={active ? "page" : undefined}
                     className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
                       active
-                        ? "bg-[#f0c75e] text-[#0f1f3a]"
-                        : "text-gray-200 hover:bg-white/5 hover:text-[#f0c75e]"
+                        ? "bg-[#DD550C] text-[#0C2340]"
+                        : "text-gray-200 hover:bg-white/5 hover:text-[#DD550C]"
                     }`}
                   >
                     {item.label}
