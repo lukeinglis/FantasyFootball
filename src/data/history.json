@@ -10,18 +10,94 @@
       "thirdTeam": "The Glorious Return"
     },
     {
-      "year": 2015,
-      "championTeam": "First&Goal",
-      "runnerUpTeam": "Scott's Team",
-      "thirdTeam": "Captain Morgan",
-      "notes": "Manager names hidden by Yahoo privacy settings"
+      "year": 2024,
+      "champion": "Greg",
+      "championTeam": "REO Teabagging",
+      "runnerUp": "cody",
+      "runnerUpTeam": "Onekneebiegs",
+      "third": "Patrick",
+      "thirdTeam": "Cakes all Night"
     },
     {
-      "year": 2008,
-      "championTeam": "Orange Crush",
-      "runnerUpTeam": "American Psycho's",
-      "thirdTeam": "Super Falcons",
-      "notes": "Manager names hidden by Yahoo privacy settings"
+      "year": 2023,
+      "champion": "Kyle V",
+      "championTeam": "Pre Sugar Bowl Falco",
+      "runnerUp": "Austin",
+      "runnerUpTeam": "Cammy Cam Juice",
+      "third": "Phil",
+      "thirdTeam": "The Implication"
+    },
+    {
+      "year": 2022,
+      "champion": "Zach",
+      "championTeam": "Bend Over And Floss",
+      "runnerUp": "Tyler",
+      "runnerUpTeam": "Ghost of Cinmeon Bowers",
+      "third": "Damaso",
+      "thirdTeam": "Ken Porter"
+    },
+    {
+      "year": 2021,
+      "champion": "Tyler",
+      "championTeam": "Ghost of Cinmeon Bowers",
+      "runnerUp": "Rob",
+      "runnerUpTeam": "Its Da Robbery",
+      "third": "Kyle V",
+      "thirdTeam": "Pre Sugar Bowl Falco"
+    },
+    {
+      "year": 2020,
+      "champion": "Evan",
+      "championTeam": "Gretzky knows",
+      "runnerUp": "luke",
+      "runnerUpTeam": "The Glorious Return",
+      "third": "Damaso",
+      "thirdTeam": "Trey's Wet Wipes"
+    },
+    {
+      "year": 2019,
+      "champion": "Bryan",
+      "championTeam": "A Team Has No Name",
+      "runnerUp": "Rob",
+      "runnerUpTeam": "Its Da Robbery",
+      "third": "luke",
+      "thirdTeam": "The Glorious Return"
+    },
+    {
+      "year": 2018,
+      "champion": "Damaso",
+      "championTeam": "Kyle's Kalendar",
+      "runnerUp": "Kyle V",
+      "runnerUpTeam": "Pre Sugar Bowl Falco",
+      "third": "Bryan",
+      "thirdTeam": "A Team Has No Name"
+    },
+    {
+      "year": 2017,
+      "champion": "luke",
+      "championTeam": "The Glorious Return",
+      "runnerUp": "Zach",
+      "runnerUpTeam": "Bend Over And Floss",
+      "third": "Phil",
+      "thirdTeam": "The Implication"
+    },
+    {
+      "year": 2016,
+      "champion": "Colin",
+      "championTeam": "Victorious Secret",
+      "runnerUp": "Kyle V",
+      "runnerUpTeam": "Pre Sugar Bowl Falco",
+      "third": "Phil",
+      "thirdTeam": "The Implication"
+    },
+    {
+      "year": 2015,
+      "champion": "Phil",
+      "championTeam": "The Implication",
+      "runnerUp": "Austin",
+      "runnerUpTeam": "Cammy Cam Juice",
+      "third": "Rob",
+      "thirdTeam": "Its Da Robbery"
     }
   ]
 }
