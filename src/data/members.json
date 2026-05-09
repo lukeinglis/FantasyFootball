@@ -1,20 +1,23 @@
 {
   "active": [
     { "name": "Austin", "teamName": "Cammy Cam Juice" },
-    { "name": "Colin", "teamName": "Fitzmagic Time" },
-    { "name": "Damaso", "teamName": "The Grove Groper" },
-    { "name": "Evan", "teamName": "Gretzky Knows" },
-    { "name": "Kyle", "teamName": "Pre Sugar Bowl Falco" },
+    { "name": "Cody", "teamName": "Taco Bell is life" },
+    { "name": "Damaso", "teamName": "FugginFILLEDUp" },
+    { "name": "Greg", "teamName": "REO Teabagging" },
     { "name": "Luke", "teamName": "The Glorious Return" },
+    { "name": "Patrick", "teamName": "Stable of Stars" },
     { "name": "Phil", "teamName": "The Implication" },
     { "name": "Rob", "teamName": "Its Da Robbery" },
-    { "name": "Ross", "teamName": "Pound the Brown(s)" },
-    { "name": "Trey", "teamName": "Beauxnersnatchers" },
-    { "name": "Tyler", "teamName": "Ghost of Cinmeon Bowers" },
-    { "name": "Zach", "teamName": "Bend Over and Floss" }
+    { "name": "Ross", "teamName": "Rob's thumb print" },
+    { "name": "Trey", "teamName": "BeauxnerSnatchers" },
+    { "name": "Tyler", "teamName": "A Guy about a Horse" },
+    { "name": "Zach", "teamName": "Bend Over And Floss" }
   ],
   "emeritus": [
     { "name": "Bryan", "teamName": "A Team Has No Name" },
-    { "name": "John", "teamName": "Fuggin Filled Up" }
+    { "name": "Colin", "teamName": "Victorious Secret" },
+    { "name": "Evan", "teamName": "Gretzky Knows" },
+    { "name": "John", "teamName": "Fuggin Filled Up" },
+    { "name": "Kyle", "teamName": "Pre Sugar Bowl Falco" }
   ]
 }
