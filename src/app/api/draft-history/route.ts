@@ -40,6 +40,8 @@ interface DraftPick {
   playerName: string;
   position: string;
   nflTeam: string;
+  isKeeper: boolean;
+  keeperCost: number | null;
 }
 
 interface SeasonDraft {
@@ -105,7 +107,7 @@ async function fetchDraftForSeason(
 
     // Collect all player keys for batch lookup
     const playerKeys: string[] = [];
-    const rawPicks: { pick: number; round: number; teamKey: string; playerKey: string }[] = [];
+    const rawPicks: { pick: number; round: number; teamKey: string; playerKey: string; isKeeper: boolean; keeperCost: number | null }[] = [];
 
     for (let i = 0; i < count; i++) {
       const pick = draftData[i]?.draft_result;
@@ -115,6 +117,8 @@ async function fetchDraftForSeason(
         round: pick.round || 0,
         teamKey: pick.team_key || "",
         playerKey: pick.player_key || "",
+        isKeeper: pick.is_keeper === "1" || pick.is_keeper === 1 || pick.is_keeper === true,
+        keeperCost: pick.cost != null ? Number(pick.cost) : null,
       });
       if (pick.player_key) playerKeys.push(pick.player_key);
     }
@@ -166,6 +170,8 @@ async function fetchDraftForSeason(
         playerName: player?.name || "",
         position: player?.position || "",
         nflTeam: player?.nflTeam || "",
+        isKeeper: rp.isKeeper,
+        keeperCost: rp.keeperCost,
       };
     });
 
