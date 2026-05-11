@@ -13,6 +13,8 @@ interface DraftPick {
   playerName: string;
   position: string;
   nflTeam: string;
+  isKeeper?: boolean;
+  keeperCost?: number | null;
 }
 
 interface SeasonDraft {

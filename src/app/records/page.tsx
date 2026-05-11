@@ -153,6 +153,56 @@ function computeRecords() {
     return { year: d.year, positions: posCounts };
   }).sort((a, b) => a.year - b.year);
 
+  // Keeper analytics
+  const keeperPicks = allPicks.filter((p) => p.isKeeper);
+  const totalKeepers = keeperPicks.length;
+  const keepersByYear = drafts.map((d) => ({
+    year: d.year,
+    keepers: d.picks.filter((p) => p.isKeeper).length,
+    total: d.picks.length,
+  })).sort((a, b) => a.year - b.year);
+
+  // Longest kept players (same manager, same player across most consecutive years)
+  const keeperStreaks: { player: string; manager: string; pos: string; years: number[]; streak: number }[] = [];
+  const mgrPlayerYears: Record<string, Record<string, number[]>> = {};
+  for (const d of drafts) {
+    for (const p of d.picks) {
+      if (!p.playerName) continue;
+      const mgr = normalizeManagerName(p.managerName);
+      if (!mgrPlayerYears[mgr]) mgrPlayerYears[mgr] = {};
+      if (!mgrPlayerYears[mgr][p.playerName]) mgrPlayerYears[mgr][p.playerName] = [];
+      mgrPlayerYears[mgr][p.playerName].push(d.year);
+    }
+  }
+  for (const [mgr, players] of Object.entries(mgrPlayerYears)) {
+    for (const [player, years] of Object.entries(players)) {
+      if (years.length < 3) continue;
+      const sorted = [...years].sort((a, b) => a - b);
+      let maxStreak = 1, current = 1, start = 0, bestStart = 0;
+      for (let i = 1; i < sorted.length; i++) {
+        if (sorted[i] === sorted[i - 1] + 1) {
+          current++;
+          if (current > maxStreak) { maxStreak = current; bestStart = start; }
+        } else { current = 1; start = i; }
+      }
+      const streakYears = sorted.slice(bestStart, bestStart + maxStreak);
+      const firstPick = allPicks.find((p) => normalizeManagerName(p.managerName) === mgr && p.playerName === player);
+      keeperStreaks.push({
+        player, manager: mgr, pos: firstPick?.position || "",
+        years: streakYears, streak: maxStreak,
+      });
+    }
+  }
+  keeperStreaks.sort((a, b) => b.streak - a.streak);
+
+  // Most keepers per manager
+  const keepersByMgr: Record<string, number> = {};
+  for (const p of keeperPicks) {
+    const mgr = normalizeManagerName(p.managerName);
+    keepersByMgr[mgr] = (keepersByMgr[mgr] || 0) + 1;
+  }
+  const topKeepers = Object.entries(keepersByMgr).sort((a, b) => b[1] - a[1]);
+
   return {
     totalPicks: allPicks.length,
     totalDrafts: drafts.length,
@@ -170,6 +220,10 @@ function computeRecords() {
     qbTimers,
     bridesmaids,
     r1ByYear,
+    totalKeepers,
+    keepersByYear,
+    keeperStreaks,
+    topKeepers,
   };
 }
 
@@ -425,6 +479,100 @@ export default function RecordsPage() {
                     ))}
                   </tbody>
                 </table>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      </Container>
+
+      {/* Keeper Records */}
+      <Container className="pt-0">
+        <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-white mb-6">Keeper Records</h2>
+        <p className="mb-6 text-sm text-gray-400">
+          342 inferred keepers across 10 seasons. Early years (2016-2020): keepers slotted into final rounds.
+          Recent years (2023+): keepers held at their original draft round.
+        </p>
+
+        {/* Keeper stats banner */}
+        <div className="mb-6 grid gap-3 grid-cols-2 sm:grid-cols-4">
+          <StatCard label="Total Keepers" value={r.totalKeepers.toString()} />
+          <StatCard label="Avg / Draft" value={r.keepersByYear.length > 1 ? Math.round(r.totalKeepers / (r.keepersByYear.length - 1)).toString() : "0"} />
+          <StatCard label="Longest Streak" value={r.keeperStreaks[0]?.streak.toString() || "0"} highlight />
+          <StatCard label="Seasons Tracked" value={(r.keepersByYear.length - 1).toString()} />
+        </div>
+
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* Longest Keeper Streaks */}
+          <Card className="overflow-hidden">
+            <CardHeader title="Longest Keeper Streaks" description="Same manager, same player, most consecutive seasons" />
+            <CardBody className="!p-0">
+              <div className="divide-y divide-white/5">
+                {r.keeperStreaks.slice(0, 12).map((ks, i) => (
+                  <div key={`${ks.manager}-${ks.player}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="truncate text-white">
+                        <Link href={`/managers/${getManagerSlug(ks.manager)}`} className="font-semibold hover:text-[#DD550C]">{ks.manager}</Link>
+                        <span className="text-gray-400"> kept </span>
+                        <span className="font-semibold">{ks.player}</span>
+                      </p>
+                      <p className="text-xs text-gray-400">{ks.years[0]} to {ks.years[ks.years.length - 1]}</p>
+                    </div>
+                    <div className="text-right">
+                      <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-[#DD550C]">{ks.streak}</span>
+                      <span className="text-xs text-gray-500 ml-1">yrs</span>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </CardBody>
+          </Card>
+
+          {/* Most Keepers by Manager */}
+          <Card className="overflow-hidden">
+            <CardHeader title="Keeper Volume" description="Total keeper picks per manager (all time)" />
+            <CardBody className="!p-0">
+              <div className="divide-y divide-white/5">
+                {r.topKeepers.slice(0, 12).map(([name, count], i) => {
+                  const maxCount = r.topKeepers[0]?.[1] || 1;
+                  const pct = (count / maxCount) * 100;
+                  return (
+                    <Link key={name} href={`/managers/${getManagerSlug(name)}`} className="block px-5 py-2.5 hover:bg-white/5 transition-colors">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-[10px] font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                          <span className="font-semibold text-white">{name}</span>
+                        </div>
+                        <span className="font-mono text-sm text-gray-400">{count} keepers</span>
+                      </div>
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                        <div className="h-full rounded-full bg-gradient-to-r from-[#DD550C] to-[#ff8a3d]" style={{ width: `${pct}%` }} />
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+
+        {/* Keepers by Year */}
+        <div className="mt-6">
+          <Card className="overflow-hidden">
+            <CardHeader title="Keepers by Season" description="How many players were kept each year" />
+            <CardBody>
+              <div className="flex items-end gap-2 h-32">
+                {r.keepersByYear.map((ky) => {
+                  const pct = ky.total > 0 ? (ky.keepers / ky.total) * 100 : 0;
+                  const heightPct = Math.max(4, (ky.keepers / 50) * 100);
+                  return (
+                    <div key={ky.year} className="flex-1 flex flex-col items-center gap-1">
+                      <span className="text-[10px] font-mono text-gray-400">{ky.keepers}</span>
+                      <div className="w-full rounded-t bg-gradient-to-t from-[#DD550C] to-[#ff8a3d]" style={{ height: `${heightPct}%` }} />
+                      <span className="text-[9px] text-gray-500">{String(ky.year).slice(2)}</span>
+                    </div>
+                  );
+                })}
               </div>
             </CardBody>
           </Card>
