@@ -2274,8 +2274,8 @@
       "playerName": "Saquon Barkley",
       "position": "RB",
       "nflTeam": "Phi",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 15
     },
     {
       "pick": 176,
@@ -2417,8 +2417,8 @@
       "playerName": "Alvin Kamara",
       "position": "RB",
       "nflTeam": "NO",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 16
     },
     {
       "pick": 187,
@@ -2482,8 +2482,8 @@
       "playerName": "Lamar Jackson",
       "position": "QB",
       "nflTeam": "Bal",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 11
     },
     {
       "pick": 192,

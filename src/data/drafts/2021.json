@@ -2118,8 +2118,8 @@
       "playerName": "Kirk Cousins",
       "position": "QB",
       "nflTeam": "LV",
-      "isKeeper": true,
-      "keeperCost": 14
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 164,

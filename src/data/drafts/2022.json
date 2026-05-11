@@ -2092,8 +2092,8 @@
       "playerName": "Tyler Higbee",
       "position": "TE",
       "nflTeam": "LAR",
-      "isKeeper": true,
-      "keeperCost": 7
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 162,
@@ -2170,8 +2170,8 @@
       "playerName": "Rob Gronkowski",
       "position": "TE",
       "nflTeam": "TB",
-      "isKeeper": true,
-      "keeperCost": 10
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 168,
@@ -2209,8 +2209,8 @@
       "playerName": "Sony Michel",
       "position": "RB",
       "nflTeam": "LAC",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 6
     },
     {
       "pick": 171,
@@ -2222,8 +2222,8 @@
       "playerName": "Baker Mayfield",
       "position": "QB",
       "nflTeam": "TB",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 7
     },
     {
       "pick": 172,
@@ -2235,8 +2235,8 @@
       "playerName": "Ravens",
       "position": "DEF",
       "nflTeam": "Bal",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 11
     },
     {
       "pick": 173,
@@ -2261,8 +2261,8 @@
       "playerName": "C.J. Uzomah",
       "position": "TE",
       "nflTeam": "Phi",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 14
     },
     {
       "pick": 175,
@@ -2300,8 +2300,8 @@
       "playerName": "Matt Prater",
       "position": "K",
       "nflTeam": "Buf",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 14
     },
     {
       "pick": 178,
@@ -2326,8 +2326,8 @@
       "playerName": "Robbie Gould",
       "position": "K",
       "nflTeam": "SF",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 14
     },
     {
       "pick": 180,
@@ -2365,8 +2365,8 @@
       "playerName": "Austin Ekeler",
       "position": "RB",
       "nflTeam": "Was",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 1
     },
     {
       "pick": 183,

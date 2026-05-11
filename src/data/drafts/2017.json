@@ -2118,8 +2118,8 @@
       "playerName": "Dez Bryant",
       "position": "WR",
       "nflTeam": "Bal",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 14
     },
     {
       "pick": 164,
@@ -2222,8 +2222,8 @@
       "playerName": "LeSean McCoy",
       "position": "RB",
       "nflTeam": "TB",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 1
     },
     {
       "pick": 172,
@@ -2274,8 +2274,8 @@
       "playerName": "Jordan Howard",
       "position": "RB",
       "nflTeam": "NO",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 10
     },
     {
       "pick": 176,
@@ -2404,8 +2404,8 @@
       "playerName": "Jay Ajayi",
       "position": "RB",
       "nflTeam": "Phi",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 9
     },
     {
       "pick": 186,
@@ -2456,8 +2456,8 @@
       "playerName": "Michael Crabtree",
       "position": "WR",
       "nflTeam": "Ari",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 4
     },
     {
       "pick": 190,

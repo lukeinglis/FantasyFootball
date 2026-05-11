@@ -2040,8 +2040,8 @@
       "playerName": "T.Y. Hilton",
       "position": "WR",
       "nflTeam": "Dal",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 15
     },
     {
       "pick": 158,
@@ -2053,8 +2053,8 @@
       "playerName": "Leonard Fournette",
       "position": "RB",
       "nflTeam": "Buf",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 1
     },
     {
       "pick": 159,
@@ -2144,8 +2144,8 @@
       "playerName": "Dalvin Cook",
       "position": "RB",
       "nflTeam": "Dal",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 1
     },
     {
       "pick": 166,
@@ -2209,8 +2209,8 @@
       "playerName": "A.J. Green",
       "position": "WR",
       "nflTeam": "Ari",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 15
     },
     {
       "pick": 171,
@@ -2235,8 +2235,8 @@
       "playerName": "Kareem Hunt",
       "position": "RB",
       "nflTeam": "KC",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 2
     },
     {
       "pick": 173,
@@ -2274,8 +2274,8 @@
       "playerName": "Derrick Henry",
       "position": "RB",
       "nflTeam": "Bal",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 4
     },
     {
       "pick": 176,

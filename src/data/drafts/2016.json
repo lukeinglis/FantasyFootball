@@ -2456,8 +2456,8 @@
       "playerName": "Julian Edelman",
       "position": "WR",
       "nflTeam": "NE",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 6
     },
     {
       "pick": 190,
@@ -2469,8 +2469,8 @@
       "playerName": "Jamaal Charles",
       "position": "RB",
       "nflTeam": "Jax",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 1
     },
     {
       "pick": 191,
@@ -2482,8 +2482,8 @@
       "playerName": "Keenan Allen",
       "position": "WR",
       "nflTeam": "LAC",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 4
     },
     {
       "pick": 192,
@@ -2495,8 +2495,8 @@
       "playerName": "Ryan Mathews",
       "position": "RB",
       "nflTeam": "Phi",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 10
     }
   ],
   "teams": [

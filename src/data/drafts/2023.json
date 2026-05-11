@@ -25,8 +25,8 @@
       "playerName": "Najee Harris",
       "position": "RB",
       "nflTeam": "LAC",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 1
     },
     {
       "pick": 3,
@@ -38,8 +38,8 @@
       "playerName": "Stefon Diggs",
       "position": "WR",
       "nflTeam": "NE",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 1
     },
     {
       "pick": 4,
@@ -64,8 +64,8 @@
       "playerName": "CeeDee Lamb",
       "position": "WR",
       "nflTeam": "Dal",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 1
     },
     {
       "pick": 6,
@@ -298,8 +298,8 @@
       "playerName": "Keenan Allen",
       "position": "WR",
       "nflTeam": "LAC",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 2
     },
     {
       "pick": 24,
@@ -363,8 +363,8 @@
       "playerName": "Mark Andrews",
       "position": "TE",
       "nflTeam": "Bal",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 3
     },
     {
       "pick": 29,
@@ -415,8 +415,8 @@
       "playerName": "DJ Moore",
       "position": "WR",
       "nflTeam": "Buf",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 3
     },
     {
       "pick": 33,
@@ -454,8 +454,8 @@
       "playerName": "Justin Herbert",
       "position": "QB",
       "nflTeam": "LAC",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 3
     },
     {
       "pick": 36,
@@ -597,8 +597,8 @@
       "playerName": "Tony Pollard",
       "position": "RB",
       "nflTeam": "Ten",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 4
     },
     {
       "pick": 47,
@@ -649,8 +649,8 @@
       "playerName": "Patrick Mahomes",
       "position": "QB",
       "nflTeam": "KC",
-      "isKeeper": true,
-      "keeperCost": 5
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 51,
@@ -1195,8 +1195,8 @@
       "playerName": "Brian Robinson Jr.",
       "position": "RB",
       "nflTeam": "Atl",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 93,
@@ -1351,8 +1351,8 @@
       "playerName": "Chris Olave",
       "position": "WR",
       "nflTeam": "NO",
-      "isKeeper": true,
-      "keeperCost": 9
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 105,
@@ -1494,8 +1494,8 @@
       "playerName": "Treylon Burks",
       "position": "WR",
       "nflTeam": "Was",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 10
     },
     {
       "pick": 116,
@@ -1572,8 +1572,8 @@
       "playerName": "Cole Kmet",
       "position": "TE",
       "nflTeam": "Chi",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 11
     },
     {
       "pick": 122,
@@ -1689,8 +1689,8 @@
       "playerName": "Justin Fields",
       "position": "QB",
       "nflTeam": "KC",
-      "isKeeper": false,
-      "keeperCost": null
+      "isKeeper": true,
+      "keeperCost": 11
     },
     {
       "pick": 131,
@@ -2365,8 +2365,8 @@
       "playerName": "Nick Chubb",
       "position": "RB",
       "nflTeam": "Hou",
-      "isKeeper": true,
-      "keeperCost": 16
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 183,
@@ -2404,8 +2404,8 @@
       "playerName": "Austin Ekeler",
       "position": "RB",
       "nflTeam": "Was",
-      "isKeeper": true,
-      "keeperCost": 16
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 186,
@@ -2417,8 +2417,8 @@
       "playerName": "Cooper Kupp",
       "position": "WR",
       "nflTeam": "Sea",
-      "isKeeper": true,
-      "keeperCost": 16
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 187,
@@ -2430,8 +2430,8 @@
       "playerName": "Justin Jefferson",
       "position": "WR",
       "nflTeam": "Min",
-      "isKeeper": true,
-      "keeperCost": 16
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 188,
@@ -2456,8 +2456,8 @@
       "playerName": "Ja'Marr Chase",
       "position": "WR",
       "nflTeam": "Cin",
-      "isKeeper": true,
-      "keeperCost": 16
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 190,
@@ -2482,8 +2482,8 @@
       "playerName": "Travis Kelce",
       "position": "TE",
       "nflTeam": "KC",
-      "isKeeper": true,
-      "keeperCost": 16
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 192,
@@ -2495,8 +2495,8 @@
       "playerName": "Christian McCaffrey",
       "position": "RB",
       "nflTeam": "SF",
-      "isKeeper": true,
-      "keeperCost": 16
+      "isKeeper": false,
+      "keeperCost": null
     }
   ],
   "teams": [
