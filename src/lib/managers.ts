@@ -540,13 +540,22 @@ export interface ChampionDraftProfile {
   positionBreakdown: Record<string, number>;
 }
 
+export interface KeeperByYear {
+  year: number;
+  keepers: number;
+  fresh: number;
+  total: number;
+}
+
 export interface LeagueAnalytics {
   positionByYear: PositionByYearData[];
   archetypes: ManagerArchetype[];
   nflTeamPopularity: NFLTeamPopularity[];
   positionScarcity: PositionScarcityData[];
   championProfiles: ChampionDraftProfile[];
+  keepersByYear: KeeperByYear[];
   totalPicks: number;
+  totalKeepers: number;
   totalDrafts: number;
   totalManagers: number;
 }
@@ -681,13 +690,24 @@ export function computeLeagueAnalytics(): LeagueAnalytics {
     });
   }
 
+  // Keeper stats by year
+  const keepersByYear: KeeperByYear[] = drafts
+    .map((d) => {
+      const keepers = d.picks.filter((p) => p.isKeeper).length;
+      return { year: d.year, keepers, fresh: d.picks.length - keepers, total: d.picks.length };
+    })
+    .sort((a, b) => a.year - b.year);
+  const totalKeepers = keepersByYear.reduce((s, k) => s + k.keepers, 0);
+
   return {
     positionByYear,
     archetypes,
     nflTeamPopularity,
     positionScarcity,
     championProfiles,
+    keepersByYear,
     totalPicks,
+    totalKeepers,
     totalDrafts: drafts.length,
     totalManagers: allManagers.length,
   };

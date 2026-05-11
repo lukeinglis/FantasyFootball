@@ -21,6 +21,8 @@ interface DraftPick {
   playerName: string;
   position: string;
   nflTeam: string;
+  isKeeper?: boolean;
+  keeperCost?: number | null;
 }
 
 interface SeasonDraft {
@@ -99,7 +101,9 @@ function computeStats(drafts: SeasonDraft[]) {
     };
   });
 
-  return { totalPicks, totalDrafts, posCounts, r1Pos, mostDrafted, firstOveralls };
+  const totalKeepers = allPicks.filter((p) => p.isKeeper).length;
+
+  return { totalPicks, totalDrafts, totalKeepers, posCounts, r1Pos, mostDrafted, firstOveralls };
 }
 
 export default function DraftHistoryPage() {
@@ -121,12 +125,12 @@ export default function DraftHistoryPage() {
       <PageHeader
         eyebrow="The Archives"
         title="Draft History"
-        subtitle={`${stats.totalPicks.toLocaleString()} picks across ${stats.totalDrafts} drafts. Every reach, every steal, every "who?"`}
+        subtitle={`${stats.totalPicks.toLocaleString()} picks across ${stats.totalDrafts} drafts. ${stats.totalKeepers} keepers. Every reach, every steal, every "who?"`}
       />
 
       {/* Stats Banner */}
       <Container>
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+        <div className="grid gap-4 grid-cols-2 lg:grid-cols-5">
           <Card variant="glass">
             <CardBody>
               <div className="text-center">
@@ -140,6 +144,14 @@ export default function DraftHistoryPage() {
               <div className="text-center">
                 <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Drafts</p>
                 <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-gradient">{stats.totalDrafts}</p>
+              </div>
+            </CardBody>
+          </Card>
+          <Card variant="glass">
+            <CardBody>
+              <div className="text-center">
+                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">Keepers</p>
+                <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-amber-300">{stats.totalKeepers}</p>
               </div>
             </CardBody>
           </Card>

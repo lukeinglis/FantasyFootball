@@ -13,6 +13,8 @@ interface DraftPick {
   playerName: string;
   position: string;
   nflTeam: string;
+  isKeeper?: boolean;
+  keeperCost?: number | null;
 }
 
 interface SeasonDraft {
@@ -38,14 +40,17 @@ interface Props {
 export default function DraftHistoryClient({ years, drafts }: Props) {
   const [selectedYear, setSelectedYear] = useState(years[0] || 2025);
   const [filterPos, setFilterPos] = useState<string>("ALL");
+  const [filterKeepers, setFilterKeepers] = useState<"ALL" | "KEEPERS" | "FRESH">("ALL");
   const [searchQuery, setSearchQuery] = useState("");
 
   const draft = drafts.find((d) => d.year === selectedYear);
   if (!draft) return null;
 
   const positions = ["ALL", "QB", "RB", "WR", "TE", "K", "DEF"];
+  const keeperCount = draft.picks.filter((p) => p.isKeeper).length;
+  const freshCount = draft.picks.length - keeperCount;
 
-  // Build draft board: determine team order from round 1
+  // Build draft board
   const round1 = draft.picks.filter((p) => p.round === 1).sort((a, b) => a.pick - b.pick);
   const teamOrder = round1.map((p) => ({
     teamKey: p.teamKey,
@@ -54,15 +59,16 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
   }));
   const totalRounds = Math.max(...draft.picks.map((p) => p.round), 1);
 
-  // Index picks by (round, teamKey)
   const pickByCell = new Map<string, DraftPick>();
   for (const p of draft.picks) {
     pickByCell.set(`${p.round}:${p.teamKey}`, p);
   }
 
-  // Filter picks for search/position
+  // Filter picks
   const filteredPicks = draft.picks.filter((p) => {
     if (filterPos !== "ALL" && p.position !== filterPos) return false;
+    if (filterKeepers === "KEEPERS" && !p.isKeeper) return false;
+    if (filterKeepers === "FRESH" && p.isKeeper) return false;
     if (searchQuery) {
       const q = searchQuery.toLowerCase();
       return (
@@ -75,13 +81,14 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
     return true;
   });
 
+  const isFiltering = searchQuery || filterPos !== "ALL" || filterKeepers !== "ALL";
+
   return (
     <div>
-      {/* Year Selector + Filters */}
       <Card className="overflow-hidden">
         <CardHeader
           title={`${selectedYear} Draft Board`}
-          description={`${draft.picks.length} picks, ${totalRounds} rounds, ${teamOrder.length} teams`}
+          description={`${draft.picks.length} picks, ${totalRounds} rounds, ${teamOrder.length} teams${keeperCount > 0 ? ` · ${keeperCount} keepers` : ""}`}
         />
 
         <div className="border-b border-white/10 px-5 py-3">
@@ -103,7 +110,7 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
               ))}
             </div>
 
-            {/* Position filter */}
+            {/* Position + Keeper filters */}
             <div className="flex gap-1 ml-auto">
               {positions.map((pos) => (
                 <button
@@ -118,10 +125,25 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
                   {pos}
                 </button>
               ))}
+              <span className="mx-1 text-white/20">|</span>
+              {(["ALL", "KEEPERS", "FRESH"] as const).map((f) => (
+                <button
+                  key={f}
+                  onClick={() => setFilterKeepers(f)}
+                  className={`rounded px-2 py-1 text-[10px] font-bold uppercase transition-all ${
+                    f === filterKeepers
+                      ? f === "KEEPERS"
+                        ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
+                        : "bg-[#DD550C]/20 text-[#DD550C] border border-[#DD550C]/40"
+                      : "bg-white/5 text-gray-500 hover:text-gray-300 border border-transparent"
+                  }`}
+                >
+                  {f === "ALL" ? "All" : f === "KEEPERS" ? `K (${keeperCount})` : `New (${freshCount})`}
+                </button>
+              ))}
             </div>
           </div>
 
-          {/* Search */}
           <div className="mt-3">
             <input
               type="text"
@@ -133,8 +155,8 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
           </div>
         </div>
 
-        {/* Draft Board Grid (when no search/filter active) */}
-        {!searchQuery && filterPos === "ALL" ? (
+        {/* Draft Board Grid */}
+        {!isFiltering ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
               <thead className="bg-[#0C2340] text-[10px] uppercase tracking-wider text-gray-400">
@@ -158,12 +180,15 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
                       if (!p) return <td key={t.teamKey} className="px-2 py-2 text-gray-600">-</td>;
                       const posClass = POSITION_COLORS[p.position] || "bg-white/10 text-gray-200 border-white/20";
                       return (
-                        <td key={t.teamKey} className="px-2 py-2 align-top">
+                        <td key={t.teamKey} className={`px-2 py-2 align-top ${p.isKeeper ? "bg-amber-500/5 border-l-2 border-l-amber-500/40" : ""}`}>
                           <div className="flex items-center gap-1">
                             <span className="font-mono text-[10px] text-gray-500">#{p.pick}</span>
                             <span className={`rounded-full border px-1.5 py-0 text-[9px] font-bold ${posClass}`}>
                               {p.position}
                             </span>
+                            {p.isKeeper && (
+                              <span className="rounded bg-amber-500/20 px-1 py-0 text-[8px] font-bold text-amber-300">K</span>
+                            )}
                           </div>
                           <p className="mt-0.5 font-medium text-white leading-tight text-[11px]">{p.playerName}</p>
                           <p className="text-[10px] text-gray-500">{p.nflTeam}</p>
@@ -176,21 +201,24 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
             </table>
           </div>
         ) : (
-          /* Filtered/Search Results List */
+          /* Filtered/Search Results */
           <div className="max-h-[600px] overflow-y-auto divide-y divide-white/5">
             {filteredPicks.length === 0 ? (
               <div className="px-5 py-8 text-center text-sm text-gray-400">
-                No picks match your search.
+                No picks match your filters.
               </div>
             ) : (
               filteredPicks.map((p) => {
                 const posClass = POSITION_COLORS[p.position] || "bg-white/10 text-gray-200 border-white/20";
                 return (
-                  <div key={`${p.pick}-${p.playerKey}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
+                  <div key={`${p.pick}-${p.playerKey}`} className={`flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors ${p.isKeeper ? "border-l-2 border-l-amber-500/40" : ""}`}>
                     <span className="font-mono text-xs text-gray-500 w-8 text-right">#{p.pick}</span>
                     <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${posClass}`}>
                       {p.position}
                     </span>
+                    {p.isKeeper && (
+                      <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[9px] font-bold text-amber-300">KEEPER</span>
+                    )}
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-semibold text-white">{p.playerName}</p>
                       <p className="text-xs text-gray-400">{p.nflTeam} · R{p.round}</p>
@@ -202,6 +230,16 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
                 );
               })
             )}
+          </div>
+        )}
+
+        {/* Legend */}
+        {keeperCount > 0 && !isFiltering && (
+          <div className="border-t border-white/10 bg-[#0C2340]/60 px-4 py-2 flex items-center gap-4 text-[10px] text-gray-500">
+            <span className="flex items-center gap-1.5">
+              <span className="rounded bg-amber-500/20 px-1 py-0 text-[8px] font-bold text-amber-300">K</span>
+              Keeper from previous season ({keeperCount} total)
+            </span>
           </div>
         )}
       </Card>

@@ -79,6 +79,9 @@ export default async function ManagerProfilePage({
     .slice(0, 8);
 
   const podiumTotal = profile.championships + profile.runnerUpYears.length + profile.thirdPlaceYears.length;
+  const keeperCount = profile.draftsByYear.reduce(
+    (sum, d) => sum + d.picks.filter((p) => p.isKeeper).length, 0
+  );
 
   // Compute max for heatmap intensity
   const heatmapMax = Math.max(1, ...profile.heatmap.map((c) => c.count));
@@ -101,11 +104,12 @@ export default async function ManagerProfilePage({
 
       <Container>
         {/* Quick Stats */}
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-6">
+        <div className="grid grid-cols-2 gap-3 sm:grid-cols-4 lg:grid-cols-7">
           <StatCard label="Seasons" value={String(profile.yearsActive.length)} />
           <StatCard label="Titles" value={String(profile.championships)} highlight={profile.championships > 0} />
           <StatCard label="Podiums" value={String(podiumTotal)} />
           <StatCard label="Total Picks" value={profile.totalPicks.toLocaleString()} />
+          <StatCard label="Keepers" value={String(keeperCount)} keeper />
           <StatCard label="First Active" value={String(Math.min(...profile.yearsActive))} />
           <StatCard label="Last Active" value={String(Math.max(...profile.yearsActive))} />
         </div>
@@ -550,10 +554,11 @@ export default async function ManagerProfilePage({
                   const draftYear = profile.draftsByYear.find((d) => d.picks.some((dp) => dp.pick === p.pick && dp.playerKey === p.playerKey));
                   const posClass = POS_COLORS[p.position] || "bg-white/10 text-gray-200 border-white/20";
                   return (
-                    <div key={`${draftYear?.year}-${p.pick}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
+                    <div key={`${draftYear?.year}-${p.pick}`} className={`flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors ${p.isKeeper ? "border-l-2 border-l-amber-500/40" : ""}`}>
                       <span className="font-[family-name:var(--font-heading)] font-mono text-sm font-bold text-[#DD550C] w-10">{draftYear?.year}</span>
                       <span className="font-mono text-xs text-gray-500 w-8">#{p.pick}</span>
                       <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${posClass}`}>{p.position}</span>
+                      {p.isKeeper && <span className="rounded bg-amber-500/20 px-1 py-0 text-[8px] font-bold text-amber-300">K</span>}
                       <p className="font-semibold text-white flex-1">{p.playerName}</p>
                       <span className="text-xs text-gray-400">{p.nflTeam}</span>
                     </div>
@@ -578,16 +583,22 @@ export default async function ManagerProfilePage({
                     <span className="ml-2 text-xs font-normal text-gray-400">
                       {draft.picks.length} picks
                     </span>
+                    {draft.picks.filter((p) => p.isKeeper).length > 0 && (
+                      <span className="ml-2 text-xs font-normal text-amber-400">
+                        {draft.picks.filter((p) => p.isKeeper).length} keepers
+                      </span>
+                    )}
                   </p>
                 </div>
                 <div className="divide-y divide-white/5">
                   {draft.picks.sort((a, b) => a.round - b.round).map((p) => {
                     const posClass = POS_COLORS[p.position] || "bg-white/10 text-gray-200 border-white/20";
                     return (
-                      <div key={`${draft.year}-${p.pick}`} className="flex items-center gap-2 px-5 py-1.5 text-sm hover:bg-white/5 transition-colors">
+                      <div key={`${draft.year}-${p.pick}`} className={`flex items-center gap-2 px-5 py-1.5 text-sm hover:bg-white/5 transition-colors ${p.isKeeper ? "border-l-2 border-l-amber-500/40" : ""}`}>
                         <span className="font-mono text-[10px] text-gray-500 w-6">R{p.round}</span>
                         <span className="font-mono text-[10px] text-gray-500 w-8">#{p.pick}</span>
                         <span className={`rounded-full border px-1.5 py-0 text-[9px] font-bold ${posClass}`}>{p.position}</span>
+                        {p.isKeeper && <span className="rounded bg-amber-500/20 px-1 py-0 text-[8px] font-bold text-amber-300">K</span>}
                         <span className="text-white flex-1 truncate">{p.playerName}</span>
                         <span className="text-xs text-gray-500">{p.nflTeam}</span>
                       </div>
@@ -605,11 +616,11 @@ export default async function ManagerProfilePage({
 
 // ── Sub-components ───────────────────────────────────────────────
 
-function StatCard({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+function StatCard({ label, value, highlight, keeper }: { label: string; value: string; highlight?: boolean; keeper?: boolean }) {
   return (
     <div className="rounded-2xl border border-white/10 bg-[#112d4e] p-4 text-center">
-      <p className="font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">{label}</p>
-      <p className={`mt-1 font-[family-name:var(--font-heading)] text-2xl font-bold ${highlight ? "text-gradient" : "text-white"}`}>{value}</p>
+      <p className={`font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] ${keeper ? "text-amber-400" : "text-gray-400"}`}>{label}</p>
+      <p className={`mt-1 font-[family-name:var(--font-heading)] text-2xl font-bold ${highlight ? "text-gradient" : keeper ? "text-amber-300" : "text-white"}`}>{value}</p>
     </div>
   );
 }
