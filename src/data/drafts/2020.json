@@ -454,8 +454,8 @@
       "playerName": "Dak Prescott",
       "position": "QB",
       "nflTeam": "Dal",
-      "isKeeper": true,
-      "keeperCost": 12
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 36,
@@ -571,8 +571,8 @@
       "playerName": "Hollywood Brown",
       "position": "WR",
       "nflTeam": "Phi",
-      "isKeeper": true,
-      "keeperCost": 9
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 45,
@@ -584,8 +584,8 @@
       "playerName": "Tyler Boyd",
       "position": "WR",
       "nflTeam": "Ten",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 46,
@@ -870,8 +870,8 @@
       "playerName": "Carson Wentz",
       "position": "QB",
       "nflTeam": "Min",
-      "isKeeper": true,
-      "keeperCost": 10
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 68,
@@ -1182,8 +1182,8 @@
       "playerName": "Anthony Miller",
       "position": "WR",
       "nflTeam": "Bal",
-      "isKeeper": true,
-      "keeperCost": 9
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 92,
@@ -1273,8 +1273,8 @@
       "playerName": "Golden Tate",
       "position": "WR",
       "nflTeam": "Ten",
-      "isKeeper": true,
-      "keeperCost": 9
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 99,
@@ -1858,8 +1858,8 @@
       "playerName": "Dede Westbrook",
       "position": "WR",
       "nflTeam": "GB",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 144,
@@ -2027,8 +2027,8 @@
       "playerName": "Chiefs",
       "position": "DEF",
       "nflTeam": "KC",
-      "isKeeper": true,
-      "keeperCost": 11
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 157,

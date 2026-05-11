@@ -64,8 +64,8 @@
       "playerName": "Melvin Gordon III",
       "position": "RB",
       "nflTeam": "Bal",
-      "isKeeper": true,
-      "keeperCost": 15
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 6,
@@ -90,8 +90,8 @@
       "playerName": "Stefon Diggs",
       "position": "WR",
       "nflTeam": "NE",
-      "isKeeper": true,
-      "keeperCost": 1
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 8,
@@ -129,8 +129,8 @@
       "playerName": "Devonta Freeman",
       "position": "RB",
       "nflTeam": "Bal",
-      "isKeeper": true,
-      "keeperCost": 14
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 11,
@@ -142,8 +142,8 @@
       "playerName": "Amari Cooper",
       "position": "WR",
       "nflTeam": "Buf",
-      "isKeeper": true,
-      "keeperCost": 1
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 12,
@@ -168,8 +168,8 @@
       "playerName": "Robert Woods",
       "position": "WR",
       "nflTeam": "Pit",
-      "isKeeper": true,
-      "keeperCost": 4
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 14,
@@ -181,8 +181,8 @@
       "playerName": "Duke Johnson",
       "position": "RB",
       "nflTeam": "Buf",
-      "isKeeper": true,
-      "keeperCost": 5
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 15,
@@ -207,8 +207,8 @@
       "playerName": "Zach Ertz",
       "position": "TE",
       "nflTeam": "Was",
-      "isKeeper": true,
-      "keeperCost": 14
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 17,
@@ -1078,8 +1078,8 @@
       "playerName": "Delanie Walker",
       "position": "TE",
       "nflTeam": "Ten",
-      "isKeeper": true,
-      "keeperCost": 4
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 84,
@@ -1130,8 +1130,8 @@
       "playerName": "Kyle Rudolph",
       "position": "TE",
       "nflTeam": "TB",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 88,
@@ -1429,8 +1429,8 @@
       "playerName": "Patriots",
       "position": "DEF",
       "nflTeam": "NE",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 111,
@@ -1884,8 +1884,8 @@
       "playerName": "Ted Ginn Jr.",
       "position": "WR",
       "nflTeam": "Chi",
-      "isKeeper": true,
-      "keeperCost": 10
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 146,

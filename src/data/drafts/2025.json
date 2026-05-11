@@ -844,8 +844,8 @@
       "playerName": "Stefon Diggs",
       "position": "WR",
       "nflTeam": "NE",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 66,
@@ -935,8 +935,8 @@
       "playerName": "Jameson Williams",
       "position": "WR",
       "nflTeam": "Det",
-      "isKeeper": true,
-      "keeperCost": 9
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 73,
@@ -1286,8 +1286,8 @@
       "playerName": "Rhamondre Stevenson",
       "position": "RB",
       "nflTeam": "NE",
-      "isKeeper": true,
-      "keeperCost": 4
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 100,
@@ -1338,8 +1338,8 @@
       "playerName": "Brian Robinson Jr.",
       "position": "RB",
       "nflTeam": "Atl",
-      "isKeeper": true,
-      "keeperCost": 6
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 104,
@@ -1455,8 +1455,8 @@
       "playerName": "Jayden Reed",
       "position": "WR",
       "nflTeam": "GB",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 113,
@@ -1767,8 +1767,8 @@
       "playerName": "Brandon Aiyuk",
       "position": "WR",
       "nflTeam": "SF",
-      "isKeeper": true,
-      "keeperCost": 2
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 137,
@@ -2131,8 +2131,8 @@
       "playerName": "Harrison Butker",
       "position": "K",
       "nflTeam": "KC",
-      "isKeeper": true,
-      "keeperCost": 10
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 165,

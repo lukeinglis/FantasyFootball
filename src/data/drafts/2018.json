@@ -194,8 +194,8 @@
       "playerName": "Jay Ajayi",
       "position": "RB",
       "nflTeam": "Phi",
-      "isKeeper": true,
-      "keeperCost": 16
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 16,
@@ -506,8 +506,8 @@
       "playerName": "Tevin Coleman",
       "position": "RB",
       "nflTeam": "SF",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 40,
@@ -597,8 +597,8 @@
       "playerName": "Michael Crabtree",
       "position": "WR",
       "nflTeam": "Ari",
-      "isKeeper": true,
-      "keeperCost": 16
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 47,
@@ -727,8 +727,8 @@
       "playerName": "Nelson Agholor",
       "position": "WR",
       "nflTeam": "Bal",
-      "isKeeper": true,
-      "keeperCost": 10
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 57,
@@ -844,8 +844,8 @@
       "playerName": "Sterling Shepard",
       "position": "WR",
       "nflTeam": "TB",
-      "isKeeper": true,
-      "keeperCost": 11
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 66,
@@ -870,8 +870,8 @@
       "playerName": "Chris Thompson",
       "position": "RB",
       "nflTeam": "SF",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 68,
@@ -1065,8 +1065,8 @@
       "playerName": "Panthers",
       "position": "DEF",
       "nflTeam": "Car",
-      "isKeeper": true,
-      "keeperCost": 10
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 83,
@@ -1078,8 +1078,8 @@
       "playerName": "Danny Amendola",
       "position": "WR",
       "nflTeam": "Hou",
-      "isKeeper": true,
-      "keeperCost": 9
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 84,
@@ -1481,8 +1481,8 @@
       "playerName": "C.J. Anderson",
       "position": "RB",
       "nflTeam": "Det",
-      "isKeeper": true,
-      "keeperCost": 14
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 115,
@@ -1494,8 +1494,8 @@
       "playerName": "Martavis Bryant",
       "position": "WR",
       "nflTeam": "Was",
-      "isKeeper": true,
-      "keeperCost": 2
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 116,
@@ -1533,8 +1533,8 @@
       "playerName": "Matt Bryant",
       "position": "K",
       "nflTeam": "Atl",
-      "isKeeper": true,
-      "keeperCost": 10
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 119,

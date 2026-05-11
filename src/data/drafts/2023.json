@@ -51,8 +51,8 @@
       "playerName": "Dameon Pierce",
       "position": "RB",
       "nflTeam": "Phi",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 5,
@@ -714,8 +714,8 @@
       "playerName": "49ers",
       "position": "DEF",
       "nflTeam": "SF",
-      "isKeeper": true,
-      "keeperCost": 12
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 56,
@@ -844,8 +844,8 @@
       "playerName": "Rachaad White",
       "position": "RB",
       "nflTeam": "Was",
-      "isKeeper": true,
-      "keeperCost": 10
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 66,
@@ -1026,8 +1026,8 @@
       "playerName": "Daniel Carlson",
       "position": "K",
       "nflTeam": "LV",
-      "isKeeper": true,
-      "keeperCost": 11
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 80,
@@ -1104,8 +1104,8 @@
       "playerName": "Dalvin Cook",
       "position": "RB",
       "nflTeam": "Dal",
-      "isKeeper": true,
-      "keeperCost": 1
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 86,
@@ -1390,8 +1390,8 @@
       "playerName": "Kadarius Toney",
       "position": "WR",
       "nflTeam": "Cle",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 108,
@@ -1650,8 +1650,8 @@
       "playerName": "Rashaad Penny",
       "position": "RB",
       "nflTeam": "Phi",
-      "isKeeper": true,
-      "keeperCost": 6
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 128,
@@ -1949,8 +1949,8 @@
       "playerName": "Patriots",
       "position": "DEF",
       "nflTeam": "NE",
-      "isKeeper": true,
-      "keeperCost": 14
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 151,

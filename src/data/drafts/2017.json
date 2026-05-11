@@ -285,8 +285,8 @@
       "playerName": "Jarvis Landry",
       "position": "WR",
       "nflTeam": "NO",
-      "isKeeper": true,
-      "keeperCost": 16
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 23,
@@ -415,8 +415,8 @@
       "playerName": "Tevin Coleman",
       "position": "RB",
       "nflTeam": "SF",
-      "isKeeper": true,
-      "keeperCost": 7
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 33,
@@ -454,8 +454,8 @@
       "playerName": "Martellus Bennett",
       "position": "TE",
       "nflTeam": "GB",
-      "isKeeper": true,
-      "keeperCost": 5
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 36,
@@ -480,8 +480,8 @@
       "playerName": "Kirk Cousins",
       "position": "QB",
       "nflTeam": "LV",
-      "isKeeper": true,
-      "keeperCost": 7
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 38,
@@ -623,8 +623,8 @@
       "playerName": "DeSean Jackson",
       "position": "WR",
       "nflTeam": "Bal",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 49,
@@ -662,8 +662,8 @@
       "playerName": "Jeremy Maclin",
       "position": "WR",
       "nflTeam": "Bal",
-      "isKeeper": true,
-      "keeperCost": 16
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 52,
@@ -714,8 +714,8 @@
       "playerName": "Thomas Rawls",
       "position": "RB",
       "nflTeam": "Cin",
-      "isKeeper": true,
-      "keeperCost": 1
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 56,
@@ -753,8 +753,8 @@
       "playerName": "Zach Ertz",
       "position": "TE",
       "nflTeam": "Was",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 59,
@@ -883,8 +883,8 @@
       "playerName": "Andy Dalton",
       "position": "QB",
       "nflTeam": "Phi",
-      "isKeeper": true,
-      "keeperCost": 12
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 69,
@@ -896,8 +896,8 @@
       "playerName": "Donte Moncrief",
       "position": "WR",
       "nflTeam": "Hou",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 70,
@@ -948,8 +948,8 @@
       "playerName": "Andrew Luck",
       "position": "QB",
       "nflTeam": "Ind",
-      "isKeeper": true,
-      "keeperCost": 15
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 74,
@@ -974,8 +974,8 @@
       "playerName": "Matthew Stafford",
       "position": "QB",
       "nflTeam": "LAR",
-      "isKeeper": true,
-      "keeperCost": 12
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 76,
@@ -1013,8 +1013,8 @@
       "playerName": "Corey Coleman",
       "position": "WR",
       "nflTeam": "KC",
-      "isKeeper": true,
-      "keeperCost": 7
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 79,
@@ -1156,8 +1156,8 @@
       "playerName": "Marvin Jones Jr.",
       "position": "WR",
       "nflTeam": "Det",
-      "isKeeper": true,
-      "keeperCost": 5
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 90,
@@ -1195,8 +1195,8 @@
       "playerName": "Chiefs",
       "position": "DEF",
       "nflTeam": "KC",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 93,
@@ -1273,8 +1273,8 @@
       "playerName": "Justin Tucker",
       "position": "K",
       "nflTeam": "Bal",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 99,
@@ -1390,8 +1390,8 @@
       "playerName": "Patriots",
       "position": "DEF",
       "nflTeam": "NE",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 108,
@@ -1689,8 +1689,8 @@
       "playerName": "Sterling Shepard",
       "position": "WR",
       "nflTeam": "TB",
-      "isKeeper": true,
-      "keeperCost": 6
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 131,
@@ -1780,8 +1780,8 @@
       "playerName": "Devin Funchess",
       "position": "WR",
       "nflTeam": "Det",
-      "isKeeper": true,
-      "keeperCost": 6
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 138,

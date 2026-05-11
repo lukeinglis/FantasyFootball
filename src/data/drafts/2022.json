@@ -51,8 +51,8 @@
       "playerName": "Stefon Diggs",
       "position": "WR",
       "nflTeam": "NE",
-      "isKeeper": true,
-      "keeperCost": 15
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 5,
@@ -90,8 +90,8 @@
       "playerName": "CeeDee Lamb",
       "position": "WR",
       "nflTeam": "Dal",
-      "isKeeper": true,
-      "keeperCost": 1
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 8,
@@ -519,8 +519,8 @@
       "playerName": "Jerry Jeudy",
       "position": "WR",
       "nflTeam": "Cle",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 41,
@@ -571,8 +571,8 @@
       "playerName": "Brandin Cooks",
       "position": "WR",
       "nflTeam": "NO",
-      "isKeeper": true,
-      "keeperCost": 6
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 45,
@@ -714,8 +714,8 @@
       "playerName": "Josh Jacobs",
       "position": "RB",
       "nflTeam": "GB",
-      "isKeeper": true,
-      "keeperCost": 2
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 56,
@@ -740,8 +740,8 @@
       "playerName": "Joe Burrow",
       "position": "QB",
       "nflTeam": "Cin",
-      "isKeeper": true,
-      "keeperCost": 5
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 58,
@@ -909,8 +909,8 @@
       "playerName": "Brandon Aiyuk",
       "position": "WR",
       "nflTeam": "SF",
-      "isKeeper": true,
-      "keeperCost": 4
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 71,
@@ -1208,8 +1208,8 @@
       "playerName": "Dak Prescott",
       "position": "QB",
       "nflTeam": "Dal",
-      "isKeeper": true,
-      "keeperCost": 4
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 94,
@@ -1273,8 +1273,8 @@
       "playerName": "Mark Ingram II",
       "position": "RB",
       "nflTeam": "NO",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 99,
@@ -1286,8 +1286,8 @@
       "playerName": "James Robinson",
       "position": "RB",
       "nflTeam": "NO",
-      "isKeeper": true,
-      "keeperCost": 1
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 100,
@@ -1325,8 +1325,8 @@
       "playerName": "Kenneth Gainwell",
       "position": "RB",
       "nflTeam": "TB",
-      "isKeeper": true,
-      "keeperCost": 13
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 103,
@@ -1403,8 +1403,8 @@
       "playerName": "Bills",
       "position": "DEF",
       "nflTeam": "Buf",
-      "isKeeper": true,
-      "keeperCost": 11
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 109,
@@ -1455,8 +1455,8 @@
       "playerName": "Chuba Hubbard",
       "position": "RB",
       "nflTeam": "Car",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 113,
@@ -1468,8 +1468,8 @@
       "playerName": "Matthew Stafford",
       "position": "QB",
       "nflTeam": "LAR",
-      "isKeeper": true,
-      "keeperCost": 5
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 114,
@@ -1806,8 +1806,8 @@
       "playerName": "49ers",
       "position": "DEF",
       "nflTeam": "SF",
-      "isKeeper": true,
-      "keeperCost": 11
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 140,
@@ -1871,8 +1871,8 @@
       "playerName": "Jameis Winston",
       "position": "QB",
       "nflTeam": "NYG",
-      "isKeeper": true,
-      "keeperCost": 10
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 145,
@@ -1962,8 +1962,8 @@
       "playerName": "Rams",
       "position": "DEF",
       "nflTeam": "LAR",
-      "isKeeper": true,
-      "keeperCost": 10
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 152,
@@ -2001,8 +2001,8 @@
       "playerName": "Colts",
       "position": "DEF",
       "nflTeam": "Ind",
-      "isKeeper": true,
-      "keeperCost": 11
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 155,

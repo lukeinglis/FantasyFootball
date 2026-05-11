@@ -974,8 +974,8 @@
       "playerName": "Evan Engram",
       "position": "TE",
       "nflTeam": "Den",
-      "isKeeper": true,
-      "keeperCost": 5
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 76,
@@ -1156,8 +1156,8 @@
       "playerName": "DeAndre Hopkins",
       "position": "WR",
       "nflTeam": "Bal",
-      "isKeeper": true,
-      "keeperCost": 4
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 90,
@@ -1351,8 +1351,8 @@
       "playerName": "Tyler Allgeier",
       "position": "RB",
       "nflTeam": "Ari",
-      "isKeeper": true,
-      "keeperCost": 11
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 105,
@@ -1585,8 +1585,8 @@
       "playerName": "Ravens",
       "position": "DEF",
       "nflTeam": "Bal",
-      "isKeeper": true,
-      "keeperCost": 12
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 123,
@@ -1858,8 +1858,8 @@
       "playerName": "Jake Elliott",
       "position": "K",
       "nflTeam": "Phi",
-      "isKeeper": true,
-      "keeperCost": 13
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 144,
@@ -2209,8 +2209,8 @@
       "playerName": "Khalil Herbert",
       "position": "RB",
       "nflTeam": "NYJ",
-      "isKeeper": true,
-      "keeperCost": 6
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 171,

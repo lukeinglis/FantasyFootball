@@ -489,8 +489,8 @@ export default function RecordsPage() {
       <Container className="pt-0">
         <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-white mb-6">Keeper Records</h2>
         <p className="mb-6 text-sm text-gray-400">
-          342 inferred keepers across 10 seasons. Early years (2016-2020): keepers slotted into final rounds.
-          Recent years (2023+): keepers held at their original draft round.
+          {r.totalKeepers} keepers across 10 seasons. Early years (2016-2022): keepers slotted into the final rounds (14-16).
+          Since 2023: keepers held at their original draft round.
         </p>
 
         {/* Keeper stats banner */}

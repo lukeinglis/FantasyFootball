@@ -142,8 +142,8 @@
       "playerName": "Tyler Lockett",
       "position": "WR",
       "nflTeam": "LV",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 12,
@@ -168,8 +168,8 @@
       "playerName": "Latavius Murray",
       "position": "RB",
       "nflTeam": "Buf",
-      "isKeeper": true,
-      "keeperCost": 4
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 14,
@@ -441,8 +441,8 @@
       "playerName": "Allen Hurns",
       "position": "WR",
       "nflTeam": "Mia",
-      "isKeeper": true,
-      "keeperCost": 13
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 35,
@@ -636,8 +636,8 @@
       "playerName": "Martellus Bennett",
       "position": "TE",
       "nflTeam": "GB",
-      "isKeeper": true,
-      "keeperCost": 6
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 50,
@@ -701,8 +701,8 @@
       "playerName": "Eli Manning",
       "position": "QB",
       "nflTeam": "NYG",
-      "isKeeper": true,
-      "keeperCost": 5
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 55,
@@ -1013,8 +1013,8 @@
       "playerName": "Stephen Gostkowski",
       "position": "K",
       "nflTeam": "Ten",
-      "isKeeper": true,
-      "keeperCost": 13
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 79,
@@ -1052,8 +1052,8 @@
       "playerName": "Alfred Morris",
       "position": "RB",
       "nflTeam": "NYG",
-      "isKeeper": true,
-      "keeperCost": 3
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 82,
@@ -1169,8 +1169,8 @@
       "playerName": "Justin Tucker",
       "position": "K",
       "nflTeam": "Bal",
-      "isKeeper": true,
-      "keeperCost": 14
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 91,
@@ -1585,8 +1585,8 @@
       "playerName": "Eric Ebron",
       "position": "TE",
       "nflTeam": "Pit",
-      "isKeeper": true,
-      "keeperCost": 11
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 123,
@@ -1832,8 +1832,8 @@
       "playerName": "Terrance Williams",
       "position": "WR",
       "nflTeam": "Dal",
-      "isKeeper": true,
-      "keeperCost": 11
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 142,

@@ -77,8 +77,8 @@
       "playerName": "James Robinson",
       "position": "RB",
       "nflTeam": "NO",
-      "isKeeper": true,
-      "keeperCost": 11
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 7,
@@ -428,8 +428,8 @@
       "playerName": "Kareem Hunt",
       "position": "RB",
       "nflTeam": "KC",
-      "isKeeper": true,
-      "keeperCost": 2
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 34,
@@ -662,8 +662,8 @@
       "playerName": "Matthew Stafford",
       "position": "QB",
       "nflTeam": "LAR",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 52,
@@ -701,8 +701,8 @@
       "playerName": "Ronald Jones",
       "position": "RB",
       "nflTeam": "Dal",
-      "isKeeper": true,
-      "keeperCost": 4
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 55,
@@ -1013,8 +1013,8 @@
       "playerName": "Devin Singletary",
       "position": "RB",
       "nflTeam": "NYG",
-      "isKeeper": true,
-      "keeperCost": 7
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 79,
@@ -1182,8 +1182,8 @@
       "playerName": "Curtis Samuel",
       "position": "WR",
       "nflTeam": "Buf",
-      "isKeeper": true,
-      "keeperCost": 8
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 92,
@@ -1234,8 +1234,8 @@
       "playerName": "Phillip Lindsay",
       "position": "RB",
       "nflTeam": "Ind",
-      "isKeeper": true,
-      "keeperCost": 7
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 96,
@@ -1273,8 +1273,8 @@
       "playerName": "Dallas Goedert",
       "position": "TE",
       "nflTeam": "Phi",
-      "isKeeper": true,
-      "keeperCost": 9
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 99,
@@ -1520,8 +1520,8 @@
       "playerName": "James White",
       "position": "RB",
       "nflTeam": "NE",
-      "isKeeper": true,
-      "keeperCost": 7
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 118,
@@ -1663,8 +1663,8 @@
       "playerName": "Justin Tucker",
       "position": "K",
       "nflTeam": "Bal",
-      "isKeeper": true,
-      "keeperCost": 9
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 129,
@@ -1715,8 +1715,8 @@
       "playerName": "Darius Slayton",
       "position": "WR",
       "nflTeam": "NYG",
-      "isKeeper": true,
-      "keeperCost": 5
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 133,
@@ -1741,8 +1741,8 @@
       "playerName": "Matt Ryan",
       "position": "QB",
       "nflTeam": "Ind",
-      "isKeeper": true,
-      "keeperCost": 4
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 135,
@@ -1767,8 +1767,8 @@
       "playerName": "Jared Cook",
       "position": "TE",
       "nflTeam": "LAC",
-      "isKeeper": true,
-      "keeperCost": 9
+      "isKeeper": false,
+      "keeperCost": null
     },
     {
       "pick": 137,
