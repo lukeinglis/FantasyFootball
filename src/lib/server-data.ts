@@ -8,6 +8,7 @@ import {
   getTeamMatchups,
   getDraftResults,
   getTransactions,
+  isFallbackSeason,
 } from "./yahoo/client";
 import type {
   LeagueSettings,
@@ -89,4 +90,8 @@ export function fetchDraft(): Promise<FetchResult<DraftResult[]>> {
 
 export function fetchTransactions(): Promise<FetchResult<Transaction[]>> {
   return safeFetch(() => getTransactions());
+}
+
+export function isViewingFallbackSeason(): boolean {
+  return isFallbackSeason();
 }

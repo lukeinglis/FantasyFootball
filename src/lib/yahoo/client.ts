@@ -79,19 +79,37 @@ async function yahooFetch<T>(
 }
 
 // --- Game Key Resolution ---
+//
+// The league uses different Yahoo league IDs each season. When "nfl"
+// is configured, we resolve the current game key and try the configured
+// league ID. If that fails (offseason), we fall back to the most recent
+// known season so the site shows real data year-round.
 
-let _resolvedGameKey: string | null = null;
+// Historical league keys: game_key.l.league_id for each season
+const HISTORICAL_LEAGUE_KEYS: { gameKey: string; leagueId: string; season: number }[] = [
+  { gameKey: "461", leagueId: "655705", season: 2025 },
+  { gameKey: "449", leagueId: "374164", season: 2024 },
+  { gameKey: "423", leagueId: "293965", season: 2023 },
+  { gameKey: "414", leagueId: "625095", season: 2022 },
+  { gameKey: "406", leagueId: "693008", season: 2021 },
+  { gameKey: "399", leagueId: "62032", season: 2020 },
+  { gameKey: "390", leagueId: "91864", season: 2019 },
+  { gameKey: "380", leagueId: "129524", season: 2018 },
+  { gameKey: "371", leagueId: "34938", season: 2017 },
+  { gameKey: "359", leagueId: "66864", season: 2016 },
+  { gameKey: "348", leagueId: "227105", season: 2015 },
+];
+
+let _resolvedLeagueKey: string | null = null;
+let _isFallbackSeason = false;
 
 async function getGameKey(): Promise<string> {
-  if (_resolvedGameKey) return _resolvedGameKey;
-
   // If a numeric game key is configured, use it directly
   if (YAHOO_GAME_KEY && /^\d+$/.test(YAHOO_GAME_KEY)) {
-    _resolvedGameKey = YAHOO_GAME_KEY;
-    return _resolvedGameKey;
+    return YAHOO_GAME_KEY;
   }
 
-  // Otherwise resolve "nfl" to the current season's game key
+  // Resolve "nfl" to the current season's game key
   const token = await getValidToken();
   const url = `${YAHOO_API_BASE}/game/nfl?format=json`;
   const response = await fetch(url, {
@@ -108,13 +126,61 @@ async function getGameKey(): Promise<string> {
     throw new Error("Could not extract game key from Yahoo API response");
   }
 
-  _resolvedGameKey = gameKey;
   return gameKey;
 }
 
 async function getLeagueKey(): Promise<string> {
+  if (_resolvedLeagueKey) return _resolvedLeagueKey;
+
+  try {
+    const gameKey = await getGameKey();
+    const primaryKey = `${gameKey}.l.${YAHOO_LEAGUE_ID}`;
+
+    // Test if the current season league exists
+    const token = await getValidToken();
+    const testUrl = `${YAHOO_API_BASE}/league/${primaryKey}/metadata?format=json`;
+    const testRes = await fetch(testUrl, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (testRes.ok) {
+      _resolvedLeagueKey = primaryKey;
+      _isFallbackSeason = false;
+      return primaryKey;
+    }
+  } catch {
+    // Current season unavailable, fall through to fallback
+  }
+
+  // Fall back to most recent historical season
+  for (const entry of HISTORICAL_LEAGUE_KEYS) {
+    try {
+      const token = await getValidToken();
+      const fallbackKey = `${entry.gameKey}.l.${entry.leagueId}`;
+      const testUrl = `${YAHOO_API_BASE}/league/${fallbackKey}/metadata?format=json`;
+      const testRes = await fetch(testUrl, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (testRes.ok) {
+        console.log(`Using fallback season ${entry.season} (${fallbackKey})`);
+        _resolvedLeagueKey = fallbackKey;
+        _isFallbackSeason = true;
+        return fallbackKey;
+      }
+    } catch {
+      continue;
+    }
+  }
+
+  // Last resort: use configured league ID with current game key
   const gameKey = await getGameKey();
-  return `${gameKey}.l.${YAHOO_LEAGUE_ID}`;
+  _resolvedLeagueKey = `${gameKey}.l.${YAHOO_LEAGUE_ID}`;
+  return _resolvedLeagueKey;
+}
+
+export function isFallbackSeason(): boolean {
+  return _isFallbackSeason;
 }
 
 // ============================================================
