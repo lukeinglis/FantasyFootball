@@ -57,6 +57,7 @@ interface Tackler {
   lane: number;
   y: number;
   wide: boolean; // spans 2 lanes
+  jersey: number; // fixed jersey number assigned at spawn
 }
 
 interface Powerup {
@@ -316,7 +317,8 @@ export default function BreakawayGame() {
     function spawnTackler() {
       const lane = Math.floor(Math.random() * LANE_COUNT);
       const wide = Math.random() < 0.15 && speedRef.current > 4;
-      tacklersRef.current.push({ lane, y: -TACKLER_H, wide });
+      const jersey = 20 + Math.floor(Math.random() * 79);
+      tacklersRef.current.push({ lane, y: -TACKLER_H, wide, jersey });
     }
 
     function spawnPowerup() {
@@ -767,7 +769,7 @@ export default function BreakawayGame() {
         const tcx = t.wide
           ? SIDELINE_W + tlane * LANE_W + LANE_W
           : laneX(t.lane);
-        const num = String(55 + (tlane * 7 + Math.floor(t.y)) % 44);
+        const num = String(t.jersey);
         const tacklerScale = t.wide ? 1.15 : 1.0;
         drawFootballer(tcx, t.y, TACKLER_COLOR, "#1a3a5c", num, tacklerScale, true);
       }
