@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
+import UserMenu from "./UserMenu";
 
 interface NavItem {
   href: string;
@@ -147,9 +148,16 @@ export default function SiteNav() {
               </div>
             )}
           </div>
+
+          <div className="ml-2 border-l border-white/10 pl-3">
+            <UserMenu />
+          </div>
         </nav>
 
-        {/* Mobile toggle */}
+        {/* Mobile: user menu + toggle */}
+        <div className="flex items-center gap-2 lg:hidden">
+          <UserMenu />
+        </div>
         <button
           type="button"
           aria-label={mobileOpen ? "Close menu" : "Open menu"}
