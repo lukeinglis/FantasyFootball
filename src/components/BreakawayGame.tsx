@@ -645,46 +645,131 @@ export default function BreakawayGame() {
         ctx.restore();
       }
 
+      // --- Draw a top-down football player ---
+      function drawFootballer(
+        cx: number, cy: number,
+        jerseyColor: string, helmetColor: string,
+        number: string, scale: number, facingUp: boolean,
+        glow?: string,
+      ) {
+        if (!ctx) return;
+        ctx.save();
+        ctx.translate(cx, cy);
+        if (!facingUp) ctx.rotate(Math.PI);
+        const s = scale;
+
+        // Shadow on the ground
+        ctx.fillStyle = "rgba(0,0,0,0.18)";
+        ctx.beginPath();
+        ctx.ellipse(0, 2 * s, 11 * s, 5 * s, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (glow) {
+          ctx.shadowColor = glow;
+          ctx.shadowBlur = 16;
+        }
+
+        // Legs (two small ovals below body, animated with frame count)
+        const legPhase = (frameCountRef.current * 0.2) % (Math.PI * 2);
+        const legSpread = Math.sin(legPhase) * 3 * s;
+        ctx.fillStyle = "white";
+        ctx.beginPath();
+        ctx.ellipse(-4 * s, 14 * s + legSpread, 3 * s, 5 * s, -0.15, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(4 * s, 14 * s - legSpread, 3 * s, 5 * s, 0.15, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Shoes
+        ctx.fillStyle = "#111";
+        ctx.beginPath();
+        ctx.ellipse(-4 * s, 18 * s + legSpread, 3 * s, 2.5 * s, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(4 * s, 18 * s - legSpread, 3 * s, 2.5 * s, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Jersey / torso
+        ctx.fillStyle = jerseyColor;
+        ctx.beginPath();
+        ctx.ellipse(0, 4 * s, 10 * s, 12 * s, 0, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Shoulder pads (wider ellipse)
+        ctx.fillStyle = jerseyColor;
+        ctx.strokeStyle = "rgba(255,255,255,0.15)";
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(0, -2 * s, 13 * s, 6 * s, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+
+        // Arms (two small ovals to the sides, animated)
+        const armSwing = Math.sin(legPhase + Math.PI) * 2 * s;
+        ctx.fillStyle = jerseyColor;
+        ctx.beginPath();
+        ctx.ellipse(-12 * s, 2 * s + armSwing, 3.5 * s, 6 * s, 0.3, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.ellipse(12 * s, 2 * s - armSwing, 3.5 * s, 6 * s, -0.3, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Hands
+        ctx.fillStyle = "#d4a574";
+        ctx.beginPath();
+        ctx.arc(-12 * s, 8 * s + armSwing, 2.5 * s, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(12 * s, 8 * s - armSwing, 2.5 * s, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Helmet
+        ctx.fillStyle = helmetColor;
+        ctx.beginPath();
+        ctx.arc(0, -10 * s, 8 * s, 0, Math.PI * 2);
+        ctx.fill();
+
+        // Facemask
+        ctx.strokeStyle = "rgba(200,200,200,0.6)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.arc(0, -12 * s, 4 * s, 0.3, Math.PI - 0.3);
+        ctx.stroke();
+        ctx.beginPath();
+        ctx.moveTo(-3 * s, -13 * s);
+        ctx.lineTo(3 * s, -13 * s);
+        ctx.stroke();
+
+        // Helmet stripe
+        ctx.strokeStyle = "rgba(255,255,255,0.25)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(0, -18 * s);
+        ctx.lineTo(0, -3 * s);
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
+
+        // Jersey number on back
+        ctx.fillStyle = "rgba(255,255,255,0.75)";
+        ctx.font = `bold ${Math.round(9 * s)}px sans-serif`;
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(number, 0, 4 * s);
+
+        ctx.restore();
+      }
+
       // Tacklers
       for (const t of tacklersRef.current) {
         const tw = t.wide ? TACKLER_W_WIDE : TACKLER_W;
         const tlane = t.wide ? Math.min(t.lane, LANE_COUNT - 2) : t.lane;
-        const tx = t.wide
-          ? SIDELINE_W + tlane * LANE_W + (LANE_W * 2 - tw) / 2
-          : laneX(t.lane) - tw / 2;
-        const ty = t.y - TACKLER_H / 2;
-
-        // Body
-        ctx.fillStyle = TACKLER_COLOR;
-        ctx.strokeStyle = TACKLER_OUTLINE;
-        ctx.lineWidth = 2;
-
-        // Rounded rectangle
-        const r = 6;
-        ctx.beginPath();
-        ctx.moveTo(tx + r, ty);
-        ctx.lineTo(tx + tw - r, ty);
-        ctx.quadraticCurveTo(tx + tw, ty, tx + tw, ty + r);
-        ctx.lineTo(tx + tw, ty + TACKLER_H - r);
-        ctx.quadraticCurveTo(tx + tw, ty + TACKLER_H, tx + tw - r, ty + TACKLER_H);
-        ctx.lineTo(tx + r, ty + TACKLER_H);
-        ctx.quadraticCurveTo(tx, ty + TACKLER_H, tx, ty + TACKLER_H - r);
-        ctx.lineTo(tx, ty + r);
-        ctx.quadraticCurveTo(tx, ty, tx + r, ty);
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-
-        // Helmet visor line
-        ctx.fillStyle = "#3a6090";
-        ctx.fillRect(tx + 4, ty + 6, tw - 8, 4);
-
-        // Jersey number
-        ctx.fillStyle = "rgba(255,255,255,0.5)";
-        ctx.font = "bold 12px sans-serif";
-        ctx.textAlign = "center";
-        ctx.textBaseline = "middle";
-        ctx.fillText(String(55 + (tlane * 7 + Math.floor(t.y)) % 44), tx + tw / 2, ty + TACKLER_H / 2 + 3);
+        const tcx = t.wide
+          ? SIDELINE_W + tlane * LANE_W + LANE_W
+          : laneX(t.lane);
+        const num = String(55 + (tlane * 7 + Math.floor(t.y)) % 44);
+        const tacklerScale = t.wide ? 1.15 : 1.0;
+        drawFootballer(tcx, t.y, TACKLER_COLOR, "#1a3a5c", num, tacklerScale, true);
       }
 
       // Player
@@ -692,54 +777,24 @@ export default function BreakawayGame() {
       const invincible = now < invincibleUntilRef.current;
       const playerX = laneX(laneRef.current);
 
-      ctx.save();
-      if (invincible) {
-        // Golden glow when invincible
-        ctx.shadowColor = POWERUP_COLOR;
-        ctx.shadowBlur = 20;
-        // Pulse effect
-        const pulse = Math.sin(now * 0.01) * 0.3 + 0.7;
-        ctx.globalAlpha = pulse;
-      } else {
-        ctx.shadowColor = PLAYER_GLOW;
-        ctx.shadowBlur = 10;
+      const playerGlow = invincible ? POWERUP_COLOR : PLAYER_GLOW;
+      const jerseyCol = invincible ? POWERUP_COLOR : PLAYER_COLOR;
+      const helmetCol = invincible ? "#fff8dc" : "#c44a0a";
+      drawFootballer(playerX, PLAYER_Y, jerseyCol, helmetCol, "7", 1.1, false, playerGlow);
+
+      // Football in hand (for ball carrier)
+      if (!invincible) {
+        ctx.fillStyle = "#8B4513";
+        ctx.beginPath();
+        ctx.ellipse(playerX + 10, PLAYER_Y + 2, 5, 3, 0.5, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = "white";
+        ctx.lineWidth = 0.7;
+        ctx.beginPath();
+        ctx.moveTo(playerX + 8, PLAYER_Y + 1);
+        ctx.lineTo(playerX + 12, PLAYER_Y + 3);
+        ctx.stroke();
       }
-
-      const pColor = invincible ? POWERUP_COLOR : PLAYER_COLOR;
-
-      // Player body (rounded rect)
-      const pLeft = playerX - PLAYER_W / 2;
-      const pTop = PLAYER_Y - PLAYER_H / 2;
-      const pr = 8;
-      ctx.fillStyle = pColor;
-      ctx.beginPath();
-      ctx.moveTo(pLeft + pr, pTop);
-      ctx.lineTo(pLeft + PLAYER_W - pr, pTop);
-      ctx.quadraticCurveTo(pLeft + PLAYER_W, pTop, pLeft + PLAYER_W, pTop + pr);
-      ctx.lineTo(pLeft + PLAYER_W, pTop + PLAYER_H - pr);
-      ctx.quadraticCurveTo(pLeft + PLAYER_W, pTop + PLAYER_H, pLeft + PLAYER_W - pr, pTop + PLAYER_H);
-      ctx.lineTo(pLeft + pr, pTop + PLAYER_H);
-      ctx.quadraticCurveTo(pLeft, pTop + PLAYER_H, pLeft, pTop + PLAYER_H - pr);
-      ctx.lineTo(pLeft, pTop + pr);
-      ctx.quadraticCurveTo(pLeft, pTop, pLeft + pr, pTop);
-      ctx.closePath();
-      ctx.fill();
-
-      // Helmet
-      ctx.fillStyle = invincible ? "#fff8dc" : "#c44a0a";
-      ctx.beginPath();
-      ctx.arc(playerX, pTop + 6, 10, Math.PI, 0);
-      ctx.fill();
-
-      // Jersey number
-      ctx.globalAlpha = 1;
-      ctx.fillStyle = "white";
-      ctx.font = "bold 14px sans-serif";
-      ctx.textAlign = "center";
-      ctx.textBaseline = "middle";
-      ctx.fillText("7", playerX, PLAYER_Y + 4);
-
-      ctx.restore();
 
       // First down flash
       if (firstDownFlashRef.current > 0) {
