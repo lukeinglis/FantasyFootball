@@ -228,10 +228,46 @@ function computeRecords() {
   };
 }
 
+/**
+ * Dense ranking: ties share the same rank, next rank increments by 1.
+ * Returns an array of rank numbers matching the input array indices.
+ * Items must already be sorted by the value function (descending for "highest wins").
+ */
+function denseRanks<T>(items: T[], valueFn: (item: T) => number | string): number[] {
+  const ranks: number[] = [];
+  let currentRank = 1;
+  for (let i = 0; i < items.length; i++) {
+    if (i > 0 && valueFn(items[i]) !== valueFn(items[i - 1])) {
+      currentRank = ranks[i - 1] + 1;
+    }
+    ranks.push(currentRank);
+  }
+  return ranks;
+}
+
 export default function RecordsPage() {
   const r = computeRecords();
 
   const top3List = Object.entries(r.top3Counts).sort((a, b) => b[1] - a[1]);
+
+  // Precompute dense ranks for all ranked lists
+  const top3Ranks = denseRanks(top3List, ([, c]) => c);
+  const ironmenRanks = denseRanks(r.ironmen.slice(0, 10), im => im.consecutive);
+  const loyaltyRanks = denseRanks(r.loyaltyRecords, lr => lr.count);
+  const mostDraftedSlice = r.mostDrafted.slice(0, 12);
+  const mostDraftedRanks = denseRanks(mostDraftedSlice, p => p.count);
+  const nflTeamRanks = denseRanks(r.topNflTeams, ([, c]) => c);
+  const keeperStreakSlice = r.keeperStreaks.slice(0, 12);
+  const keeperStreakRanks = denseRanks(keeperStreakSlice, ks => ks.streak);
+  const topKeeperSlice = r.topKeepers.slice(0, 12);
+  const topKeeperRanks = denseRanks(topKeeperSlice, ([, c]) => c);
+
+  const weeklyScoreRanks = denseRanks(allTimeRecords.leaderboards.top10WeeklyScores, s => s.points);
+  const bottomScoreRanks = denseRanks(allTimeRecords.leaderboards.bottom10WeeklyScores, s => s.points);
+  const blowoutRanks = denseRanks(allTimeRecords.leaderboards.top10Blowouts, s => s.margin);
+  const closestRanks = denseRanks(allTimeRecords.leaderboards.top10ClosestGames, s => s.margin);
+  const seasonPtsRanks = denseRanks(allTimeRecords.leaderboards.topSeasonPointTotals, s => s.points);
+  const avgPtsRanks = denseRanks(allTimeRecords.leaderboards.avgPointsPerManager, s => s.avgPoints);
 
   return (
     <>
@@ -347,7 +383,7 @@ export default function RecordsPage() {
               <div className="divide-y divide-white/5">
                 {allTimeRecords.leaderboards.top10WeeklyScores.map((s, i) => (
                   <div key={`${s.season}-${s.week}-${s.manager}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
-                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${weeklyScoreRanks[i] <= 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{weeklyScoreRanks[i]}</span>
                     <div className="flex-1 min-w-0">
                       <p className="truncate text-white">
                         <Link href={`/managers/${getManagerSlug(s.manager)}`} className="font-semibold hover:text-[#DD550C]">{s.manager}</Link>
@@ -368,7 +404,7 @@ export default function RecordsPage() {
               <div className="divide-y divide-white/5">
                 {allTimeRecords.leaderboards.bottom10WeeklyScores.map((s, i) => (
                   <div key={`${s.season}-${s.week}-${s.manager}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
-                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-red-600 text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${bottomScoreRanks[i] <= 3 ? "bg-red-600 text-white" : "bg-white/10 text-gray-300"}`}>{bottomScoreRanks[i]}</span>
                     <div className="flex-1 min-w-0">
                       <p className="truncate text-white">
                         <Link href={`/managers/${getManagerSlug(s.manager)}`} className="font-semibold hover:text-[#DD550C]">{s.manager}</Link>
@@ -393,7 +429,7 @@ export default function RecordsPage() {
               <div className="divide-y divide-white/5">
                 {allTimeRecords.leaderboards.top10Blowouts.map((s, i) => (
                   <div key={`${s.season}-${s.week}-${s.winner}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
-                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${blowoutRanks[i] <= 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{blowoutRanks[i]}</span>
                     <div className="flex-1 min-w-0">
                       <p className="truncate text-white">
                         <span className="font-semibold">{s.winner}</span>
@@ -415,7 +451,7 @@ export default function RecordsPage() {
               <div className="divide-y divide-white/5">
                 {allTimeRecords.leaderboards.top10ClosestGames.map((s, i) => (
                   <div key={`${s.season}-${s.week}-${s.winner}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
-                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-sky-600 text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${closestRanks[i] <= 3 ? "bg-sky-600 text-white" : "bg-white/10 text-gray-300"}`}>{closestRanks[i]}</span>
                     <div className="flex-1 min-w-0">
                       <p className="truncate text-white">
                         <span className="font-semibold">{s.winner}</span>
@@ -442,7 +478,7 @@ export default function RecordsPage() {
               <div className="divide-y divide-white/5">
                 {allTimeRecords.leaderboards.topSeasonPointTotals.map((s, i) => (
                   <div key={`${s.season}-${s.manager}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
-                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${seasonPtsRanks[i] <= 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{seasonPtsRanks[i]}</span>
                     <div className="flex-1 min-w-0">
                       <p className="truncate text-white">
                         <Link href={`/managers/${getManagerSlug(s.manager)}`} className="font-semibold hover:text-[#DD550C]">{s.manager}</Link>
@@ -468,7 +504,7 @@ export default function RecordsPage() {
                     <Link key={s.manager} href={`/managers/${getManagerSlug(s.manager)}`} className="block px-5 py-2.5 hover:bg-white/5 transition-colors">
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
-                          <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-[10px] font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                          <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-[10px] font-bold ${avgPtsRanks[i] <= 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{avgPtsRanks[i]}</span>
                           <span className="font-semibold text-white">{s.manager}</span>
                         </div>
                         <div className="text-right">
@@ -499,7 +535,7 @@ export default function RecordsPage() {
                   const titles = r.champCounts[name] || 0;
                   return (
                     <Link key={name} href={`/managers/${getManagerSlug(name)}`} className="flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition-colors">
-                      <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-sm font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                      <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-sm font-bold ${top3Ranks[i] <= 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{top3Ranks[i]}</span>
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-white">{name}</p>
                         <p className="text-xs text-gray-400">{titles} title{titles !== 1 ? "s" : ""}, {count} podium{count !== 1 ? "s" : ""}</p>
@@ -522,7 +558,7 @@ export default function RecordsPage() {
               <div className="divide-y divide-white/5">
                 {r.ironmen.slice(0, 10).map((im, i) => (
                   <Link key={im.name} href={`/managers/${getManagerSlug(im.name)}`} className="flex items-center gap-3 px-5 py-3 hover:bg-white/5 transition-colors">
-                    <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-sm font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-sm font-bold ${ironmenRanks[i] <= 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{ironmenRanks[i]}</span>
                     <div className="flex-1">
                       <p className="font-semibold text-white">{im.name}</p>
                       <p className="text-xs text-gray-400">{im.first} to {im.last}</p>
@@ -570,7 +606,7 @@ export default function RecordsPage() {
               <div className="divide-y divide-white/5">
                 {r.loyaltyRecords.map((lr, i) => (
                   <div key={`${lr.manager}-${lr.player}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
-                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${loyaltyRanks[i] <= 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{loyaltyRanks[i]}</span>
                     <div className="flex-1 min-w-0">
                       <p className="truncate text-white">
                         <span className="font-semibold">{lr.manager}</span>
@@ -591,9 +627,9 @@ export default function RecordsPage() {
             <CardHeader title="Most Drafted Players" description="Players taken most times across all league drafts" />
             <CardBody className="!p-0">
               <div className="divide-y divide-white/5">
-                {r.mostDrafted.slice(0, 12).map((p, i) => (
+                {mostDraftedSlice.map((p, i) => (
                   <div key={p.name} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
-                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${mostDraftedRanks[i] <= 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{mostDraftedRanks[i]}</span>
                     <div className="flex-1 min-w-0">
                       <p className="truncate font-semibold text-white">{p.name}</p>
                       <p className="text-xs text-gray-400">{p.nflTeam}</p>
@@ -668,7 +704,7 @@ export default function RecordsPage() {
                     <div key={team} className="px-5 py-2.5 hover:bg-white/5 transition-colors">
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
-                          <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-[10px] font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                          <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-[10px] font-bold ${nflTeamRanks[i] <= 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{nflTeamRanks[i]}</span>
                           <span className="font-semibold text-white">{team}</span>
                         </div>
                         <span className="font-mono text-sm text-gray-400">{count} picks</span>
@@ -745,9 +781,9 @@ export default function RecordsPage() {
             <CardHeader title="Longest Keeper Streaks" description="Same manager, same player, most consecutive seasons" />
             <CardBody className="!p-0">
               <div className="divide-y divide-white/5">
-                {r.keeperStreaks.slice(0, 12).map((ks, i) => (
+                {keeperStreakSlice.map((ks, i) => (
                   <div key={`${ks.manager}-${ks.player}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
-                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${keeperStreakRanks[i] <= 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{keeperStreakRanks[i]}</span>
                     <div className="flex-1 min-w-0">
                       <p className="truncate text-white">
                         <Link href={`/managers/${getManagerSlug(ks.manager)}`} className="font-semibold hover:text-[#DD550C]">{ks.manager}</Link>
@@ -771,14 +807,14 @@ export default function RecordsPage() {
             <CardHeader title="Keeper Volume" description="Total keeper picks per manager (all time)" />
             <CardBody className="!p-0">
               <div className="divide-y divide-white/5">
-                {r.topKeepers.slice(0, 12).map(([name, count], i) => {
-                  const maxCount = r.topKeepers[0]?.[1] || 1;
+                {topKeeperSlice.map(([name, count], i) => {
+                  const maxCount = topKeeperSlice[0]?.[1] || 1;
                   const pct = (count / maxCount) * 100;
                   return (
                     <Link key={name} href={`/managers/${getManagerSlug(name)}`} className="block px-5 py-2.5 hover:bg-white/5 transition-colors">
                       <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
-                          <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-[10px] font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                          <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-[10px] font-bold ${topKeeperRanks[i] <= 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{topKeeperRanks[i]}</span>
                           <span className="font-semibold text-white">{name}</span>
                         </div>
                         <span className="font-mono text-sm text-gray-400">{count} keepers</span>
