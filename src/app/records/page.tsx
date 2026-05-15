@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { loadAllDrafts, normalizeManagerName, getManagerSlug } from "@/lib/managers";
 import historyData from "@/data/history.json";
+import allTimeRecords from "@/data/all-time-records.json";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import { Card, CardHeader, CardBody } from "@/components/Card";
@@ -244,9 +245,246 @@ export default function RecordsPage() {
       <Container>
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-4">
           <StatCard label="Total Picks" value={r.totalPicks.toLocaleString()} />
-          <StatCard label="Seasons" value={String(r.totalSeasons)} />
+          <StatCard label="Matchups Played" value={allTimeRecords.totalMatchups.toLocaleString()} />
           <StatCard label="Unique Champs" value={String(r.uniqueChamps)} highlight />
-          <StatCard label="Repeat Winners" value="0" />
+          <StatCard label="Seasons" value={String(r.totalSeasons)} />
+        </div>
+      </Container>
+
+      {/* All-Time Scoring Records */}
+      <Container className="pt-0">
+        <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-white mb-6">All-Time Records</h2>
+
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3 mb-6">
+          <RecordCard
+            title="Highest Weekly Score"
+            value={String(allTimeRecords.allTime.mostPointsWeek.value)}
+            unit="pts"
+            holder={allTimeRecords.allTime.mostPointsWeek.holder}
+            detail={`Week ${allTimeRecords.allTime.mostPointsWeek.week}, ${allTimeRecords.allTime.mostPointsWeek.season}`}
+            accent="text-emerald-400"
+          />
+          <RecordCard
+            title="Lowest Weekly Score"
+            value={String(allTimeRecords.allTime.fewestPointsWeek.value)}
+            unit="pts"
+            holder={allTimeRecords.allTime.fewestPointsWeek.holder}
+            detail={`Week ${allTimeRecords.allTime.fewestPointsWeek.week}, ${allTimeRecords.allTime.fewestPointsWeek.season}`}
+            accent="text-red-400"
+          />
+          <RecordCard
+            title="Highest Playoff Score"
+            value={String(allTimeRecords.allTime.highestPlayoffScore?.value || 0)}
+            unit="pts"
+            holder={allTimeRecords.allTime.highestPlayoffScore?.holder || ""}
+            detail={`Week ${allTimeRecords.allTime.highestPlayoffScore?.week || ""}, ${allTimeRecords.allTime.highestPlayoffScore?.season || ""}`}
+            accent="text-amber-400"
+          />
+          <RecordCard
+            title="Best Season Total"
+            value={allTimeRecords.allTime.mostPointsSeason.value.toLocaleString()}
+            unit="pts"
+            holder={allTimeRecords.allTime.mostPointsSeason.holder}
+            detail={`${allTimeRecords.allTime.mostPointsSeason.season} (${allTimeRecords.allTime.mostPointsSeason.games} games)`}
+            accent="text-emerald-400"
+          />
+          <RecordCard
+            title="Best Record"
+            value={allTimeRecords.allTime.bestRecord.value}
+            holder={allTimeRecords.allTime.bestRecord.holder}
+            detail={String(allTimeRecords.allTime.bestRecord.season)}
+            accent="text-emerald-400"
+          />
+          <RecordCard
+            title="Worst Record"
+            value={allTimeRecords.allTime.worstRecord.value}
+            holder={allTimeRecords.allTime.worstRecord.holder}
+            detail={String(allTimeRecords.allTime.worstRecord.season)}
+            accent="text-red-400"
+          />
+          <RecordCard
+            title="Longest Win Streak"
+            value={String(allTimeRecords.allTime.longestWinStreak.value)}
+            unit="wins"
+            holder={allTimeRecords.allTime.longestWinStreak.holder}
+            detail={String(allTimeRecords.allTime.longestWinStreak.season)}
+            accent="text-emerald-400"
+          />
+          <RecordCard
+            title="Longest Losing Streak"
+            value={String(allTimeRecords.allTime.longestLosingStreak.value)}
+            unit="losses"
+            holder={allTimeRecords.allTime.longestLosingStreak.holder}
+            detail={String(allTimeRecords.allTime.longestLosingStreak.season)}
+            accent="text-red-400"
+          />
+          <RecordCard
+            title="Biggest Blowout"
+            value={String(allTimeRecords.allTime.biggestBlowout.margin)}
+            unit="pts"
+            holder={`${allTimeRecords.allTime.biggestBlowout.winner} over ${allTimeRecords.allTime.biggestBlowout.loser}`}
+            detail={`${allTimeRecords.allTime.biggestBlowout.score}, Week ${allTimeRecords.allTime.biggestBlowout.week}, ${allTimeRecords.allTime.biggestBlowout.season}`}
+            accent="text-[#DD550C]"
+          />
+          <RecordCard
+            title="Closest Game"
+            value={String(allTimeRecords.allTime.closestGame.margin)}
+            unit="pts"
+            holder={`${allTimeRecords.allTime.closestGame.winner} over ${allTimeRecords.allTime.closestGame.loser}`}
+            detail={`${allTimeRecords.allTime.closestGame.score}, Week ${allTimeRecords.allTime.closestGame.week}, ${allTimeRecords.allTime.closestGame.season}`}
+            accent="text-sky-400"
+          />
+        </div>
+      </Container>
+
+      {/* Leaderboards */}
+      <Container className="pt-0">
+        <div className="grid gap-6 lg:grid-cols-2">
+          {/* Top Weekly Scores */}
+          <Card className="overflow-hidden">
+            <CardHeader title="Top 10 Weekly Scores" description="Highest single-week performances in league history" />
+            <CardBody className="!p-0">
+              <div className="divide-y divide-white/5">
+                {allTimeRecords.leaderboards.top10WeeklyScores.map((s, i) => (
+                  <div key={`${s.season}-${s.week}-${s.manager}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="truncate text-white">
+                        <Link href={`/managers/${getManagerSlug(s.manager)}`} className="font-semibold hover:text-[#DD550C]">{s.manager}</Link>
+                      </p>
+                      <p className="text-xs text-gray-400">vs {s.opponent} · Week {s.week}, {s.season}</p>
+                    </div>
+                    <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-emerald-400">{s.points}</span>
+                  </div>
+                ))}
+              </div>
+            </CardBody>
+          </Card>
+
+          {/* Bottom Weekly Scores */}
+          <Card className="overflow-hidden">
+            <CardHeader title="Bottom 10 Weekly Scores" description="The weeks managers would rather forget" />
+            <CardBody className="!p-0">
+              <div className="divide-y divide-white/5">
+                {allTimeRecords.leaderboards.bottom10WeeklyScores.map((s, i) => (
+                  <div key={`${s.season}-${s.week}-${s.manager}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-red-600 text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="truncate text-white">
+                        <Link href={`/managers/${getManagerSlug(s.manager)}`} className="font-semibold hover:text-[#DD550C]">{s.manager}</Link>
+                      </p>
+                      <p className="text-xs text-gray-400">vs {s.opponent} · Week {s.week}, {s.season}</p>
+                    </div>
+                    <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-red-400">{s.points}</span>
+                  </div>
+                ))}
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      </Container>
+
+      {/* Blowouts & Closest Games */}
+      <Container className="pt-0">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Card className="overflow-hidden">
+            <CardHeader title="Biggest Blowouts" description="Largest margins of victory in a single matchup" />
+            <CardBody className="!p-0">
+              <div className="divide-y divide-white/5">
+                {allTimeRecords.leaderboards.top10Blowouts.map((s, i) => (
+                  <div key={`${s.season}-${s.week}-${s.winner}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="truncate text-white">
+                        <span className="font-semibold">{s.winner}</span>
+                        <span className="text-gray-400"> over </span>
+                        <span className="font-semibold">{s.loser}</span>
+                      </p>
+                      <p className="text-xs text-gray-400">{s.score} · Week {s.week}, {s.season}</p>
+                    </div>
+                    <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-[#DD550C]">+{s.margin}</span>
+                  </div>
+                ))}
+              </div>
+            </CardBody>
+          </Card>
+
+          <Card className="overflow-hidden">
+            <CardHeader title="Closest Games" description="Nail-biters decided by the smallest margins" />
+            <CardBody className="!p-0">
+              <div className="divide-y divide-white/5">
+                {allTimeRecords.leaderboards.top10ClosestGames.map((s, i) => (
+                  <div key={`${s.season}-${s.week}-${s.winner}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-sky-600 text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="truncate text-white">
+                        <span className="font-semibold">{s.winner}</span>
+                        <span className="text-gray-400"> over </span>
+                        <span className="font-semibold">{s.loser}</span>
+                      </p>
+                      <p className="text-xs text-gray-400">{s.score} · Week {s.week}, {s.season}</p>
+                    </div>
+                    <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-sky-400">+{s.margin}</span>
+                  </div>
+                ))}
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      </Container>
+
+      {/* Season Scoring Leaders & Avg Points */}
+      <Container className="pt-0">
+        <div className="grid gap-6 lg:grid-cols-2">
+          <Card className="overflow-hidden">
+            <CardHeader title="Top Season Point Totals" description="Highest regular-season scoring outputs" />
+            <CardBody className="!p-0">
+              <div className="divide-y divide-white/5">
+                {allTimeRecords.leaderboards.topSeasonPointTotals.map((s, i) => (
+                  <div key={`${s.season}-${s.manager}`} className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors">
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                    <div className="flex-1 min-w-0">
+                      <p className="truncate text-white">
+                        <Link href={`/managers/${getManagerSlug(s.manager)}`} className="font-semibold hover:text-[#DD550C]">{s.manager}</Link>
+                        <span className="text-gray-400 text-sm"> ({s.team})</span>
+                      </p>
+                      <p className="text-xs text-gray-400">{s.season} · {s.games} games</p>
+                    </div>
+                    <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-white">{s.points.toLocaleString()}</span>
+                  </div>
+                ))}
+              </div>
+            </CardBody>
+          </Card>
+
+          <Card className="overflow-hidden">
+            <CardHeader title="Career Scoring Average" description="Average points per regular-season game (min. 10 games)" />
+            <CardBody className="!p-0">
+              <div className="divide-y divide-white/5">
+                {allTimeRecords.leaderboards.avgPointsPerManager.map((s, i) => {
+                  const maxAvg = allTimeRecords.leaderboards.avgPointsPerManager[0]?.avgPoints || 200;
+                  const pct = Math.min(100, (s.avgPoints / maxAvg) * 100);
+                  return (
+                    <Link key={s.manager} href={`/managers/${getManagerSlug(s.manager)}`} className="block px-5 py-2.5 hover:bg-white/5 transition-colors">
+                      <div className="flex items-center justify-between mb-1">
+                        <div className="flex items-center gap-2">
+                          <span className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-[10px] font-bold ${i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"}`}>{i + 1}</span>
+                          <span className="font-semibold text-white">{s.manager}</span>
+                        </div>
+                        <div className="text-right">
+                          <span className="font-mono text-sm text-white">{s.avgPoints}</span>
+                          <span className="text-xs text-gray-500 ml-1">({s.games}g)</span>
+                        </div>
+                      </div>
+                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                        <div className="h-full rounded-full bg-gradient-to-r from-[#DD550C] to-[#ff8a3d]" style={{ width: `${pct}%` }} />
+                      </div>
+                    </Link>
+                  );
+                })}
+              </div>
+            </CardBody>
+          </Card>
         </div>
       </Container>
 
@@ -590,6 +828,24 @@ function StatCard({ label, value, highlight }: { label: string; value: string; h
           <p className="font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">{label}</p>
           <p className={`mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold ${highlight ? "text-gradient" : "text-white"}`}>{value}</p>
         </div>
+      </CardBody>
+    </Card>
+  );
+}
+
+function RecordCard({ title, value, unit, holder, detail, accent }: {
+  title: string; value: string; unit?: string; holder: string; detail: string; accent?: string;
+}) {
+  return (
+    <Card variant="glass">
+      <CardBody>
+        <p className="font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400 mb-2">{title}</p>
+        <p className={`font-[family-name:var(--font-heading)] text-3xl font-bold ${accent || "text-white"}`}>
+          {value}
+          {unit && <span className="text-sm font-normal text-gray-400 ml-1">{unit}</span>}
+        </p>
+        <p className="mt-1 text-sm font-semibold text-white truncate">{holder}</p>
+        <p className="text-xs text-gray-400">{detail}</p>
       </CardBody>
     </Card>
   );
