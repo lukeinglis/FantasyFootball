@@ -6,7 +6,7 @@ import ScoreboardPreview from "@/components/home/ScoreboardPreview";
 import ArticlesPreview from "@/components/home/ArticlesPreview";
 import SeasonAtAGlance from "@/components/home/SeasonAtAGlance";
 import SeasonCountdown from "@/components/SeasonCountdown";
-import BreakawaySection from "@/components/home/BreakawaySection";
+import GameZone from "@/components/home/GameZone";
 import { Card, CardBody, CardHeader } from "@/components/Card";
 import { fetchSettings } from "@/lib/server-data";
 import membersData from "@/data/members.json";
@@ -338,9 +338,9 @@ export default async function Home() {
         </Container>
       )}
 
-      {/* Breakaway Mini Game */}
+      {/* Game Zone: Breakaway + Field Goal Frenzy */}
       <Container className="pt-0">
-        <BreakawaySection />
+        <GameZone />
       </Container>
 
       {/* Articles */}
