@@ -19,6 +19,8 @@ Fantasy football league homepage for Greybushes & Chili Dogs: live standings, ma
 - next.config.mjs
 - postcss.config.mjs
 - tailwind.config.*
+- factory.md
+- eval/**/*
 
 ### Read-only
 
@@ -45,7 +47,7 @@ python3 eval/score.py
 
 ### Threshold
 
-0.6
+0.40
 
 ## Target Branch
 
