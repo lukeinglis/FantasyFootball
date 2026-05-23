@@ -1,5 +1,6 @@
 import { loadAllDrafts, normalizeManagerName } from "@/lib/managers";
 import historyData from "@/data/history.json";
+import logger from "@/lib/logger";
 
 export interface SeasonRecord {
   year: number;
@@ -21,6 +22,7 @@ export const POS_COLORS: Record<string, string> = {
 };
 
 export function computeRecords() {
+  logger.info("computing league records");
   const drafts = loadAllDrafts();
   const history = (historyData as { seasons: SeasonRecord[] }).seasons;
   const allPicks = drafts.flatMap((d) =>

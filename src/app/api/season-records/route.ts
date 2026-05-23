@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getValidToken } from "@/lib/yahoo/auth";
+import logger from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -177,10 +178,15 @@ async function fetchRosterStats(
 }
 
 export async function GET(request: NextRequest) {
+  const requestId = request.headers.get("x-request-id");
+  const log = requestId ? logger.child({ requestId }) : logger;
+  log.info({ route: "/api/season-records" }, "request started");
+
   const cronSecret = process.env.CRON_SECRET;
   if (cronSecret) {
     const auth = request.headers.get("authorization");
     if (auth !== `Bearer ${cronSecret}`) {
+      log.warn({ route: "/api/season-records" }, "unauthorized request");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   }
@@ -189,6 +195,7 @@ export async function GET(request: NextRequest) {
   const season = Number(seasonParam);
   const entry = LEAGUE_KEYS.find((l) => l.season === season);
   if (!entry) {
+    log.warn({ route: "/api/season-records", season }, "no league key found");
     return NextResponse.json({ error: `No league key for ${season}` }, { status: 404 });
   }
 
@@ -250,6 +257,7 @@ export async function GET(request: NextRequest) {
       }
     }
 
+    log.info({ route: "/api/season-records", season, totalWeekScores: weekScores.length }, "request completed");
     return NextResponse.json({
       season,
       leagueKey: entry.key,
@@ -258,6 +266,7 @@ export async function GET(request: NextRequest) {
       playerStats,
     });
   } catch (error) {
+    log.error({ route: "/api/season-records", err: error }, "request failed");
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 },

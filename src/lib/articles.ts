@@ -12,6 +12,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import matter from "gray-matter";
+import logger from "@/lib/logger";
 
 export interface ArticleFrontmatter {
   title: string;
@@ -72,6 +73,7 @@ function normalizeFrontmatter(
 
 /** Returns the list of articles, newest first. */
 export function getAllArticles(): ArticleSummary[] {
+  logger.debug("loading all articles");
   const files = listMdxFiles();
   const items: ArticleSummary[] = files.map((file) => {
     const filePath = path.join(ARTICLES_DIR, file);
@@ -86,13 +88,19 @@ export function getAllArticles(): ArticleSummary[] {
 
 /** Read a single article by slug. Returns null if not found. */
 export function getArticleBySlug(slug: string): Article | null {
-  if (!articlesDirExists()) return null;
+  if (!articlesDirExists()) {
+    logger.warn("articles directory does not exist");
+    return null;
+  }
   // Look for either .mdx or .md
   const candidates = [`${slug}.mdx`, `${slug}.md`];
   const file = candidates.find((c) =>
     fs.existsSync(path.join(ARTICLES_DIR, c))
   );
-  if (!file) return null;
+  if (!file) {
+    logger.warn({ slug }, "article not found");
+    return null;
+  }
   const raw = fs.readFileSync(path.join(ARTICLES_DIR, file), "utf8");
   const { data, content } = matter(raw);
   const fm = normalizeFrontmatter(data, slug);

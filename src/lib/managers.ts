@@ -2,6 +2,7 @@ import { readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import membersData from "@/data/members.json";
 import historyData from "@/data/history.json";
+import logger from "@/lib/logger";
 
 interface DraftPick {
   pick: number;
@@ -62,11 +63,13 @@ export function loadAllDrafts(): SeasonDraft[] {
       .filter((f) => f.endsWith(".json"))
       .sort()
       .reverse();
+    logger.debug({ dir, fileCount: files.length }, "loading draft data files");
     return files.map((f) => {
       const raw = readFileSync(join(dir, f), "utf-8");
       return JSON.parse(raw) as SeasonDraft;
     });
-  } catch {
+  } catch (err) {
+    logger.error({ dir, err }, "failed to load draft data");
     return [];
   }
 }
@@ -561,6 +564,7 @@ export interface LeagueAnalytics {
 }
 
 export function computeLeagueAnalytics(): LeagueAnalytics {
+  logger.info("computing league analytics");
   const drafts = loadAllDrafts();
   const history = (historyData as { seasons: SeasonRecord[] }).seasons;
 
@@ -716,6 +720,7 @@ export function computeLeagueAnalytics(): LeagueAnalytics {
 // ── Main profile builder ─────────────────────────────────────────
 
 export function buildManagerProfile(name: string): ManagerProfile | null {
+  logger.info({ manager: name }, "building manager profile");
   const drafts = loadAllDrafts();
   const history = (historyData as { seasons: SeasonRecord[] }).seasons;
   const members = membersData as { active: { name: string; teamName: string }[]; emeritus: { name: string; teamName: string }[] };
@@ -772,7 +777,10 @@ export function buildManagerProfile(name: string): ManagerProfile | null {
     }
   }
 
-  if (yearsActive.length === 0 && !activeMember && !emeritusMember) return null;
+  if (yearsActive.length === 0 && !activeMember && !emeritusMember) {
+    logger.warn({ manager: name }, "manager not found in any draft or member list");
+    return null;
+  }
 
   // Season results
   const championshipYears: number[] = [];

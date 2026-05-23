@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync } from "fs";
 import { join } from "path";
 import { normalizeManagerName } from "@/lib/managers";
+import logger from "@/lib/logger";
 
 interface Matchup {
   week: number;
@@ -68,11 +69,13 @@ function loadAllSeasons(): SeasonData[] {
     const files = readdirSync(dir)
       .filter((f) => f.endsWith(".json"))
       .sort();
+    logger.debug({ dir, fileCount: files.length }, "loading season data files");
     return files.map((f) => {
       const raw = readFileSync(join(dir, f), "utf-8");
       return JSON.parse(raw) as SeasonData;
     });
-  } catch {
+  } catch (err) {
+    logger.error({ dir, err }, "failed to load season data");
     return [];
   }
 }
@@ -109,6 +112,7 @@ function updateRecord(
 }
 
 export function computeHeadToHead(): Rivalry[] {
+  logger.info("computing head-to-head records");
   const seasons = loadAllSeasons();
 
   const rivalryMap = new Map<
@@ -190,6 +194,7 @@ export function computeHeadToHead(): Rivalry[] {
   }
 
   rivalries.sort((a, b) => b.totalGames - a.totalGames);
+  logger.info({ rivalryCount: rivalries.length }, "head-to-head computation complete");
   return rivalries;
 }
 

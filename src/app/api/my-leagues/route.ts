@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getValidToken } from "@/lib/yahoo/auth";
+import logger from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -16,10 +17,15 @@ function dig(obj: unknown, ...keys: string[]): unknown {
 }
 
 export async function GET(request: NextRequest) {
+  const requestId = request.headers.get("x-request-id");
+  const log = requestId ? logger.child({ requestId }) : logger;
+  log.info({ route: "/api/my-leagues" }, "request started");
+
   const cronSecret = process.env.CRON_SECRET;
   if (cronSecret) {
     const auth = request.headers.get("authorization");
     if (auth !== `Bearer ${cronSecret}`) {
+      log.warn({ route: "/api/my-leagues" }, "unauthorized request");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   }
@@ -165,6 +171,7 @@ export async function GET(request: NextRequest) {
 
     seasons.sort((a, b) => b.year - a.year);
 
+    log.info({ route: "/api/my-leagues", seasonsFound: seasons.length }, "request completed");
     return NextResponse.json({
       allLeagues: leagues,
       matchingLeagues: matching,
@@ -172,6 +179,7 @@ export async function GET(request: NextRequest) {
       seasons,
     });
   } catch (error) {
+    log.error({ route: "/api/my-leagues", err: error }, "request failed");
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }
