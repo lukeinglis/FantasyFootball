@@ -47,4 +47,45 @@ describe("denseRanks", () => {
     const ranks = denseRanks(items, (i) => i.v);
     expect(ranks).toEqual([1, 2, 2]);
   });
+
+  it("handles two items with same value", () => {
+    const ranks = denseRanks([{ v: 5 }, { v: 5 }], (i) => i.v);
+    expect(ranks).toEqual([1, 1]);
+  });
+
+  it("handles large number of sequential unique values", () => {
+    const items = Array.from({ length: 100 }, (_, i) => ({ v: 100 - i }));
+    const ranks = denseRanks(items, (i) => i.v);
+    expect(ranks).toEqual(Array.from({ length: 100 }, (_, i) => i + 1));
+  });
+
+  it("handles alternating tie groups", () => {
+    const items = [{ v: "a" }, { v: "b" }, { v: "b" }, { v: "c" }, { v: "c" }, { v: "c" }];
+    const ranks = denseRanks(items, (i) => i.v);
+    expect(ranks).toEqual([1, 2, 2, 3, 3, 3]);
+  });
+
+  it("handles negative numeric values", () => {
+    const items = [{ v: -1 }, { v: -1 }, { v: -5 }, { v: -10 }];
+    const ranks = denseRanks(items, (i) => i.v);
+    expect(ranks).toEqual([1, 1, 2, 3]);
+  });
+
+  it("handles zero values", () => {
+    const items = [{ v: 0 }, { v: 0 }, { v: 0 }];
+    const ranks = denseRanks(items, (i) => i.v);
+    expect(ranks).toEqual([1, 1, 1]);
+  });
+
+  it("handles mixed positive and negative values", () => {
+    const items = [{ v: 10 }, { v: 0 }, { v: -5 }];
+    const ranks = denseRanks(items, (i) => i.v);
+    expect(ranks).toEqual([1, 2, 3]);
+  });
+
+  it("handles decimal values with ties", () => {
+    const items = [{ v: 1.5 }, { v: 1.5 }, { v: 1.0 }];
+    const ranks = denseRanks(items, (i) => i.v);
+    expect(ranks).toEqual([1, 1, 2]);
+  });
 });
