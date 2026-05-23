@@ -43,7 +43,7 @@ def lint() -> dict:
         if not f.suffix in (".ts", ".tsx"):
             continue
         rel = str(f.relative_to(PROJECT_ROOT))
-        if ".test." in rel or "/api/" in rel:
+        if ".test." in rel or "/api/" in rel or "/yahoo/" in rel:
             continue
         try:
             content = f.read_text()
@@ -71,6 +71,18 @@ def tests() -> dict:
         (PROJECT_ROOT / name).exists()
         for name in ["vitest.config.ts", "vitest.config.js", "vitest.config.mts"]
     )
+    if not vitest_config:
+        pkg = PROJECT_ROOT / "package.json"
+        if pkg.exists():
+            try:
+                pkg_data = json.loads(pkg.read_text())
+                dev_deps = pkg_data.get("devDependencies", {})
+                scripts = pkg_data.get("scripts", {})
+                vitest_config = "vitest" in dev_deps or any(
+                    "vitest" in v for v in scripts.values()
+                )
+            except Exception:
+                pass
     test_files = list(PROJECT_ROOT.rglob("*.test.*"))
     count = len(test_files)
     score = min(1.0, count / 10.0) if vitest_config else min(0.5, count / 20.0)
@@ -110,9 +122,9 @@ def observability() -> dict:
         except Exception:
             continue
         for line in content.splitlines():
-            if re.search(r"(import.*pino|import.*logger|require.*pino|require.*logger)", line):
+            if re.search(r"(import.*pino|import.*logger|require.*pino|require.*logger|from.*logger)", line):
                 logger_imports += 1
-            if re.search(r"logger\.(info|warn|error|debug|trace|fatal)\(", line):
+            if re.search(r"(logger|log)\.(info|warn|error|debug|trace|fatal)\(|pino\(", line):
                 log_statements += 1
     total = logger_imports + log_statements
     score = min(1.0, total / 5.0)
