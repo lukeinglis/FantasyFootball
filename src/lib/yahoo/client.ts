@@ -163,7 +163,7 @@ async function getLeagueKey(): Promise<string> {
       });
 
       if (testRes.ok) {
-        console.log(`Using fallback season ${entry.season} (${fallbackKey})`);
+        // intentionally silent: fallback season resolved
         _resolvedLeagueKey = fallbackKey;
         _isFallbackSeason = true;
         return fallbackKey;
