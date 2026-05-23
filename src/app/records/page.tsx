@@ -626,6 +626,7 @@ export default function RecordsPage() {
 
 function StatCard({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
+    <div data-testid="stat-card">
     <Card variant="glass">
       <CardBody>
         <div className="text-center">
@@ -634,6 +635,7 @@ function StatCard({ label, value, highlight }: { label: string; value: string; h
         </div>
       </CardBody>
     </Card>
+    </div>
   );
 }
 
@@ -641,6 +643,7 @@ function RecordCard({ title, value, unit, holder, detail, accent }: {
   title: string; value: string; unit?: string; holder: string; detail: string; accent?: string;
 }) {
   return (
+    <div data-testid="record-card">
     <Card variant="glass">
       <CardBody>
         <p className="font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400 mb-2">{title}</p>
@@ -652,5 +655,6 @@ function RecordCard({ title, value, unit, holder, detail, accent }: {
         <p className="text-xs text-gray-400">{detail}</p>
       </CardBody>
     </Card>
+    </div>
   );
 }

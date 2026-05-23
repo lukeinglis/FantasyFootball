@@ -7,7 +7,8 @@
       "runnerUp": "Ross",
       "runnerUpTeam": "Rob's thumb print",
       "third": "luke",
-      "thirdTeam": "The Glorious Return"
+      "thirdTeam": "The Glorious Return",
+      "milestones": ["11th season"]
     },
     {
       "year": 2024,
@@ -16,7 +17,8 @@
       "runnerUp": "cody",
       "runnerUpTeam": "Onekneebiegs",
       "third": "Patrick",
-      "thirdTeam": "Cakes all Night"
+      "thirdTeam": "Cakes all Night",
+      "milestones": ["10th anniversary season"]
     },
     {
       "year": 2023,
@@ -25,7 +27,8 @@
       "runnerUp": "Austin",
       "runnerUpTeam": "Cammy Cam Juice",
       "third": "Phil",
-      "thirdTeam": "The Implication"
+      "thirdTeam": "The Implication",
+      "milestones": []
     },
     {
       "year": 2022,
@@ -34,7 +37,8 @@
       "runnerUp": "Tyler",
       "runnerUpTeam": "Ghost of Cinmeon Bowers",
       "third": "Damaso",
-      "thirdTeam": "Ken Porter"
+      "thirdTeam": "Ken Porter",
+      "milestones": []
     },
     {
       "year": 2021,
@@ -43,7 +47,8 @@
       "runnerUp": "Rob",
       "runnerUpTeam": "Its Da Robbery",
       "third": "Kyle V",
-      "thirdTeam": "Pre Sugar Bowl Falco"
+      "thirdTeam": "Pre Sugar Bowl Falco",
+      "milestones": []
     },
     {
       "year": 2020,
@@ -52,7 +57,8 @@
       "runnerUp": "luke",
       "runnerUpTeam": "The Glorious Return",
       "third": "Damaso",
-      "thirdTeam": "Trey's Wet Wipes"
+      "thirdTeam": "Trey's Wet Wipes",
+      "milestones": ["COVID season"]
     },
     {
       "year": 2019,
@@ -61,7 +67,8 @@
       "runnerUp": "Rob",
       "runnerUpTeam": "Its Da Robbery",
       "third": "luke",
-      "thirdTeam": "The Glorious Return"
+      "thirdTeam": "The Glorious Return",
+      "milestones": ["Keeper era begins"]
     },
     {
       "year": 2018,
@@ -70,7 +77,8 @@
       "runnerUp": "Kyle V",
       "runnerUpTeam": "Pre Sugar Bowl Falco",
       "third": "Bryan",
-      "thirdTeam": "A Team Has No Name"
+      "thirdTeam": "A Team Has No Name",
+      "milestones": ["League expands to 12 teams"]
     },
     {
       "year": 2017,
@@ -79,7 +87,8 @@
       "runnerUp": "Zach",
       "runnerUpTeam": "Bend Over And Floss",
       "third": "Phil",
-      "thirdTeam": "The Implication"
+      "thirdTeam": "The Implication",
+      "milestones": []
     },
     {
       "year": 2016,
@@ -88,7 +97,8 @@
       "runnerUp": "Kyle V",
       "runnerUpTeam": "Pre Sugar Bowl Falco",
       "third": "Phil",
-      "thirdTeam": "The Implication"
+      "thirdTeam": "The Implication",
+      "milestones": []
     },
     {
       "year": 2015,
@@ -97,7 +107,8 @@
       "runnerUp": "Austin",
       "runnerUpTeam": "Cammy Cam Juice",
       "third": "Rob",
-      "thirdTeam": "Its Da Robbery"
+      "thirdTeam": "Its Da Robbery",
+      "milestones": ["League founded"]
     }
   ]
 }

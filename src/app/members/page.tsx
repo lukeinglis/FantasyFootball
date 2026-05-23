@@ -28,7 +28,7 @@ function MemberCard({ member }: { member: Member }) {
     .slice(0, 2)
     .join("");
   return (
-    <div className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-[#112d4e] p-5 transition-all duration-300 hover:border-[#DD550C]/30 hover:shadow-lg hover:shadow-[#DD550C]/10 hover:-translate-y-0.5">
+    <div data-testid="member-card" className="group flex items-center gap-4 rounded-2xl border border-white/10 bg-[#112d4e] p-5 transition-all duration-300 hover:border-[#DD550C]/30 hover:shadow-lg hover:shadow-[#DD550C]/10 hover:-translate-y-0.5">
       <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#DD550C] to-[#a33d08] text-base font-bold text-white shadow-lg shadow-[#DD550C]/20 transition-transform duration-300 group-hover:scale-110">
         {initials || "?"}
       </div>
@@ -53,7 +53,7 @@ export default function MembersPage() {
         subtitle={`${data.active.length} active managers and ${data.emeritus.length} emeritus. The good, the bad, and the bushes.`}
       />
       <Container>
-        <section>
+        <section data-testid="members-active">
           <h2 className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#DD550C]">
             Active ({data.active.length})
           </h2>

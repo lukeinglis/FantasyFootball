@@ -72,6 +72,7 @@ export default function SiteNav() {
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           href="/"
+          data-testid="site-logo"
           className="flex items-center gap-2 text-[#DD550C] hover:text-orange-400 transition-colors"
         >
           <span aria-hidden className="text-xl">🏈</span>
