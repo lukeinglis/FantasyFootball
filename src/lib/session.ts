@@ -1,4 +1,5 @@
 import { cookies } from "next/headers";
+import logger from "@/lib/logger";
 
 // ============================================================
 // Cookie-based User Session
@@ -25,13 +26,15 @@ export async function getSession(): Promise<UserSession | null> {
   try {
     const parsed = JSON.parse(raw);
     if (typeof parsed.name === "string" && parsed.name.length > 0) {
+      logger.debug({ user: parsed.name }, "session loaded");
       return {
         name: parsed.name,
         avatarUrl: parsed.avatarUrl ?? undefined,
       };
     }
     return null;
-  } catch {
+  } catch (err) {
+    logger.warn({ err }, "failed to parse session cookie");
     return null;
   }
 }

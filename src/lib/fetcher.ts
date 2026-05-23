@@ -5,6 +5,7 @@
 // ============================================================
 
 import { headers } from "next/headers";
+import logger from "./logger";
 
 /**
  * Build an absolute base URL for server-side fetches to our own API.
@@ -75,6 +76,7 @@ export async function apiFetch<T>(
   const base = await getBaseUrl();
   const url = path.startsWith("http") ? path : `${base}${path}`;
 
+  logger.debug({ module: "fetcher", path }, "apiFetch called");
   try {
     const res = await fetch(url, {
       // Server components: avoid Next's full-route static caching surprise;
@@ -94,6 +96,7 @@ export async function apiFetch<T>(
       } catch {
         // ignore body parse errors
       }
+      logger.warn({ module: "fetcher", path, status: res.status }, "apiFetch non-ok response");
       return {
         ok: false,
         status: res.status,
@@ -104,9 +107,11 @@ export async function apiFetch<T>(
     }
 
     const data = (await res.json()) as T;
+    logger.debug({ module: "fetcher", path, status: res.status }, "apiFetch succeeded");
     return { ok: true, data };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
+    logger.error({ module: "fetcher", path, err }, "apiFetch network error");
     return {
       ok: false,
       status: 0,

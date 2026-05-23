@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getValidToken } from "@/lib/yahoo/auth";
+import logger from "@/lib/logger";
 
 export const runtime = "nodejs";
 export const maxDuration = 60;
@@ -20,12 +21,11 @@ const LEAGUE_KEYS: { year: number; key: string }[] = [
   { year: 2015, key: "348.l.227105" },
 ];
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function dig(obj: any, ...keys: string[]): any {
-  let current = obj;
+function dig(obj: unknown, ...keys: string[]): unknown {
+  let current: unknown = obj;
   for (const key of keys) {
-    if (current == null) return undefined;
-    current = current[key];
+    if (current == null || typeof current !== "object") return undefined;
+    current = (current as Record<string, unknown>)[key];
   }
   return current;
 }
@@ -135,7 +135,8 @@ async function fetchDraftForSeason(
         });
         if (pRes.ok) {
           const pRaw = await pRes.json();
-          const players = dig(pRaw, "fantasy_content", "players");
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested response
+          const players = dig(pRaw, "fantasy_content", "players") as any;
           const pCount = players?.count || 0;
           for (let j = 0; j < pCount; j++) {
             const p = players[j]?.player;
@@ -182,10 +183,15 @@ async function fetchDraftForSeason(
 }
 
 export async function GET(request: NextRequest) {
+  const requestId = request.headers.get("x-request-id");
+  const log = requestId ? logger.child({ requestId }) : logger;
+  log.info({ route: "/api/draft-history" }, "request started");
+
   const cronSecret = process.env.CRON_SECRET;
   if (cronSecret) {
     const auth = request.headers.get("authorization");
     if (auth !== `Bearer ${cronSecret}`) {
+      log.warn({ route: "/api/draft-history" }, "unauthorized request");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   }
@@ -197,12 +203,15 @@ export async function GET(request: NextRequest) {
     const year = Number(yearParam);
     const entry = LEAGUE_KEYS.find((l) => l.year === year);
     if (!entry) {
+      log.warn({ route: "/api/draft-history", year }, "no league key found");
       return NextResponse.json({ error: `No league found for year ${year}` }, { status: 404 });
     }
     const result = await fetchDraftForSeason(year, entry.key, token);
     if (!result) {
+      log.error({ route: "/api/draft-history", year }, "failed to fetch draft");
       return NextResponse.json({ error: `Could not fetch draft for ${year}` }, { status: 500 });
     }
+    log.info({ route: "/api/draft-history", year, picks: result.picks.length }, "single season request completed");
     return NextResponse.json(result);
   }
 
@@ -214,6 +223,7 @@ export async function GET(request: NextRequest) {
     await new Promise((r) => setTimeout(r, 300));
   }
 
+  log.info({ route: "/api/draft-history", draftsFound: drafts.length }, "all seasons request completed");
   return NextResponse.json({
     found: drafts.length,
     drafts: drafts.map((d) => ({

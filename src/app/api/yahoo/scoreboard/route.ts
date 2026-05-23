@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getScoreboard } from "@/lib/yahoo/client";
 import { errorResponse } from "@/lib/api-helpers";
+import logger from "@/lib/logger";
 
 export const runtime = "nodejs";
 
@@ -19,10 +20,13 @@ export async function GET(request: NextRequest) {
     }
   }
 
+  logger.info({ route: "/api/yahoo/scoreboard", week }, "request started");
   try {
     const scoreboard = await getScoreboard(week);
+    logger.info({ route: "/api/yahoo/scoreboard", week }, "request completed");
     return NextResponse.json(scoreboard);
   } catch (error) {
+    logger.error({ route: "/api/yahoo/scoreboard", week, err: error }, "request failed");
     return errorResponse(error, "scoreboard");
   }
 }
