@@ -6,12 +6,11 @@ export const maxDuration = 60;
 
 const YAHOO_API_BASE = "https://fantasysports.yahooapis.com/fantasy/v2";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function dig(obj: any, ...keys: string[]): any {
-  let current = obj;
+function dig(obj: unknown, ...keys: string[]): unknown {
+  let current: unknown = obj;
   for (const key of keys) {
-    if (current == null) return undefined;
-    current = current[key];
+    if (current == null || typeof current !== "object") return undefined;
+    current = (current as Record<string, unknown>)[key];
   }
   return current;
 }

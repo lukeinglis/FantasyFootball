@@ -16,12 +16,11 @@ const LEAGUE_KEYS: { season: number; key: string }[] = [
   { season: 2020, key: "399.l.62032" },
 ];
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function dig(obj: any, ...keys: string[]): any {
-  let current = obj;
+function dig(obj: unknown, ...keys: string[]): unknown {
+  let current: unknown = obj;
   for (const key of keys) {
-    if (current == null) return undefined;
-    current = current[key];
+    if (current == null || typeof current !== "object") return undefined;
+    current = (current as Record<string, unknown>)[key];
   }
   return current;
 }
@@ -107,11 +106,13 @@ async function fetchSeasonScoreboards(
   return scores;
 }
 
-function parseMatchupTeam(teamData: any): { teamName: string; managerName: string; points: number; projectedPoints: number } {
+function parseMatchupTeam(teamData: unknown): { teamName: string; managerName: string; points: number; projectedPoints: number } {
   if (!teamData) return { teamName: "", managerName: "", points: 0, projectedPoints: 0 };
-  const info = Array.isArray(teamData) ? teamData[0] : teamData;
-  const pts = Array.isArray(teamData) ? teamData[1]?.team_points : null;
-  const proj = Array.isArray(teamData) ? teamData[1]?.team_projected_points : null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested arrays
+  const td = teamData as any;
+  const info = Array.isArray(td) ? td[0] : td;
+  const pts = Array.isArray(td) ? td[1]?.team_points : null;
+  const proj = Array.isArray(td) ? td[1]?.team_projected_points : null;
   const infoArray = Array.isArray(info) ? info : [info];
   const flat: Record<string, any> = {};
   for (const item of infoArray) {
@@ -204,9 +205,9 @@ export async function GET(request: NextRequest) {
       const sRes = await fetch(settingsUrl, { headers: { Authorization: `Bearer ${token}` } });
       if (sRes.ok) {
         const sRaw = await sRes.json();
-        const sMeta = Array.isArray(dig(sRaw, "fantasy_content", "league"))
-          ? dig(sRaw, "fantasy_content", "league")[0]
-          : dig(sRaw, "fantasy_content", "league");
+        const sLeague = dig(sRaw, "fantasy_content", "league");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested response
+        const sMeta = (Array.isArray(sLeague) ? (sLeague as any[])[0] : sLeague) as Record<string, any>;
         maxWeek = sMeta?.end_week || sMeta?.current_week || 17;
       }
     } catch { /* use default */ }

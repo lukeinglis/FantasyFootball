@@ -6,12 +6,11 @@ export const runtime = "nodejs";
 const YAHOO_API_BASE = "https://fantasysports.yahooapis.com/fantasy/v2";
 const LEAGUE_ID = process.env.YAHOO_LEAGUE_ID || "655705";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function dig(obj: any, ...keys: string[]): any {
-  let current = obj;
+function dig(obj: unknown, ...keys: string[]): unknown {
+  let current: unknown = obj;
   for (const key of keys) {
-    if (current == null) return undefined;
-    current = current[key];
+    if (current == null || typeof current !== "object") return undefined;
+    current = (current as Record<string, unknown>)[key];
   }
   return current;
 }

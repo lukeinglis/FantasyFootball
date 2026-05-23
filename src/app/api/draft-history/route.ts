@@ -20,12 +20,11 @@ const LEAGUE_KEYS: { year: number; key: string }[] = [
   { year: 2015, key: "348.l.227105" },
 ];
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function dig(obj: any, ...keys: string[]): any {
-  let current = obj;
+function dig(obj: unknown, ...keys: string[]): unknown {
+  let current: unknown = obj;
   for (const key of keys) {
-    if (current == null) return undefined;
-    current = current[key];
+    if (current == null || typeof current !== "object") return undefined;
+    current = (current as Record<string, unknown>)[key];
   }
   return current;
 }
@@ -135,7 +134,8 @@ async function fetchDraftForSeason(
         });
         if (pRes.ok) {
           const pRaw = await pRes.json();
-          const players = dig(pRaw, "fantasy_content", "players");
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested response
+          const players = dig(pRaw, "fantasy_content", "players") as any;
           const pCount = players?.count || 0;
           for (let j = 0; j < pCount; j++) {
             const p = players[j]?.player;
