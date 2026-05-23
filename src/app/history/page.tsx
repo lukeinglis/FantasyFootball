@@ -140,12 +140,12 @@ export default function HistoryPage() {
           <div className="grid gap-10 lg:grid-cols-3">
             {/* Timeline: 2 columns on large screens */}
             <div className="lg:col-span-2">
-              <div className="relative border-s-2 border-[#DD550C]/30 ms-4 sm:ms-6">
+              <div data-testid="history-timeline" className="relative border-s-2 border-[#DD550C]/30 ms-4 sm:ms-6">
                 {seasons.map((s, i) => {
                   const isLatest = i === 0;
                   const milestones = s.milestones?.filter(Boolean) ?? [];
                   return (
-                    <div key={`${s.year}-${i}`} className="mb-8 ms-6 sm:ms-8 last:mb-0">
+                    <div key={`${s.year}-${i}`} data-testid="season-card" className="mb-8 ms-6 sm:ms-8 last:mb-0">
                       {/* Timeline dot */}
                       <span
                         className={`absolute -start-[9px] flex h-4 w-4 items-center justify-center rounded-full ring-4 ring-[#0C2340] ${
@@ -162,7 +162,7 @@ export default function HistoryPage() {
                         <CardBody>
                           {/* Year badge */}
                           <div className="mb-3 flex flex-wrap items-center gap-2">
-                            <span className="font-[family-name:var(--font-heading)] text-2xl font-bold text-[#DD550C]">
+                            <span data-testid="season-year" className="font-[family-name:var(--font-heading)] text-2xl font-bold text-[#DD550C]">
                               {s.year}
                             </span>
                             {isLatest && (
@@ -224,6 +224,7 @@ export default function HistoryPage() {
             {/* Sidebar: Championship Belt Tracker */}
             <div className="lg:col-span-1">
               <div className="sticky top-6 space-y-6">
+                <div data-testid="belt-tracker">
                 <Card>
                   <CardHeader
                     title="Championship Belt"
@@ -251,7 +252,9 @@ export default function HistoryPage() {
                     </ol>
                   </CardBody>
                 </Card>
+                </div>
 
+                <div data-testid="title-count">
                 <Card>
                   <CardHeader
                     title="Title Count"
@@ -280,6 +283,7 @@ export default function HistoryPage() {
                     </ul>
                   </CardBody>
                 </Card>
+                </div>
               </div>
             </div>
           </div>

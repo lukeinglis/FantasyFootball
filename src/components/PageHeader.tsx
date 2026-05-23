@@ -26,7 +26,10 @@ export default function PageHeader({
                 {eyebrow}
               </p>
             )}
-            <h1 className="mt-1 font-[family-name:var(--font-heading)] text-4xl font-bold uppercase tracking-tight text-white sm:text-5xl">
+            <h1
+              data-testid="page-title"
+              className="mt-1 font-[family-name:var(--font-heading)] text-4xl font-bold uppercase tracking-tight text-white sm:text-5xl"
+            >
               {title}
             </h1>
             {subtitle && (
