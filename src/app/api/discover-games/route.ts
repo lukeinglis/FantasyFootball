@@ -1,26 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getValidToken } from "@/lib/yahoo/auth";
+import logger from "@/lib/logger";
 
 export const runtime = "nodejs";
 
 const YAHOO_API_BASE = "https://fantasysports.yahooapis.com/fantasy/v2";
 const LEAGUE_ID = process.env.YAHOO_LEAGUE_ID || "655705";
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
-function dig(obj: any, ...keys: string[]): any {
-  let current = obj;
+function dig(obj: unknown, ...keys: string[]): unknown {
+  let current: unknown = obj;
   for (const key of keys) {
-    if (current == null) return undefined;
-    current = current[key];
+    if (current == null || typeof current !== "object") return undefined;
+    current = (current as Record<string, unknown>)[key];
   }
   return current;
 }
 
 export async function GET(request: NextRequest) {
+  const requestId = request.headers.get("x-request-id");
+  const log = requestId ? logger.child({ requestId }) : logger;
+  log.info({ route: "/api/discover-games" }, "request started");
+
   const cronSecret = process.env.CRON_SECRET;
   if (cronSecret) {
     const auth = request.headers.get("authorization");
     if (auth !== `Bearer ${cronSecret}`) {
+      log.warn({ route: "/api/discover-games" }, "unauthorized request");
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
   }
@@ -136,6 +141,7 @@ export async function GET(request: NextRequest) {
 
     seasons.sort((a, b) => b.year - a.year);
 
+    log.info({ route: "/api/discover-games", gamesFound: games.length, seasonsFound: seasons.length }, "request completed");
     return NextResponse.json({
       gamesFound: games.length,
       games,
@@ -146,6 +152,7 @@ export async function GET(request: NextRequest) {
         .map((s) => ({ season: s.year, loser: s.lastPlace, team: s.lastPlaceTeam })),
     });
   } catch (error) {
+    log.error({ route: "/api/discover-games", err: error }, "request failed");
     return NextResponse.json(
       { error: error instanceof Error ? error.message : "Unknown error" },
       { status: 500 }

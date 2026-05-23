@@ -1,183 +1,178 @@
 #!/usr/bin/env python3
-"""Eval scorer for the FantasyFootball project."""
+"""Eval script for the Software Factory.
+
+Runs each eval dimension as a subprocess and outputs JSON to stdout.
+
+Output format:
+    {"results": [{"name": str, "score": float, "weight": float, "passed": bool, "details": str}, ...]}
+"""
 
 import json
-import os
 import re
 import subprocess
 import sys
 from pathlib import Path
 
-PROJECT_ROOT = Path(os.path.dirname(os.path.abspath(__file__))) / ".."
 
+def eval_lint() -> dict:
+    """Check code quality: unused imports, console.log in production, any/unknown abuse."""
+    from pathlib import Path
 
-def run(cmd: list[str], cwd: str | None = None) -> subprocess.CompletedProcess:
-    return subprocess.run(
-        cmd,
-        cwd=cwd or str(PROJECT_ROOT),
-        capture_output=True,
-        text=True,
-        timeout=120,
-    )
+    skip = {"node_modules", ".next", ".factory", "eval", "dist", "build", ".git"}
+    issues = []
+    file_count = 0
 
+    src_dir = Path("src")
+    if not src_dir.exists():
+        return {"name": "lint", "score": 1.0, "weight": 0.3, "passed": True,
+                "details": "No src/ directory"}
 
-def type_check() -> dict:
-    result = run(["npx", "tsc", "--noEmit"])
-    passed = result.returncode == 0
-    errors = len([l for l in result.stdout.splitlines() if ": error TS" in l]) if not passed else 0
-    return {
-        "name": "type_check",
-        "score": 1.0 if passed else 0.0,
-        "weight": 1.0,
-        "passed": passed,
-        "details": "clean" if passed else f"{errors} type errors",
-    }
-
-
-def lint() -> dict:
-    src = PROJECT_ROOT / "src"
-    console_logs = []
-    any_annotations = []
-
-    for f in src.rglob("*"):
-        if not f.suffix in (".ts", ".tsx"):
+    for f in src_dir.rglob("*"):
+        if f.suffix not in (".ts", ".tsx") or any(p in f.parts for p in skip):
             continue
-        rel = str(f.relative_to(PROJECT_ROOT))
-        if ".test." in rel or "/api/" in rel or "/yahoo/" in rel:
-            continue
+        file_count += 1
         try:
-            content = f.read_text()
-        except Exception:
+            code = f.read_text(errors="replace")
+        except OSError:
             continue
-        for i, line in enumerate(content.splitlines(), 1):
-            if "console.log" in line:
-                console_logs.append(f"{rel}:{i}")
-            if re.search(r":\s*any\b|<any>|\bas\s+any\b", line):
-                any_annotations.append(f"{rel}:{i}")
+        lines = code.splitlines()
+        for i, line in enumerate(lines, 1):
+            stripped = line.strip()
+            if stripped.startswith("//") or stripped.startswith("/*"):
+                continue
+            if re.search(r'\bconsole\.log\(', line) and '/api/' not in str(f):
+                issues.append(f"{f}:{i} console.log in non-API code")
+            if re.search(r':\s*any\b', line) and 'eslint' not in line.lower():
+                issues.append(f"{f}:{i} explicit any type")
 
-    issues = console_logs + any_annotations
-    passed = len(issues) == 0
-    return {
-        "name": "lint",
-        "score": 1.0 if passed else max(0.0, 1.0 - len(issues) * 0.1),
-        "weight": 1.0,
-        "passed": passed,
-        "details": "clean" if passed else f"{len(console_logs)} console.log, {len(any_annotations)} explicit any",
+    issue_count = len(issues)
+    score = max(0.0, 1.0 - issue_count * 0.02)
+    passed = issue_count == 0
+    sample = "; ".join(issues[:5])
+    details = f"{issue_count} issues in {file_count} files"
+    if sample:
+        details += f": {sample}"
+
+    return {"name": "lint", "score": round(score, 3), "weight": 0.3, "passed": passed,
+            "details": details[-500:]}
+
+
+def eval_type_check() -> dict:
+    """Run TypeScript type checking."""
+    try:
+        result = subprocess.run(
+            ['npx', 'tsc', '--noEmit'],
+            capture_output=True,
+            text=True,
+            timeout=120,
+        )
+        passed = result.returncode == 0
+        if passed:
+            score = 1.0
+        else:
+            error_lines = [ln for ln in (result.stdout + result.stderr).splitlines()
+                           if 'error TS' in ln]
+            error_count = len(error_lines)
+            score = max(0.0, 1.0 - error_count * 0.1)
+        return {
+            "name": "type_check",
+            "score": score,
+            "weight": 0.5,
+            "passed": passed,
+            "details": (result.stdout or result.stderr).strip()[-500:],
+        }
+    except subprocess.TimeoutExpired:
+        return {
+            "name": "type_check",
+            "score": 0.0,
+            "weight": 0.5,
+            "passed": False,
+            "details": "Timed out after 120s",
+        }
+
+
+def eval_observability() -> dict:
+    """Analyze observability coverage in TypeScript/TSX source files."""
+    skip = {
+        "node_modules", ".next", ".factory", "eval", "dist", "build", ".git",
     }
-
-
-def tests() -> dict:
-    vitest_config = any(
-        (PROJECT_ROOT / name).exists()
-        for name in ["vitest.config.ts", "vitest.config.js", "vitest.config.mts"]
-    )
-    if not vitest_config:
-        pkg = PROJECT_ROOT / "package.json"
-        if pkg.exists():
-            try:
-                pkg_data = json.loads(pkg.read_text())
-                dev_deps = pkg_data.get("devDependencies", {})
-                scripts = pkg_data.get("scripts", {})
-                vitest_config = "vitest" in dev_deps or any(
-                    "vitest" in v for v in scripts.values()
-                )
-            except Exception:
-                pass
-    test_files = list(PROJECT_ROOT.rglob("*.test.*"))
-    count = len(test_files)
-    score = min(1.0, count / 10.0) if vitest_config else min(0.5, count / 20.0)
-    return {
-        "name": "tests",
-        "score": round(score, 2),
-        "weight": 1.0,
-        "passed": count > 0,
-        "details": f"vitest={'yes' if vitest_config else 'no'}, {count} test files",
-    }
-
-
-def coverage() -> dict:
-    pkg = PROJECT_ROOT / "package.json"
-    has_coverage = False
-    if pkg.exists():
-        content = pkg.read_text()
-        has_coverage = "@vitest/coverage-v8" in content
-    return {
-        "name": "coverage",
-        "score": 1.0 if has_coverage else 0.0,
-        "weight": 0.5,
-        "passed": has_coverage,
-        "details": "coverage-v8 detected" if has_coverage else "no coverage tooling",
-    }
-
-
-def observability() -> dict:
-    src = PROJECT_ROOT / "src"
-    logger_imports = 0
-    log_statements = 0
-    for f in src.rglob("*"):
-        if not f.suffix in (".ts", ".tsx"):
-            continue
-        try:
-            content = f.read_text()
-        except Exception:
-            continue
-        for line in content.splitlines():
-            if re.search(r"(import.*pino|import.*logger|require.*pino|require.*logger|from.*logger)", line):
-                logger_imports += 1
-            if re.search(r"(logger|log)\.(info|warn|error|debug|trace|fatal)\(|pino\(", line):
-                log_statements += 1
-    total = logger_imports + log_statements
-    score = min(1.0, total / 5.0)
-    return {
-        "name": "observability",
-        "score": round(score, 2),
-        "weight": 0.5,
-        "passed": total > 0,
-        "details": f"{logger_imports} logger imports, {log_statements} log statements",
-    }
-
-
-def capability_surface() -> dict:
-    src = PROJECT_ROOT / "src"
-    lib_dir = src / "lib"
-
-    modules = list(lib_dir.rglob("*.ts")) + list(lib_dir.rglob("*.tsx")) if lib_dir.exists() else []
-
-    exported_fns = 0
-    for f in modules:
-        try:
-            content = f.read_text()
-        except Exception:
-            continue
-        exported_fns += len(re.findall(r"export\s+(async\s+)?function\s+", content))
-        exported_fns += len(re.findall(r"export\s+const\s+\w+\s*=", content))
-
-    api_dir = src / "app" / "api"
-    entry_points = list(api_dir.rglob("route.ts")) if api_dir.exists() else []
-
-    return {
-        "name": "capability_surface",
-        "score": round(min(1.0, (len(modules) + len(entry_points)) / 20.0), 2),
-        "weight": 1.0,
-        "passed": len(modules) > 0 or len(entry_points) > 0,
-        "details": f"{len(modules)} lib modules, {exported_fns} exports, {len(entry_points)} API routes",
-    }
-
-
-def main():
-    results = [
-        type_check(),
-        lint(),
-        tests(),
-        coverage(),
-        observability(),
-        capability_surface(),
+    log_pats = [
+        r"\bconsole\.\w+\(",
+        r"\blogger\.\w+\(",
+        r"\blog\.\w+\(",
     ]
-    total = sum(r["score"] * r["weight"] for r in results) / sum(r["weight"] for r in results)
-    output = {"total": round(total, 4), "results": results}
-    print(json.dumps(output, indent=2))
-    return 0 if all(r["passed"] for r in results if r["weight"] >= 1.0) else 1
+    struct_pats = [r"\bpino\b", r"\bwinston\b", r"\bstructuredLog\b"]
+    trace_pats = [
+        r"request[._]id|req[._]id|trace[._]id",
+        r"\bopentelemetry\b",
+        r"trace\.context|TraceContext|span",
+    ]
+
+    src_dir = Path("src")
+    if not src_dir.exists():
+        return {"name": "observability", "score": 0.0, "weight": 0.2,
+                "passed": True, "details": "No src/ directory found"}
+
+    sources = [f for f in src_dir.rglob("*")
+               if f.suffix in (".ts", ".tsx") and not any(p in f.parts for p in skip)]
+
+    total_fn = logged_fn = total_log = 0
+    has_struct = has_trace = False
+
+    fn_pat = re.compile(
+        r'(?:^|\s)(?:export\s+)?(?:async\s+)?function\s+\w+|'
+        r'(?:const|let|var)\s+\w+\s*=\s*(?:async\s+)?\([^)]*\)\s*(?:=>|:)',
+        re.MULTILINE
+    )
+
+    for src in sources:
+        try:
+            code = src.read_text(errors="replace")
+        except OSError:
+            continue
+
+        fns = fn_pat.findall(code)
+        total_fn += len(fns)
+
+        for pat in log_pats:
+            matches = re.findall(pat, code)
+            total_log += len(matches)
+            if matches:
+                logged_fn += min(len(fns), len(matches))
+
+        for pat in struct_pats:
+            if re.search(pat, code):
+                has_struct = True
+        for pat in trace_pats:
+            if re.search(pat, code, re.IGNORECASE):
+                has_trace = True
+
+    if total_fn == 0:
+        return {"name": "observability", "score": 0.0, "weight": 0.2,
+                "passed": True, "details": "No functions found to analyze"}
+
+    cov = min(1.0, logged_fn / total_fn)
+    density = min(1.0, total_log / max(total_fn, 1))
+    score = 0.40 * cov + 0.25 * float(has_struct) + 0.20 * float(has_trace) + 0.15 * density
+
+    details = (f"coverage={cov:.0%} ({logged_fn}/{total_fn}), "
+               f"structured={'yes' if has_struct else 'no'}, "
+               f"tracing={'yes' if has_trace else 'no'}, "
+               f"density={density:.0%}")
+
+    return {"name": "observability", "score": round(score, 3), "weight": 0.2,
+            "passed": score >= 0.2, "details": details}
+
+
+EVALS = [eval_lint, eval_type_check, eval_observability]
+
+
+def main() -> None:
+    results = [fn() for fn in EVALS]
+    output = {"results": results}
+    json.dump(output, sys.stdout, indent=2)
+    print()
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    main()

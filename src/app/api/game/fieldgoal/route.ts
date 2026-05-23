@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getSession } from "@/lib/session";
+import logger from "@/lib/logger";
 
 // ============================================================
 // Field Goal Frenzy Leaderboard API
@@ -25,12 +26,14 @@ async function getKv() {
  * Returns the top 10 leaderboard entries.
  */
 export async function GET() {
+  logger.info({ route: "/api/game/fieldgoal" }, "GET request started");
   try {
     const kv = await getKv();
     const entries = await kv.get<LeaderboardEntry[]>(LEADERBOARD_KEY);
+    logger.info({ route: "/api/game/fieldgoal" }, "GET request completed");
     return NextResponse.json({ leaderboard: entries ?? [] });
   } catch (err) {
-    console.error("Field Goal leaderboard GET error:", err);
+    logger.error({ route: "/api/game/fieldgoal", err }, "leaderboard GET failed");
     return NextResponse.json({ leaderboard: [] });
   }
 }
@@ -41,6 +44,9 @@ export async function GET() {
  * Body: { score: number }
  */
 export async function POST(request: NextRequest) {
+  const requestId = request.headers.get("x-request-id");
+  const log = requestId ? logger.child({ requestId }) : logger;
+  log.info({ route: "/api/game/fieldgoal" }, "POST request started");
   const session = await getSession();
   if (!session) {
     return NextResponse.json(
@@ -91,12 +97,13 @@ export async function POST(request: NextRequest) {
       (e) => e.name === entry.name && e.score === entry.score,
     );
 
+    log.info({ route: "/api/game/fieldgoal", rank: rank >= 0 ? rank + 1 : null }, "POST request completed");
     return NextResponse.json({
       rank: rank >= 0 ? rank + 1 : null,
       leaderboard: updated,
     });
   } catch (err) {
-    console.error("Field Goal leaderboard POST error:", err);
+    log.error({ route: "/api/game/fieldgoal", err }, "leaderboard POST failed");
     return NextResponse.json(
       { error: "Could not save score" },
       { status: 500 },

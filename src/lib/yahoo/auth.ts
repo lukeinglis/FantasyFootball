@@ -1,4 +1,5 @@
 import { cache } from "@/lib/cache";
+import logger from "@/lib/logger";
 import type { YahooTokens } from "./types";
 
 // ============================================================
@@ -52,6 +53,7 @@ export function getAuthUrl(): string {
 export async function exchangeCodeForTokens(
   code: string
 ): Promise<YahooTokens> {
+  logger.info({ module: "yahoo/auth" }, "exchangeCodeForTokens called");
   const basicAuth = Buffer.from(
     `${getClientId()}:${getClientSecret()}`
   ).toString("base64");
@@ -71,6 +73,7 @@ export async function exchangeCodeForTokens(
 
   if (!response.ok) {
     const body = await response.text();
+    logger.error({ module: "yahoo/auth", status: response.status }, "token exchange failed");
     throw new Error(
       `Yahoo token exchange failed (${response.status}): ${body}`
     );
@@ -79,6 +82,7 @@ export async function exchangeCodeForTokens(
   const data = await response.json();
   const tokens = parseTokenResponse(data);
   await storeTokens(tokens);
+  logger.info({ module: "yahoo/auth" }, "token exchange succeeded");
   return tokens;
 }
 
@@ -87,17 +91,19 @@ export async function exchangeCodeForTokens(
  * This is the main entry point for API calls.
  */
 export async function getValidToken(): Promise<string> {
+  logger.debug({ module: "yahoo/auth" }, "getValidToken called");
   const tokens = await getStoredTokens();
 
   if (!tokens) {
+    logger.warn({ module: "yahoo/auth" }, "no stored tokens found");
     throw new Error(
       "No Yahoo tokens found. Visit /api/auth/yahoo to authorize."
     );
   }
 
-  // If token expires in less than 5 minutes, refresh it
   const bufferMs = 5 * 60 * 1000;
   if (Date.now() + bufferMs >= tokens.expiresAt) {
+    logger.info({ module: "yahoo/auth" }, "token expiring soon, refreshing");
     const refreshed = await refreshAccessToken(tokens.refreshToken);
     return refreshed.accessToken;
   }
@@ -111,6 +117,7 @@ export async function getValidToken(): Promise<string> {
 async function refreshAccessToken(
   refreshToken: string
 ): Promise<YahooTokens> {
+  logger.info({ module: "yahoo/auth" }, "refreshAccessToken called");
   const basicAuth = Buffer.from(
     `${getClientId()}:${getClientSecret()}`
   ).toString("base64");
@@ -129,6 +136,7 @@ async function refreshAccessToken(
 
   if (!response.ok) {
     const body = await response.text();
+    logger.error({ module: "yahoo/auth", status: response.status }, "token refresh failed");
     throw new Error(
       `Yahoo token refresh failed (${response.status}): ${body}`
     );
@@ -137,6 +145,7 @@ async function refreshAccessToken(
   const data = await response.json();
   const tokens = parseTokenResponse(data);
   await storeTokens(tokens);
+  logger.info({ module: "yahoo/auth" }, "token refresh succeeded");
   return tokens;
 }
 

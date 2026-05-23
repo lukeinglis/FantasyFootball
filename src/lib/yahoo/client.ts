@@ -1,6 +1,7 @@
 import { getValidToken } from "./auth";
 import { cache } from "@/lib/cache";
 import { YAHOO_LEAGUE_ID, YAHOO_GAME_KEY, CACHE_TTL } from "@/lib/constants";
+import logger from "@/lib/logger";
 import type {
   LeagueSettings,
   LeagueStandings,
@@ -163,7 +164,7 @@ async function getLeagueKey(): Promise<string> {
       });
 
       if (testRes.ok) {
-        // intentionally silent: fallback season resolved
+        logger.info({ season: entry.season, key: fallbackKey }, "Using fallback season");
         _resolvedLeagueKey = fallbackKey;
         _isFallbackSeason = true;
         return fallbackKey;
@@ -406,24 +407,37 @@ async function fetchPlayerDetails(
 // on the documented API and common response shapes.
 // ============================================================
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo responses are deeply nested with unpredictable shapes
+type YahooResponse = Record<string, unknown>;
 
-function dig(obj: any, ...keys: string[]): any {
-  let current = obj;
+function dig(obj: unknown, ...keys: string[]): unknown {
+  let current: unknown = obj;
   for (const key of keys) {
-    if (current == null) return undefined;
-    current = current[key];
+    if (current == null || typeof current !== "object") return undefined;
+    current = (current as Record<string, unknown>)[key];
   }
   return current;
 }
 
-function parseLeagueSettings(raw: any): LeagueSettings {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo merges metadata arrays into flat objects
+function flattenYahooArray(arr: unknown[]): Record<string, any> {
+  const flat: Record<string, any> = {};
+  for (const item of arr) {
+    if (typeof item === "object" && item !== null) {
+      Object.assign(flat, item);
+    }
+  }
+  return flat;
+}
+
+function parseLeagueSettings(raw: YahooResponse): LeagueSettings {
   const league = dig(raw, "fantasy_content", "league");
-  // Yahoo returns league as an array: [metadata, {settings}]
-  const meta = Array.isArray(league) ? league[0] : league;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested arrays
+  const leagueData = league as any;
+  const meta = Array.isArray(league) ? leagueData[0] : leagueData;
   const settingsObj = Array.isArray(league)
-    ? league[1]?.settings?.[0] || {}
-    : league?.settings?.[0] || {};
+    ? leagueData[1]?.settings?.[0] || {}
+    : leagueData?.settings?.[0] || {};
 
   return {
     leagueKey: meta?.league_key || "",
@@ -438,13 +452,17 @@ function parseLeagueSettings(raw: any): LeagueSettings {
     playoffStartWeek: meta?.playoff_start_week || settingsObj?.playoff_start_week || 15,
     numPlayoffTeams: meta?.num_playoff_teams || settingsObj?.num_playoff_teams || 6,
     isFinished: meta?.is_finished === 1 || meta?.is_finished === true,
-    rosterPositions: (settingsObj?.roster_positions || []).map((rp: any) => ({
-      position: rp?.roster_position?.position || "",
-      positionType: rp?.roster_position?.position_type || "",
-      count: rp?.roster_position?.count || 1,
-    })),
+    rosterPositions: (settingsObj?.roster_positions || []).map(
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo roster position shape
+      (rp: Record<string, any>) => ({
+        position: rp?.roster_position?.position || "",
+        positionType: rp?.roster_position?.position_type || "",
+        count: rp?.roster_position?.count || 1,
+      })
+    ),
     statCategories: (settingsObj?.stat_categories?.stats || []).map(
-      (s: any) => ({
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo stat category shape
+      (s: Record<string, any>) => ({
         statId: s?.stat?.stat_id || 0,
         name: s?.stat?.name || "",
         displayName: s?.stat?.display_name || "",
@@ -454,10 +472,12 @@ function parseLeagueSettings(raw: any): LeagueSettings {
   };
 }
 
-function parseStandings(raw: any, leagueKey: string): LeagueStandings {
+function parseStandings(raw: YahooResponse, leagueKey: string): LeagueStandings {
   const league = dig(raw, "fantasy_content", "league");
-  const meta = Array.isArray(league) ? league[0] : league;
-  const standingsData = Array.isArray(league) ? league[1]?.standings : null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested arrays
+  const leagueData = league as any;
+  const meta = Array.isArray(league) ? leagueData[0] : leagueData;
+  const standingsData = Array.isArray(league) ? leagueData[1]?.standings : null;
   const teamsArray = standingsData?.[0]?.teams || {};
 
   const teams: StandingsTeam[] = [];
@@ -471,13 +491,7 @@ function parseStandings(raw: any, leagueKey: string): LeagueStandings {
     const standings = Array.isArray(teamData) ? teamData[1]?.team_standings : null;
     const infoArray = Array.isArray(info) ? info : [info];
 
-    // Yahoo stuffs team metadata into a flat array of objects
-    const flat: Record<string, any> = {};
-    for (const item of infoArray) {
-      if (typeof item === "object" && item !== null) {
-        Object.assign(flat, item);
-      }
-    }
+    const flat = flattenYahooArray(infoArray);
 
     teams.push({
       teamKey: flat.team_key || "",
@@ -508,9 +522,11 @@ function parseStandings(raw: any, leagueKey: string): LeagueStandings {
   };
 }
 
-function parseScoreboard(raw: any, leagueKey: string): Scoreboard {
+function parseScoreboard(raw: YahooResponse, leagueKey: string): Scoreboard {
   const league = dig(raw, "fantasy_content", "league");
-  const scoreboardData = Array.isArray(league) ? league[1]?.scoreboard : null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested arrays
+  const leagueData = league as any;
+  const scoreboardData = Array.isArray(league) ? leagueData[1]?.scoreboard : null;
   const week = scoreboardData?.week || 1;
   const matchupsData = scoreboardData?.[0]?.matchups || {};
 
@@ -539,7 +555,7 @@ function parseScoreboard(raw: any, leagueKey: string): Scoreboard {
   return { leagueKey, week, matchups };
 }
 
-function parseMatchupTeam(teamData: any): MatchupTeam {
+function parseMatchupTeam(teamData: unknown): MatchupTeam {
   if (!teamData) {
     return {
       teamKey: "",
@@ -551,19 +567,14 @@ function parseMatchupTeam(teamData: any): MatchupTeam {
     };
   }
 
-  const info = Array.isArray(teamData) ? teamData[0] : teamData;
-  const points = Array.isArray(teamData) ? teamData[1]?.team_points : null;
-  const projected = Array.isArray(teamData)
-    ? teamData[1]?.team_projected_points
-    : null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested arrays
+  const td = teamData as any;
+  const info = Array.isArray(td) ? td[0] : td;
+  const points = Array.isArray(td) ? td[1]?.team_points : null;
+  const projected = Array.isArray(td) ? td[1]?.team_projected_points : null;
 
   const infoArray = Array.isArray(info) ? info : [info];
-  const flat: Record<string, any> = {};
-  for (const item of infoArray) {
-    if (typeof item === "object" && item !== null) {
-      Object.assign(flat, item);
-    }
-  }
+  const flat = flattenYahooArray(infoArray);
 
   return {
     teamKey: flat.team_key || "",
@@ -575,9 +586,11 @@ function parseMatchupTeam(teamData: any): MatchupTeam {
   };
 }
 
-function parseTeams(raw: any): Team[] {
+function parseTeams(raw: YahooResponse): Team[] {
   const league = dig(raw, "fantasy_content", "league");
-  const teamsData = Array.isArray(league) ? league[1]?.teams : {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested arrays
+  const leagueData = league as any;
+  const teamsData = Array.isArray(league) ? leagueData[1]?.teams : {};
   const count = teamsData?.count || 0;
   const teams: Team[] = [];
 
@@ -591,12 +604,7 @@ function parseTeams(raw: any): Team[] {
       : null;
 
     const infoArray = Array.isArray(info) ? info : [info];
-    const flat: Record<string, any> = {};
-    for (const item of infoArray) {
-      if (typeof item === "object" && item !== null) {
-        Object.assign(flat, item);
-      }
-    }
+    const flat = flattenYahooArray(infoArray);
 
     teams.push({
       teamKey: flat.team_key || "",
@@ -618,20 +626,17 @@ function parseTeams(raw: any): Team[] {
   return teams;
 }
 
-function parseRoster(raw: any, teamKey: string): Roster {
+function parseRoster(raw: YahooResponse, teamKey: string): Roster {
   const team = dig(raw, "fantasy_content", "team");
-  const meta = Array.isArray(team) ? team[0] : team;
-  const rosterData = Array.isArray(team) ? team[1]?.roster : null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested arrays
+  const teamData = team as any;
+  const meta = Array.isArray(team) ? teamData[0] : teamData;
+  const rosterData = Array.isArray(team) ? teamData[1]?.roster : null;
   const playersData = rosterData?.[0]?.players || {};
   const count = playersData?.count || 0;
 
   const infoArray = Array.isArray(meta) ? meta : [meta];
-  const flat: Record<string, any> = {};
-  for (const item of infoArray || []) {
-    if (typeof item === "object" && item !== null) {
-      Object.assign(flat, item);
-    }
-  }
+  const flat = flattenYahooArray(infoArray || []);
 
   const players: RosterPlayer[] = [];
   for (let i = 0; i < count; i++) {
@@ -644,12 +649,7 @@ function parseRoster(raw: any, teamKey: string): Roster {
       : null;
 
     const pInfoArray = Array.isArray(pInfo) ? pInfo : [pInfo];
-    const pFlat: Record<string, any> = {};
-    for (const item of pInfoArray) {
-      if (typeof item === "object" && item !== null) {
-        Object.assign(pFlat, item);
-      }
-    }
+    const pFlat = flattenYahooArray(pInfoArray);
 
     players.push({
       playerKey: pFlat.player_key || "",
@@ -657,7 +657,7 @@ function parseRoster(raw: any, teamKey: string): Roster {
       playerName: pFlat.name?.full || "",
       position: pFlat.display_position || "",
       eligiblePositions: (pFlat.eligible_positions || []).map(
-        (ep: any) => ep?.position || ""
+        (ep: Record<string, string>) => ep?.position || ""
       ),
       selectedPosition: selectedPos || pFlat.display_position || "",
       nflTeam: pFlat.editorial_team_abbr || "",
@@ -677,9 +677,11 @@ function parseRoster(raw: any, teamKey: string): Roster {
   };
 }
 
-function parseTeamMatchups(raw: any): Matchup[] {
+function parseTeamMatchups(raw: YahooResponse): Matchup[] {
   const team = dig(raw, "fantasy_content", "team");
-  const matchupsData = Array.isArray(team) ? team[1]?.matchups : {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested arrays
+  const teamData = team as any;
+  const matchupsData = Array.isArray(team) ? teamData[1]?.matchups : {};
   const count = matchupsData?.count || 0;
   const matchups: Matchup[] = [];
 
@@ -705,9 +707,11 @@ function parseTeamMatchups(raw: any): Matchup[] {
   return matchups;
 }
 
-function parseDraftResults(raw: any): DraftResult[] {
+function parseDraftResults(raw: YahooResponse): DraftResult[] {
   const league = dig(raw, "fantasy_content", "league");
-  const draftData = Array.isArray(league) ? league[1]?.draft_results : {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested arrays
+  const leagueData = league as any;
+  const draftData = Array.isArray(league) ? leagueData[1]?.draft_results : {};
   const count = draftData?.count || 0;
   const results: DraftResult[] = [];
 
@@ -715,23 +719,16 @@ function parseDraftResults(raw: any): DraftResult[] {
     const pick = draftData[i]?.draft_result;
     if (!pick) continue;
 
-    // Check for embedded player data (when using ;out=players subresource)
     let playerName = "";
     let position = "";
     let nflTeam = "";
     let playerId = 0;
 
-    // Yahoo may embed player info in the draft_result when ;out=players is used
     const playerData = pick.players?.[0]?.player;
     if (playerData) {
       const pInfo = Array.isArray(playerData) ? playerData[0] : playerData;
       const pInfoArray = Array.isArray(pInfo) ? pInfo : [pInfo];
-      const pFlat: Record<string, any> = {};
-      for (const item of pInfoArray) {
-        if (typeof item === "object" && item !== null) {
-          Object.assign(pFlat, item);
-        }
-      }
+      const pFlat = flattenYahooArray(pInfoArray);
       playerName = pFlat.name?.full || "";
       position = pFlat.display_position || "";
       nflTeam = pFlat.editorial_team_abbr || "";
@@ -755,13 +752,13 @@ function parseDraftResults(raw: any): DraftResult[] {
   return results;
 }
 
-function parsePlayerBatch(raw: any): PlayerInfo[] {
+function parsePlayerBatch(raw: YahooResponse): PlayerInfo[] {
   const content = dig(raw, "fantasy_content");
   if (!content) return [];
 
-  // Yahoo returns players in different structures depending on the query.
-  // Try the common shapes.
-  const playersRoot = content.players || content.league?.[1]?.players || {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested arrays
+  const c = content as any;
+  const playersRoot = c.players || c.league?.[1]?.players || {};
   const count = playersRoot?.count || 0;
   const results: PlayerInfo[] = [];
 
@@ -771,12 +768,7 @@ function parsePlayerBatch(raw: any): PlayerInfo[] {
 
     const pInfo = Array.isArray(playerData) ? playerData[0] : playerData;
     const pInfoArray = Array.isArray(pInfo) ? pInfo : [pInfo];
-    const pFlat: Record<string, any> = {};
-    for (const item of pInfoArray) {
-      if (typeof item === "object" && item !== null) {
-        Object.assign(pFlat, item);
-      }
-    }
+    const pFlat = flattenYahooArray(pInfoArray);
 
     results.push({
       playerKey: pFlat.player_key || "",
@@ -790,9 +782,11 @@ function parsePlayerBatch(raw: any): PlayerInfo[] {
   return results;
 }
 
-function parseTransactions(raw: any): Transaction[] {
+function parseTransactions(raw: YahooResponse): Transaction[] {
   const league = dig(raw, "fantasy_content", "league");
-  const txData = Array.isArray(league) ? league[1]?.transactions : {};
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- Yahoo nested arrays
+  const leagueData = league as any;
+  const txData = Array.isArray(league) ? leagueData[1]?.transactions : {};
   const count = txData?.count || 0;
   const transactions: Transaction[] = [];
 
@@ -814,12 +808,7 @@ function parseTransactions(raw: any): Transaction[] {
       const txDetailData = Array.isArray(txDetail) ? txDetail[0] : txDetail;
 
       const pInfoArray = Array.isArray(pInfo) ? pInfo : [pInfo];
-      const pFlat: Record<string, any> = {};
-      for (const item of pInfoArray) {
-        if (typeof item === "object" && item !== null) {
-          Object.assign(pFlat, item);
-        }
-      }
+      const pFlat = flattenYahooArray(pInfoArray);
 
       players.push({
         playerKey: pFlat.player_key || "",
@@ -847,5 +836,3 @@ function parseTransactions(raw: any): Transaction[] {
 
   return transactions;
 }
-
-/* eslint-enable @typescript-eslint/no-explicit-any */

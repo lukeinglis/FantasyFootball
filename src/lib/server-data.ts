@@ -20,6 +20,7 @@ import type {
   DraftResult,
   Transaction,
 } from "./yahoo/types";
+import logger from "./logger";
 
 function isConfigError(err: unknown): boolean {
   const msg = err instanceof Error ? err.message : String(err);
@@ -44,12 +45,15 @@ function isOffseasonError(err: unknown): boolean {
   );
 }
 
-async function safeFetch<T>(fn: () => Promise<T>): Promise<FetchResult<T>> {
+async function safeFetch<T>(fn: () => Promise<T>, resource: string): Promise<FetchResult<T>> {
+  logger.debug({ module: "server-data", resource }, "safeFetch called");
   try {
     const data = await fn();
+    logger.debug({ module: "server-data", resource }, "safeFetch succeeded");
     return { ok: true, data };
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
+    logger.error({ module: "server-data", resource, err }, "safeFetch failed");
     return {
       ok: false,
       status: 0,
@@ -61,35 +65,35 @@ async function safeFetch<T>(fn: () => Promise<T>): Promise<FetchResult<T>> {
 }
 
 export function fetchSettings(): Promise<FetchResult<LeagueSettings>> {
-  return safeFetch(() => getLeagueSettings());
+  return safeFetch(() => getLeagueSettings(), "settings");
 }
 
 export function fetchStandings(): Promise<FetchResult<LeagueStandings>> {
-  return safeFetch(() => getStandings());
+  return safeFetch(() => getStandings(), "standings");
 }
 
 export function fetchScoreboard(week?: number): Promise<FetchResult<Scoreboard>> {
-  return safeFetch(() => getScoreboard(week));
+  return safeFetch(() => getScoreboard(week), "scoreboard");
 }
 
 export function fetchTeams(): Promise<FetchResult<Team[]>> {
-  return safeFetch(() => getTeams());
+  return safeFetch(() => getTeams(), "teams");
 }
 
 export function fetchRoster(teamKey: string, week?: number): Promise<FetchResult<Roster>> {
-  return safeFetch(() => getTeamRoster(teamKey, week));
+  return safeFetch(() => getTeamRoster(teamKey, week), "roster");
 }
 
 export function fetchTeamMatchups(teamKey: string): Promise<FetchResult<Matchup[]>> {
-  return safeFetch(() => getTeamMatchups(teamKey));
+  return safeFetch(() => getTeamMatchups(teamKey), "matchups");
 }
 
 export function fetchDraft(): Promise<FetchResult<DraftResult[]>> {
-  return safeFetch(() => getDraftResults());
+  return safeFetch(() => getDraftResults(), "draft");
 }
 
 export function fetchTransactions(): Promise<FetchResult<Transaction[]>> {
-  return safeFetch(() => getTransactions());
+  return safeFetch(() => getTransactions(), "transactions");
 }
 
 export function isViewingFallbackSeason(): boolean {

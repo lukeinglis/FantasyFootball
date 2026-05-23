@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getTeams, getTeamRoster } from "@/lib/yahoo/client";
 import { errorResponse } from "@/lib/api-helpers";
+import logger from "@/lib/logger";
 
 export const runtime = "nodejs";
 
@@ -11,6 +12,7 @@ const TEAM_KEY_RE = /^[a-z0-9]+\.l\.\d+\.t\.\d+$/i;
 export async function GET(request: NextRequest) {
   const teamKey = request.nextUrl.searchParams.get("teamKey");
   const weekRaw = request.nextUrl.searchParams.get("week");
+  logger.info({ route: "/api/yahoo/teams", teamKey, week: weekRaw }, "request started");
 
   let week: number | undefined;
   if (weekRaw !== null) {
@@ -34,12 +36,15 @@ export async function GET(request: NextRequest) {
         );
       }
       const roster = await getTeamRoster(teamKey, week);
+      logger.info({ route: "/api/yahoo/teams", teamKey, week }, "request completed");
       return NextResponse.json(roster);
     }
 
     const teams = await getTeams();
+    logger.info({ route: "/api/yahoo/teams" }, "request completed");
     return NextResponse.json(teams);
   } catch (error) {
+    logger.error({ route: "/api/yahoo/teams", teamKey, week, err: error }, "request failed");
     return errorResponse(error, teamKey ? "team roster" : "teams");
   }
 }
