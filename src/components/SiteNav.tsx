@@ -23,6 +23,7 @@ const PRIMARY_ITEMS: NavItem[] = [
 const MORE_ITEMS: NavItem[] = [
   { href: "/draft-history", label: "Draft History" },
   { href: "/draft-insights", label: "Draft Insights" },
+  { href: "/draft-trends", label: "Draft Trends" },
   { href: "/transactions", label: "Transactions" },
   { href: "/records", label: "Records" },
   { href: "/head-to-head", label: "Head-to-Head" },
