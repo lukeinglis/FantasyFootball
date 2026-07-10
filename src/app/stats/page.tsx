@@ -38,9 +38,8 @@ export default async function StatsPage() {
     fetchSettings(),
   ]);
 
-  // Fetch all week scoreboards to compute stats
   const currentWeek = settingsResult.ok ? settingsResult.data.currentWeek : 0;
-  const weeksToFetch = Math.max(0, currentWeek - 1); // Completed weeks
+  const weeksToFetch = Math.max(0, currentWeek - 1);
 
   const scoreboards: Scoreboard[] = [];
   if (weeksToFetch > 0) {
@@ -80,15 +79,10 @@ export default async function StatsPage() {
           />
         ) : (
           <div className="space-y-6">
-            {/* Team Rankings */}
             <TeamRankings teams={standingsResult.data.teams} />
-
-            {/* Matchup Superlatives */}
             {hasMatchups && (
               <MatchupSuperlatives scoreboards={scoreboards} />
             )}
-
-            {/* Scoring Distribution */}
             {hasMatchups && (
               <ScoringLeaders scoreboards={scoreboards} />
             )}
@@ -107,7 +101,6 @@ function TeamRankings({ teams }: { teams: LeagueStandings["teams"] }) {
     (a, b) => toFiniteNumber(a.pointsAgainst, 0) - toFiniteNumber(b.pointsAgainst, 0)
   );
 
-  // Points differential
   const byDifferential = [...teams]
     .map((t) => ({
       ...t,
@@ -117,7 +110,7 @@ function TeamRankings({ teams }: { teams: LeagueStandings["teams"] }) {
 
   return (
     <div className="grid gap-6 lg:grid-cols-3">
-      <Card>
+      <Card variant="scoreboard">
         <CardHeader title="Top Scorers" description="Most total points scored" />
         <CardBody className="!p-0">
           <RankList
@@ -132,7 +125,7 @@ function TeamRankings({ teams }: { teams: LeagueStandings["teams"] }) {
         </CardBody>
       </Card>
 
-      <Card>
+      <Card variant="scoreboard">
         <CardHeader title="Best Defense" description="Fewest points allowed" />
         <CardBody className="!p-0">
           <RankList
@@ -147,7 +140,7 @@ function TeamRankings({ teams }: { teams: LeagueStandings["teams"] }) {
         </CardBody>
       </Card>
 
-      <Card>
+      <Card variant="scoreboard">
         <CardHeader title="Point Differential" description="PF minus PA" />
         <CardBody className="!p-0">
           <RankList
@@ -176,13 +169,11 @@ function MatchupSuperlatives({ scoreboards }: { scoreboards: Scoreboard[] }) {
       const aPts = toFiniteNumber(a.points, 0);
       const bPts = toFiniteNumber(b.points, 0);
 
-      // Track individual team scores
       allWeekScores.push(
         { week: m.week, teamName: a.teamName, managerName: a.managerName, points: aPts },
         { week: m.week, teamName: b.teamName, managerName: b.managerName, points: bPts }
       );
 
-      // Track matchup stats
       const winner = aPts >= bPts ? a : b;
       const loser = aPts >= bPts ? b : a;
       const winPts = Math.max(aPts, bPts);
@@ -201,14 +192,11 @@ function MatchupSuperlatives({ scoreboards }: { scoreboards: Scoreboard[] }) {
 
   if (allMatchupStats.length === 0) return null;
 
-  // Sort for superlatives
   const highestScore = [...allWeekScores].sort((a, b) => b.points - a.points)[0];
   const lowestScore = [...allWeekScores].sort((a, b) => a.points - b.points)[0];
   const biggestBlowout = [...allMatchupStats].sort((a, b) => b.margin - a.margin)[0];
   const closestGame = [...allMatchupStats].sort((a, b) => a.margin - b.margin)[0];
 
-  // Biggest upset: lowest margin where the higher-scoring team lost based on
-  // the overall average (proxy: loser scored more than league avg for the week)
   const allPointsAvg = allWeekScores.reduce((s, w) => s + w.points, 0) / Math.max(allWeekScores.length, 1);
   const upsets = allMatchupStats
     .filter((m) => m.loserPoints > allPointsAvg)
@@ -251,7 +239,7 @@ function MatchupSuperlatives({ scoreboards }: { scoreboards: Scoreboard[] }) {
   );
 
   return (
-    <Card>
+    <Card variant="scoreboard">
       <CardHeader
         title="Season Superlatives"
         description="The highs, lows, and everything in between."
@@ -261,7 +249,7 @@ function MatchupSuperlatives({ scoreboards }: { scoreboards: Scoreboard[] }) {
           {stats.map((s) => (
             <div
               key={s.label}
-              className="rounded-lg bg-[#0C2340]/60 p-4"
+              className="rounded-lg bg-white/5 border border-[#D4A847]/10 p-4"
             >
               <div className="flex items-center gap-2">
                 <span className="text-xl" aria-hidden>
@@ -271,10 +259,10 @@ function MatchupSuperlatives({ scoreboards }: { scoreboards: Scoreboard[] }) {
                   {s.label}
                 </p>
               </div>
-              <p className="mt-2 text-lg font-bold text-white">
+              <p className="mt-2 text-lg font-bold text-[#F5F0E8]">
                 {s.primary}
               </p>
-              <p className="mt-0.5 text-xs text-gray-400">
+              <p className="mt-0.5 text-xs text-[#F5F0E8]/50">
                 {s.secondary}
               </p>
             </div>
@@ -286,7 +274,6 @@ function MatchupSuperlatives({ scoreboards }: { scoreboards: Scoreboard[] }) {
 }
 
 function ScoringLeaders({ scoreboards }: { scoreboards: Scoreboard[] }) {
-  // Aggregate per-team scoring across weeks
   const teamTotals = new Map<string, { name: string; manager: string; totalPts: number; games: number; highWeek: number; lowWeek: number }>();
 
   for (const sb of scoreboards) {
@@ -317,7 +304,6 @@ function ScoringLeaders({ scoreboards }: { scoreboards: Scoreboard[] }) {
   const teams = Array.from(teamTotals.values());
   if (teams.length === 0) return null;
 
-  // Sort by average points per game
   const byAvg = teams
     .map((t) => ({
       ...t,
@@ -327,7 +313,7 @@ function ScoringLeaders({ scoreboards }: { scoreboards: Scoreboard[] }) {
     .sort((a, b) => b.avg - a.avg);
 
   return (
-    <Card>
+    <Card variant="scoreboard">
       <CardHeader
         title="Scoring Breakdown"
         description="Per-game averages, highs, lows, and consistency."
@@ -335,39 +321,39 @@ function ScoringLeaders({ scoreboards }: { scoreboards: Scoreboard[] }) {
       <CardBody className="!p-0">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
-            <thead className="bg-[#0C2340] text-xs uppercase tracking-wider text-gray-400">
-              <tr>
-                <th className="px-3 py-3">#</th>
-                <th className="px-3 py-3">Team</th>
-                <th className="px-3 py-3 text-right">Avg/Game</th>
-                <th className="px-3 py-3 text-right hidden sm:table-cell">High</th>
-                <th className="px-3 py-3 text-right hidden sm:table-cell">Low</th>
-                <th className="px-3 py-3 text-right hidden md:table-cell">Range</th>
-                <th className="px-3 py-3 text-right hidden md:table-cell">Games</th>
+            <thead>
+              <tr className="border-b-2 border-[#D4A847]/30">
+                <th className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">#</th>
+                <th className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Team</th>
+                <th className="px-3 py-3 text-right font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Avg/Game</th>
+                <th className="px-3 py-3 text-right hidden sm:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">High</th>
+                <th className="px-3 py-3 text-right hidden sm:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Low</th>
+                <th className="px-3 py-3 text-right hidden md:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Range</th>
+                <th className="px-3 py-3 text-right hidden md:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Games</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-white/5">
               {byAvg.map((t, i) => (
                 <tr
                   key={t.name}
-                  className="bg-[#112d4e]/40 hover:bg-[#112d4e]"
+                  className="hover:bg-[rgba(212,168,71,0.08)] transition-colors"
                 >
                   <td className="px-3 py-3">
                     <span
-                      className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
+                      className={`inline-flex h-6 w-6 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${
                         i < 3
-                          ? "bg-[#DD550C] text-[#0C2340]"
-                          : "bg-white/10 text-gray-300"
+                          ? "bg-[#DD550C] text-white"
+                          : "bg-white/10 text-[#F5F0E8]/60"
                       }`}
                     >
                       {i + 1}
                     </span>
                   </td>
                   <td className="px-3 py-3">
-                    <p className="font-medium text-white">{t.name}</p>
-                    <p className="text-xs text-gray-400">{t.manager}</p>
+                    <p className="font-medium text-[#F5F0E8]">{t.name}</p>
+                    <p className="text-xs text-[#F5F0E8]/50">{t.manager}</p>
                   </td>
-                  <td className="px-3 py-3 text-right font-mono text-[#DD550C]">
+                  <td className="px-3 py-3 text-right font-[family-name:var(--font-heading)] text-[#DD550C]">
                     {formatPoints(t.avg, 1)}
                   </td>
                   <td className="px-3 py-3 text-right font-mono text-emerald-300 hidden sm:table-cell">
@@ -376,10 +362,10 @@ function ScoringLeaders({ scoreboards }: { scoreboards: Scoreboard[] }) {
                   <td className="px-3 py-3 text-right font-mono text-red-300 hidden sm:table-cell">
                     {formatPoints(t.lowWeek, 1)}
                   </td>
-                  <td className="px-3 py-3 text-right font-mono text-gray-400 hidden md:table-cell">
+                  <td className="px-3 py-3 text-right font-mono text-[#F5F0E8]/50 hidden md:table-cell">
                     {formatPoints(t.consistency, 1)}
                   </td>
-                  <td className="px-3 py-3 text-right text-gray-400 hidden md:table-cell">
+                  <td className="px-3 py-3 text-right text-[#F5F0E8]/50 hidden md:table-cell">
                     {t.games}
                   </td>
                 </tr>
@@ -404,28 +390,28 @@ function RankList({
   }>;
 }) {
   return (
-    <ol className="divide-y divide-white/5">
+    <ol className="divide-y divide-[#D4A847]/10">
       {items.map((item) => (
         <li
           key={`${item.rank}-${item.name}`}
-          className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-[#0C2340]/40"
+          className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-[rgba(212,168,71,0.08)] transition-colors"
         >
           <div className="flex items-center gap-3 min-w-0">
             <span
-              className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-xs font-bold ${
+              className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${
                 item.highlight
-                  ? "bg-[#DD550C] text-[#0C2340]"
-                  : "bg-white/10 text-gray-300"
+                  ? "bg-[#DD550C] text-white"
+                  : "bg-white/10 text-[#F5F0E8]/60"
               }`}
             >
               {item.rank}
             </span>
             <div className="min-w-0">
-              <p className="truncate font-medium text-white">{item.name}</p>
-              <p className="truncate text-xs text-gray-400">{item.detail}</p>
+              <p className="truncate font-medium text-[#F5F0E8]">{item.name}</p>
+              <p className="truncate text-xs text-[#F5F0E8]/50">{item.detail}</p>
             </div>
           </div>
-          <span className="flex-shrink-0 font-mono text-sm text-[#DD550C]">
+          <span className="flex-shrink-0 font-[family-name:var(--font-heading)] text-sm text-[#DD550C]">
             {item.value}
           </span>
         </li>

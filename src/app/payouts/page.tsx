@@ -65,8 +65,7 @@ export default function PayoutsPage() {
       />
       <Container>
         <div className="grid gap-6 lg:grid-cols-2">
-          {/* Yearly prize structure */}
-          <Card>
+          <Card variant="scoreboard">
             <CardHeader
               title="Season-End Prizes"
               description="Standard structure, paid out after the championship."
@@ -77,23 +76,22 @@ export default function PayoutsPage() {
                 <PrizeRow place={2} amount={second} medal="🥈" />
                 <PrizeRow place={3} amount={third} medal="🥉" />
               </ul>
-              <div className="mt-4 flex items-center justify-between border-t border-white/10 pt-4 text-sm">
-                <span className="text-gray-400">Distributed</span>
-                <span className="font-mono text-white">
+              <div className="mt-4 flex items-center justify-between border-t border-[#D4A847]/20 pt-4 text-sm">
+                <span className="text-[#F5F0E8]/50">Distributed</span>
+                <span className="font-mono text-[#F5F0E8]">
                   {formatUsd(distributedYearly)}
                 </span>
               </div>
               <div className="mt-1 flex items-center justify-between text-sm">
-                <span className="text-gray-400">Weekly pool</span>
-                <span className="font-mono text-white">
+                <span className="text-[#F5F0E8]/50">Weekly pool</span>
+                <span className="font-mono text-[#F5F0E8]">
                   {formatUsd(Math.max(0, totalPot - distributedYearly))}
                 </span>
               </div>
             </CardBody>
           </Card>
 
-          {/* The math */}
-          <Card>
+          <Card variant="scoreboard">
             <CardHeader
               title="The Math"
               description="Where every dollar of the pot is going."
@@ -120,9 +118,8 @@ export default function PayoutsPage() {
           </Card>
         </div>
 
-        {/* Weekly payouts */}
         <div className="mt-6">
-          <Card>
+          <Card variant="scoreboard">
             <CardHeader
               title="Weekly Payouts"
               description="High score, lowest score, or whatever side bet stuck this year."
@@ -139,41 +136,41 @@ export default function PayoutsPage() {
               ) : (
                 <div className="overflow-x-auto">
                   <table className="w-full text-left text-sm">
-                    <thead className="bg-[#0C2340] text-xs uppercase tracking-wider text-gray-400">
-                      <tr>
-                        <th className="px-3 py-3">Week</th>
-                        <th className="px-3 py-3">Description</th>
-                        <th className="px-3 py-3">Winner</th>
-                        <th className="px-3 py-3 text-right">Amount</th>
+                    <thead>
+                      <tr className="border-b-2 border-[#D4A847]/30">
+                        <th className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Week</th>
+                        <th className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Description</th>
+                        <th className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Winner</th>
+                        <th className="px-3 py-3 text-right font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Amount</th>
                       </tr>
                     </thead>
                     <tbody className="divide-y divide-white/5">
                       {weekly.map((w, i) => (
                         <tr
                           key={`${w.week}-${i}`}
-                          className="bg-[#112d4e]/40 hover:bg-[#112d4e]"
+                          className="hover:bg-[rgba(212,168,71,0.08)] transition-colors"
                         >
-                          <td className="px-3 py-3 font-mono text-[#DD550C]">
+                          <td className="px-3 py-3 font-[family-name:var(--font-heading)] text-[#DD550C]">
                             {w.week}
                           </td>
-                          <td className="px-3 py-3 text-gray-300">
+                          <td className="px-3 py-3 text-[#F5F0E8]/70">
                             {w.description || "—"}
                           </td>
-                          <td className="px-3 py-3 text-white">
+                          <td className="px-3 py-3 text-[#F5F0E8]">
                             {w.winner ? (
                               <>
                                 <span className="font-medium">{w.winner}</span>
                                 {w.team && (
-                                  <span className="ml-1 text-xs text-gray-400">
+                                  <span className="ml-1 text-xs text-[#F5F0E8]/50">
                                     ({w.team})
                                   </span>
                                 )}
                               </>
                             ) : (
-                              <span className="text-gray-500">TBD</span>
+                              <span className="text-[#F5F0E8]/40">TBD</span>
                             )}
                           </td>
-                          <td className="px-3 py-3 text-right font-mono text-[#DD550C]">
+                          <td className="px-3 py-3 text-right font-[family-name:var(--font-heading)] text-[#DD550C]">
                             {formatUsd(toFiniteNumber(w.amount, 0))}
                           </td>
                         </tr>
@@ -210,19 +207,19 @@ function PrizeRow({
     3: "3rd",
   };
   return (
-    <li className="flex items-center justify-between gap-3 rounded-lg bg-[#0C2340]/60 px-4 py-3">
+    <li className="flex items-center justify-between gap-3 rounded-lg bg-white/5 border border-[#D4A847]/10 px-4 py-3">
       <div className="flex items-center gap-3">
         <span className="text-2xl" aria-hidden>
           {medal}
         </span>
         <div>
-          <p className="font-semibold text-white">{labels[place]}</p>
-          <p className="text-xs text-gray-400">
+          <p className="font-semibold text-[#F5F0E8]">{labels[place]}</p>
+          <p className="text-xs text-[#F5F0E8]/50">
             {ordinals[place]} place finisher
           </p>
         </div>
       </div>
-      <p className="font-mono text-xl font-bold text-[#DD550C]">
+      <p className="font-[family-name:var(--font-heading)] text-xl font-bold text-[#DD550C]">
         {formatUsd(amount)}
       </p>
     </li>
@@ -239,11 +236,11 @@ function Row({
   emphasis?: boolean;
 }) {
   return (
-    <div className="flex items-center justify-between border-b border-white/5 pb-2 last:border-0 last:pb-0">
-      <dt className="text-gray-400">{label}</dt>
+    <div className="flex items-center justify-between border-b border-[#D4A847]/10 pb-2 last:border-0 last:pb-0">
+      <dt className="text-[#F5F0E8]/50">{label}</dt>
       <dd
         className={`font-mono ${
-          emphasis ? "text-[#DD550C] font-semibold" : "text-white"
+          emphasis ? "text-[#DD550C] font-semibold" : "text-[#F5F0E8]"
         }`}
       >
         {value}

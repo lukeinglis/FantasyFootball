@@ -3,7 +3,7 @@ import Link from "next/link";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import EmptyState from "@/components/EmptyState";
-import { Card } from "@/components/Card";
+import { Card, CardBody } from "@/components/Card";
 import { formatArticleDate, getAllArticles } from "@/lib/articles";
 
 export const metadata: Metadata = {
@@ -34,21 +34,25 @@ export default function ArticlesPage() {
               <li key={a.slug}>
                 <Link
                   href={`/articles/${a.slug}`}
-                  className="block rounded-xl border border-white/10 bg-[#112d4e] p-5 transition-colors hover:border-[#DD550C]/40 hover:bg-[#183558]"
+                  className="block"
                 >
-                  <p className="text-[11px] font-semibold uppercase tracking-widest text-[#DD550C]/80">
-                    {formatArticleDate(a.date)}
-                    {a.author && ` · ${a.author}`}
-                  </p>
-                  <h2 className="mt-1 text-xl font-bold text-white">
-                    {a.title}
-                  </h2>
-                  {a.excerpt && (
-                    <p className="mt-2 text-sm text-gray-300">{a.excerpt}</p>
-                  )}
-                  <p className="mt-3 inline-flex items-center text-xs font-medium text-[#DD550C]">
-                    Read article →
-                  </p>
+                  <Card variant="scoreboard" className="transition-all hover:border-[#DD550C]/60">
+                    <CardBody>
+                      <p className="font-[family-name:var(--font-heading)] text-[11px] font-semibold uppercase tracking-widest text-[#D4A847]">
+                        {formatArticleDate(a.date)}
+                        {a.author && ` · ${a.author}`}
+                      </p>
+                      <h2 className="mt-1 text-xl font-bold text-[#F5F0E8]">
+                        {a.title}
+                      </h2>
+                      {a.excerpt && (
+                        <p className="mt-2 text-sm text-[#F5F0E8]/70">{a.excerpt}</p>
+                      )}
+                      <p className="mt-3 inline-flex items-center text-xs font-medium text-[#DD550C]">
+                        Read article →
+                      </p>
+                    </CardBody>
+                  </Card>
                 </Link>
               </li>
             ))}
