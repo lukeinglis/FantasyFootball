@@ -46,46 +46,46 @@ export default async function StandingsPage() {
           )
         ) : result.data.teams.length === 0 ? (
           <Card>
-            <div className="px-5 py-8 text-center text-sm text-gray-400">
+            <div className="px-5 py-8 text-center text-sm text-[#F5F0E8]/50">
               No standings yet. The season hasn&apos;t started.
             </div>
           </Card>
         ) : (
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden" variant="scoreboard">
             <div className="overflow-x-auto">
               <table className="w-full text-left text-sm">
-                <thead className="bg-[#0C2340] text-xs uppercase tracking-wider text-gray-400">
-                  <tr>
-                    <th scope="col" className="px-3 py-3">
+                <thead>
+                  <tr className="border-b-2 border-[#D4A847]/30">
+                    <th scope="col" className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">
                       Rank
                     </th>
-                    <th scope="col" className="px-3 py-3">
+                    <th scope="col" className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">
                       Team
                     </th>
-                    <th scope="col" className="px-3 py-3 hidden sm:table-cell">
+                    <th scope="col" className="px-3 py-3 hidden sm:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">
                       Manager
                     </th>
-                    <th scope="col" className="px-3 py-3 text-right">
+                    <th scope="col" className="px-3 py-3 text-right font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">
                       Record
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-right hidden md:table-cell"
+                      className="px-3 py-3 text-right hidden md:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]"
                     >
                       Pct
                     </th>
-                    <th scope="col" className="px-3 py-3 text-right">
+                    <th scope="col" className="px-3 py-3 text-right font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">
                       PF
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-right hidden md:table-cell"
+                      className="px-3 py-3 text-right hidden md:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]"
                     >
                       PA
                     </th>
                     <th
                       scope="col"
-                      className="px-3 py-3 text-right hidden lg:table-cell"
+                      className="px-3 py-3 text-right hidden lg:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]"
                     >
                       Streak
                     </th>
@@ -99,48 +99,48 @@ export default async function StandingsPage() {
                       <tr
                         key={team.teamKey}
                         className={`${
-                          inPlayoffs ? "bg-[#112d4e]" : "bg-[#112d4e]/40"
+                          inPlayoffs ? "bg-white/[0.03]" : ""
                         } ${
                           isCutoff
                             ? "border-b-2 border-[#DD550C]/60"
                             : ""
-                        } hover:bg-[#183558] transition-colors`}
+                        } hover:bg-[rgba(212,168,71,0.08)] transition-colors`}
                       >
                         <td className="px-3 py-3">
                           <span
-                            className={`inline-flex h-6 w-6 items-center justify-center rounded-full text-xs font-bold ${
+                            className={`inline-flex h-6 w-6 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${
                               inPlayoffs
-                                ? "bg-[#DD550C] text-[#0C2340]"
-                                : "bg-white/10 text-gray-300"
+                                ? "bg-[#DD550C] text-white"
+                                : "bg-white/10 text-[#F5F0E8]/60"
                             }`}
                           >
                             {team.rank}
                           </span>
                         </td>
                         <td className="px-3 py-3">
-                          <p className="font-medium text-white">
+                          <p className="font-semibold text-[#F5F0E8]">
                             {team.teamName}
                           </p>
-                          <p className="text-xs text-gray-400 sm:hidden">
+                          <p className="text-xs text-[#F5F0E8]/50 sm:hidden">
                             {team.managerName}
                           </p>
                         </td>
-                        <td className="px-3 py-3 hidden sm:table-cell text-gray-300">
+                        <td className="px-3 py-3 hidden sm:table-cell text-[#F5F0E8]/70">
                           {team.managerName}
                         </td>
-                        <td className="px-3 py-3 text-right font-mono text-gray-200">
+                        <td className="px-3 py-3 text-right font-[family-name:var(--font-heading)] text-base text-[#4CAF50] tracking-wide">
                           {formatRecord(team.wins, team.losses, team.ties)}
                         </td>
-                        <td className="px-3 py-3 text-right font-mono text-gray-300 hidden md:table-cell">
+                        <td className="px-3 py-3 text-right font-mono text-[#F5F0E8]/60 hidden md:table-cell">
                           {formatPercent(team.percentage)}
                         </td>
                         <td className="px-3 py-3 text-right font-mono text-[#DD550C]">
                           {formatPoints(team.pointsFor, 1)}
                         </td>
-                        <td className="px-3 py-3 text-right font-mono text-gray-300 hidden md:table-cell">
+                        <td className="px-3 py-3 text-right font-mono text-[#F5F0E8]/60 hidden md:table-cell">
                           {formatPoints(team.pointsAgainst, 1)}
                         </td>
-                        <td className="px-3 py-3 text-right font-mono text-gray-300 hidden lg:table-cell">
+                        <td className="px-3 py-3 text-right font-mono text-[#F5F0E8]/60 hidden lg:table-cell">
                           {team.streak || "—"}
                         </td>
                       </tr>
@@ -149,7 +149,7 @@ export default async function StandingsPage() {
                 </tbody>
               </table>
             </div>
-            <div className="border-t border-white/10 bg-[#0C2340]/60 px-4 py-2 text-[11px] text-gray-400">
+            <div className="border-t border-[#D4A847]/20 px-4 py-2 text-[11px] text-[#F5F0E8]/50">
               <span className="mr-2 inline-block h-2 w-2 rounded-full bg-[#DD550C]" />
               Playoff bracket cut-off after rank {PLAYOFF_CUTOFF}.
             </div>
