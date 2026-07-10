@@ -131,23 +131,23 @@ export default function DraftHistoryPage() {
       {/* Stats Banner */}
       <Container>
         <div className="grid gap-4 grid-cols-2 lg:grid-cols-5">
-          <Card variant="glass">
+          <Card variant="scoreboard">
             <CardBody>
               <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Total Picks</p>
-                <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-gradient">{stats.totalPicks.toLocaleString()}</p>
+                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">Total Picks</p>
+                <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-[#D4A847]">{stats.totalPicks.toLocaleString()}</p>
               </div>
             </CardBody>
           </Card>
-          <Card variant="glass">
+          <Card variant="scoreboard">
             <CardBody>
               <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Drafts</p>
-                <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-gradient">{stats.totalDrafts}</p>
+                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">Drafts</p>
+                <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-[#D4A847]">{stats.totalDrafts}</p>
               </div>
             </CardBody>
           </Card>
-          <Card variant="glass">
+          <Card variant="scoreboard">
             <CardBody>
               <div className="text-center">
                 <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-amber-400">Keepers</p>
@@ -155,19 +155,19 @@ export default function DraftHistoryPage() {
               </div>
             </CardBody>
           </Card>
-          <Card variant="glass">
+          <Card variant="scoreboard">
             <CardBody>
               <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Rounds / Draft</p>
-                <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-gradient">16</p>
+                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">Rounds / Draft</p>
+                <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-[#D4A847]">16</p>
               </div>
             </CardBody>
           </Card>
-          <Card variant="glass">
+          <Card variant="scoreboard">
             <CardBody>
               <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Teams / Draft</p>
-                <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-gradient">12</p>
+                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">Teams / Draft</p>
+                <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-[#D4A847]">12</p>
               </div>
             </CardBody>
           </Card>
@@ -185,9 +185,9 @@ export default function DraftHistoryPage() {
                   <span className="font-[family-name:var(--font-heading)] font-mono text-lg font-bold text-[#DD550C]">{fo.year}</span>
                   <div className="min-w-0 flex-1">
                     <p className="font-semibold text-white">{fo.player}</p>
-                    <p className="text-xs text-gray-400">{fo.position} · {fo.nflTeam}</p>
+                    <p className="text-xs text-[rgba(245,240,232,0.5)]">{fo.position} · {fo.nflTeam}</p>
                   </div>
-                  <span className="text-sm text-gray-400">by {fo.manager}</span>
+                  <span className="text-sm text-[rgba(245,240,232,0.5)]">by {fo.manager}</span>
                 </div>
               ))}
             </div>
@@ -209,7 +209,7 @@ export default function DraftHistoryPage() {
                     }`}>{i + 1}</span>
                     <div className="min-w-0 flex-1">
                       <p className="truncate font-semibold text-white">{p.name}</p>
-                      <p className="text-xs text-gray-400">{p.position} · Drafted {p.count}x ({p.years.join(", ")})</p>
+                      <p className="text-xs text-[rgba(245,240,232,0.5)]">{p.position} · Drafted {p.count}x ({p.years.join(", ")})</p>
                     </div>
                     <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${posColors[p.position] || "bg-white/10 text-gray-200 border-white/20"}`}>
                       {p.position}

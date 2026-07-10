@@ -66,7 +66,7 @@ export default function DraftTrendsPage() {
             <table className="w-full text-center text-xs">
               <thead>
                 <tr className="border-b border-white/10">
-                  <th className="sticky left-0 bg-[#112d4e] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400">
+                  <th className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400">
                     Year
                   </th>
                   {SKILL_POSITIONS.map((pos) => (
@@ -86,7 +86,7 @@ export default function DraftTrendsPage() {
                     key={t.year}
                     className="border-b border-white/5 hover:bg-white/5 transition-colors"
                   >
-                    <td className="sticky left-0 bg-[#112d4e] px-3 py-2 text-left font-[family-name:var(--font-heading)] font-mono text-sm font-bold text-[#DD550C]">
+                    <td className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] font-mono text-sm font-bold text-[#DD550C]">
                       {t.year}
                     </td>
                     {SKILL_POSITIONS.map((pos) => {
@@ -130,7 +130,7 @@ export default function DraftTrendsPage() {
             <table className="w-full text-center text-xs">
               <thead>
                 <tr className="border-b border-white/10">
-                  <th className="sticky left-0 bg-[#112d4e] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400">
+                  <th className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400">
                     Year
                   </th>
                   {SKILL_POSITIONS.map((pos) => (
@@ -150,7 +150,7 @@ export default function DraftTrendsPage() {
                     key={t.year}
                     className="border-b border-white/5 hover:bg-white/5 transition-colors"
                   >
-                    <td className="sticky left-0 bg-[#112d4e] px-3 py-2 text-left font-[family-name:var(--font-heading)] font-mono text-sm font-bold text-[#DD550C]">
+                    <td className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] font-mono text-sm font-bold text-[#DD550C]">
                       {t.year}
                     </td>
                     {SKILL_POSITIONS.map((pos) => {
@@ -199,7 +199,7 @@ export default function DraftTrendsPage() {
                 <Link
                   key={s.name}
                   href={`/managers/${s.slug}`}
-                  className="rounded-xl border border-white/10 bg-[#0C2340] p-4 hover:border-[#DD550C]/30 hover:bg-[#0C2340]/80 transition-all"
+                  className="rounded-xl border-2 border-[#D4A847]/30 bg-gradient-to-b from-[#2C1810] to-[#1A0F08] p-4 hover:border-[#D4A847]/60 transition-all shadow-md"
                 >
                   <div className="flex items-center gap-3 mb-3">
                     <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#DD550C]/10 border border-[#DD550C]/30 font-[family-name:var(--font-heading)] text-sm font-bold text-[#DD550C]">
@@ -380,7 +380,7 @@ export default function DraftTrendsPage() {
             <table className="w-full text-center text-xs">
               <thead>
                 <tr className="border-b border-white/10">
-                  <th className="sticky left-0 bg-[#112d4e] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400 min-w-[100px]">
+                  <th className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400 min-w-[100px]">
                     Manager
                   </th>
                   {SKILL_POSITIONS.map((pos) => (
@@ -409,7 +409,7 @@ export default function DraftTrendsPage() {
                       key={s.name}
                       className="border-b border-white/5 hover:bg-white/5 transition-colors"
                     >
-                      <td className="sticky left-0 bg-[#112d4e] px-3 py-1.5 text-left">
+                      <td className="sticky left-0 bg-[#2C1810] px-3 py-1.5 text-left">
                         <Link
                           href={`/managers/${s.slug}`}
                           className="text-sm font-semibold text-white hover:text-[#DD550C] transition-colors"
@@ -450,11 +450,11 @@ export default function DraftTrendsPage() {
 
 function QuickStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#112d4e] p-4 text-center">
-      <p className="font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] text-gray-400">
+    <div className="rounded-xl border-3 border-[#D4A847] bg-gradient-to-b from-[#2C1810] to-[#1A0F08] p-4 text-center shadow-lg">
+      <p className="font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">
         {label}
       </p>
-      <p className="mt-1 font-[family-name:var(--font-heading)] text-2xl font-bold text-white">
+      <p className="mt-1 font-[family-name:var(--font-heading)] text-2xl font-bold text-[#F5F0E8]">
         {value}
       </p>
     </div>

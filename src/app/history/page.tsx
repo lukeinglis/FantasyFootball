@@ -91,37 +91,37 @@ export default function HistoryPage() {
         {/* Summary Cards */}
         {seasons.length > 0 && (
           <div className="mb-10 grid gap-4 sm:grid-cols-3">
-            <Card variant="glass">
+            <Card variant="scoreboard">
               <CardBody>
                 <div className="text-center">
-                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">
                     Seasons
                   </p>
-                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-gradient">
+                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-[#D4A847]">
                     {seasons.length}
                   </p>
                 </div>
               </CardBody>
             </Card>
-            <Card variant="glass">
+            <Card variant="scoreboard">
               <CardBody>
                 <div className="text-center">
-                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">
                     Unique Champions
                   </p>
-                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-gradient">
+                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-[#D4A847]">
                     {uniqueChamps}
                   </p>
                 </div>
               </CardBody>
             </Card>
-            <Card variant="glass">
+            <Card variant="scoreboard">
               <CardBody>
                 <div className="text-center">
-                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">
+                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">
                     Defending Champ
                   </p>
-                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-gradient">
+                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-[#D4A847]">
                     {seasons[0]?.champion || "—"}
                   </p>
                 </div>
@@ -140,7 +140,7 @@ export default function HistoryPage() {
           <div className="grid gap-10 lg:grid-cols-3">
             {/* Timeline: 2 columns on large screens */}
             <div className="lg:col-span-2">
-              <div data-testid="history-timeline" className="relative border-s-2 border-[#DD550C]/30 ms-4 sm:ms-6">
+              <div data-testid="history-timeline" className="relative border-s-2 border-[#D4A847]/40 ms-4 sm:ms-6">
                 {seasons.map((s, i) => {
                   const isLatest = i === 0;
                   const milestones = s.milestones?.filter(Boolean) ?? [];
@@ -148,15 +148,15 @@ export default function HistoryPage() {
                     <div key={`${s.year}-${i}`} data-testid="season-card" className="mb-8 ms-6 sm:ms-8 last:mb-0">
                       {/* Timeline dot */}
                       <span
-                        className={`absolute -start-[9px] flex h-4 w-4 items-center justify-center rounded-full ring-4 ring-[#0C2340] ${
+                        className={`absolute -start-[9px] flex h-4 w-4 items-center justify-center rounded-full ring-4 ring-[#2D8C3C] ${
                           isLatest
-                            ? "bg-[#DD550C] shadow-lg shadow-[#DD550C]/40"
-                            : "bg-[#1a3a5c] border border-[#DD550C]/40"
+                            ? "bg-[#D4A847] shadow-lg shadow-[#D4A847]/40"
+                            : "bg-[#8B5E3C] border border-[#D4A847]/40"
                         }`}
                       />
 
                       <Card
-                        variant="glass"
+                        variant="scoreboard"
                         className={isLatest ? "border-[#DD550C]/30" : ""}
                       >
                         <CardBody>
@@ -202,7 +202,7 @@ export default function HistoryPage() {
                               <span className="text-base" aria-hidden>
                                 🥉
                               </span>
-                              <span className="text-gray-400">
+                              <span className="text-[rgba(245,240,232,0.5)]">
                                 {nameAndTeam(s.third, s.thirdTeam)}
                               </span>
                             </div>
@@ -241,7 +241,7 @@ export default function HistoryPage() {
                             <p className="truncate font-semibold text-white text-sm">
                               {reign.holder}
                             </p>
-                            <p className="text-xs text-gray-400">
+                            <p className="text-xs text-[rgba(245,240,232,0.5)]">
                               {reign.from === reign.to
                                 ? String(reign.from)
                                 : `${reign.from}–${reign.to}`}
@@ -274,7 +274,7 @@ export default function HistoryPage() {
                                 />
                               ))}
                             </div>
-                            <span className="w-4 text-right font-mono text-xs text-gray-400">
+                            <span className="w-4 text-right font-mono text-xs text-[rgba(245,240,232,0.5)]">
                               {t.count}
                             </span>
                           </div>

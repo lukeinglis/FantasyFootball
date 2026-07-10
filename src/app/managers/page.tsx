@@ -96,70 +96,69 @@ function ManagerCard({
   return (
     <Link
       href={`/managers/${profile.slug}`}
-      className="group block rounded-2xl border border-white/10 bg-[#112d4e] p-5 transition-all duration-300 hover:border-[#DD550C]/30 hover:shadow-lg hover:shadow-[#DD550C]/10 hover:-translate-y-0.5"
+      className="group block overflow-hidden rounded-xl border-3 border-[#A0784C] bg-gradient-to-br from-[#FFFBF0] to-[#F0E8D8] shadow-md transition-all duration-200 hover:-translate-y-1 hover:rotate-[-1deg] hover:shadow-xl"
     >
-      <div className="flex items-start gap-4">
-        <div className="relative flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#DD550C] to-[#a33d08] text-base font-bold text-white shadow-lg shadow-[#DD550C]/20 transition-transform duration-300 group-hover:scale-110">
-          {initials}
-          {profile.championships > 0 && (
-            <span className="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-[#DD550C] text-[9px] font-bold text-white ring-2 ring-[#112d4e]">
-              {profile.championships}
-            </span>
-          )}
-        </div>
-        <div className="min-w-0 flex-1">
-          <p className="truncate font-[family-name:var(--font-heading)] font-semibold uppercase tracking-wide text-white">
-            {profile.name}
-          </p>
-          <p className="truncate text-sm text-gray-400 italic">
-            {profile.currentTeamName || "No team"}
-          </p>
-          <div className="mt-2 flex items-center gap-3 text-xs text-gray-500">
-            <span>{profile.yearsActive.length} seasons</span>
-            <span className="text-white/20">|</span>
-            <span>{profile.totalPicks} picks</span>
-            {profile.championships > 0 && (
-              <>
-                <span className="text-white/20">|</span>
-                <span className="text-[#DD550C]">🏆 {profile.championships}</span>
-              </>
-            )}
-          </div>
-        </div>
+      {/* Trading-card header stripe */}
+      <div className="bg-gradient-to-r from-[#D32F2F] to-[#8B1A1A] px-4 py-2 flex items-center justify-between">
+        <p className="truncate font-[family-name:var(--font-heading)] text-sm text-white tracking-wide" style={{ textShadow: '1px 1px 0 rgba(0,0,0,0.3)' }}>
+          {profile.name}
+        </p>
+        {profile.championships > 0 && (
+          <span className="rounded bg-[#FFD700] px-1.5 py-0.5 font-[family-name:var(--font-heading)] text-[10px] text-[#2C1810] tracking-wide">
+            {profile.championships}× Champ
+          </span>
+        )}
       </div>
 
-      {careerStats && careerStats.seasonsPlayed > 0 && (
-        <div className="mt-3 flex items-center gap-3 rounded-lg bg-white/5 px-3 py-2 text-xs">
-          <span className="text-gray-300 font-medium">
-            {careerStats.wins}-{careerStats.losses}{careerStats.ties > 0 ? `-${careerStats.ties}` : ""}
-          </span>
-          <span className="text-[#DD550C] font-bold">{careerStats.winPct}%</span>
-          <span className="text-gray-500 ml-auto">{careerStats.totalPointsFor.toLocaleString()} PF</span>
+      <div className="p-4">
+        <div className="flex items-start gap-3">
+          <div className="relative flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#4A90D9] to-[#1565C0] border-3 border-[#A0784C] font-[family-name:var(--font-heading)] text-lg text-white" style={{ textShadow: '1px 1px 0 rgba(0,0,0,0.3)' }}>
+            {initials}
+          </div>
+          <div className="min-w-0 flex-1">
+            <p className="truncate text-sm text-[#6B5744] italic">
+              {profile.currentTeamName || "No team"}
+            </p>
+            <div className="mt-1 flex items-center gap-3 text-xs text-[#6B5744]">
+              <span>{profile.yearsActive.length} seasons</span>
+              <span className="text-[#A0784C]">·</span>
+              <span>{profile.totalPicks} picks</span>
+            </div>
+          </div>
         </div>
-      )}
 
-      {/* Position tendency mini-bar */}
-      {totalPicks > 0 && (
-        <div className="mt-3 flex items-center gap-2">
-          <div className="flex h-1.5 flex-1 overflow-hidden rounded-full bg-white/10">
-            {topPos.map(([pos, count]) => {
-              const pct = (count / totalPicks) * 100;
-              const colorClass = POS_COLORS[pos] || "text-gray-300";
-              const bgColor = colorClass.replace("text-", "bg-").replace("-300", "-500/60");
-              return (
-                <div key={pos} className={`h-full ${bgColor}`} style={{ width: `${pct}%` }} />
-              );
-            })}
+        {careerStats && careerStats.seasonsPlayed > 0 && (
+          <div className="mt-3 flex items-center gap-3 border-t border-dashed border-[#A0784C]/30 pt-2 text-xs">
+            <span className="text-[#3E2B1C] font-semibold">
+              {careerStats.wins}-{careerStats.losses}{careerStats.ties > 0 ? `-${careerStats.ties}` : ""}
+            </span>
+            <span className="text-[#DD550C] font-bold">{careerStats.winPct}%</span>
+            <span className="text-[#6B5744] ml-auto">{careerStats.totalPointsFor.toLocaleString()} PF</span>
           </div>
-          <div className="flex gap-1.5 text-[9px] font-bold">
-            {topPos.slice(0, 3).map(([pos]) => (
-              <span key={pos} className={POS_COLORS[pos] || "text-gray-300"}>
-                {pos}
-              </span>
-            ))}
+        )}
+
+        {totalPicks > 0 && (
+          <div className="mt-3 flex items-center gap-2">
+            <div className="flex h-1.5 flex-1 overflow-hidden rounded-full bg-[#A0784C]/20">
+              {topPos.map(([pos, count]) => {
+                const pct = (count / totalPicks) * 100;
+                const colorClass = POS_COLORS[pos] || "text-gray-300";
+                const bgColor = colorClass.replace("text-", "bg-").replace("-300", "-500/60");
+                return (
+                  <div key={pos} className={`h-full ${bgColor}`} style={{ width: `${pct}%` }} />
+                );
+              })}
+            </div>
+            <div className="flex gap-1.5 text-[9px] font-bold">
+              {topPos.slice(0, 3).map(([pos]) => (
+                <span key={pos} className={POS_COLORS[pos] || "text-gray-300"}>
+                  {pos}
+                </span>
+              ))}
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </Link>
   );
 }
