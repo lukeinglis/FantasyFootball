@@ -3,19 +3,13 @@
 // All input may come from external APIs; sanitize aggressively.
 // ============================================================
 
-import logger from "@/lib/logger";
-
-const log = logger.child({ module: "format" });
-
 /** Returns true if a value is a finite, real number. */
 export function isFiniteNumber(value: unknown): value is number {
-  log.debug({ value }, "isFiniteNumber called");
   return typeof value === "number" && Number.isFinite(value);
 }
 
 /** Coerce to a finite number or fall back. Handles NaN, Infinity, null. */
 export function toFiniteNumber(value: unknown, fallback = 0): number {
-  log.debug({ value, fallback }, "toFiniteNumber called");
   if (isFiniteNumber(value)) return value;
   if (typeof value === "string" && value.trim() !== "") {
     const parsed = Number(value);
@@ -29,7 +23,6 @@ export function formatPoints(
   value: number | null | undefined,
   digits = 2
 ): string {
-  log.debug({ value, digits }, "formatPoints called");
   if (value === null || value === undefined) return "—";
   if (!Number.isFinite(value)) return "—";
   return value.toFixed(digits);
@@ -37,7 +30,6 @@ export function formatPoints(
 
 /** Format an integer count safely. */
 export function formatInt(value: number | null | undefined): string {
-  log.debug({ value }, "formatInt called");
   if (value === null || value === undefined) return "—";
   if (!Number.isFinite(value)) return "—";
   return Math.trunc(value).toString();
@@ -49,7 +41,6 @@ export function formatRecord(
   losses: number | null | undefined,
   ties: number | null | undefined
 ): string {
-  log.debug({ wins, losses, ties }, "formatRecord called");
   const w = toFiniteNumber(wins, 0);
   const l = toFiniteNumber(losses, 0);
   const t = toFiniteNumber(ties, 0);
@@ -61,7 +52,6 @@ export function formatPercent(
   value: number | null | undefined,
   digits = 1
 ): string {
-  log.debug({ value, digits }, "formatPercent called");
   if (value === null || value === undefined) return "—";
   if (!Number.isFinite(value)) return "—";
   return `${(value * 100).toFixed(digits)}%`;
@@ -69,7 +59,6 @@ export function formatPercent(
 
 /** Format a unix-ms or unix-seconds timestamp as a localized date. */
 export function formatTimestamp(ts: number | null | undefined): string {
-  log.debug({ ts }, "formatTimestamp called");
   if (ts === null || ts === undefined || !Number.isFinite(ts)) return "—";
   // Treat anything < 10^12 as seconds, else ms.
   const ms = ts < 1e12 ? ts * 1000 : ts;
@@ -84,7 +73,6 @@ export function formatTimestamp(ts: number | null | undefined): string {
 
 /** Capitalize a single word. */
 export function titleCase(input: string | null | undefined): string {
-  log.debug({ input }, "titleCase called");
   if (!input) return "";
   return input
     .split(/[\s_-]+/)
@@ -95,7 +83,6 @@ export function titleCase(input: string | null | undefined): string {
 
 /** Format a USD currency value. */
 export function formatUsd(value: number): string {
-  log.debug({ value }, "formatUsd called");
   if (!Number.isFinite(value)) return "—";
   return value.toLocaleString("en-US", {
     style: "currency",

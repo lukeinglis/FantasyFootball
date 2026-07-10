@@ -79,6 +79,8 @@ export interface ManagerPersonalRecords {
   longestLossStreak: PersonalRecord | null;
 }
 
+export type PlayoffResult = "Champion" | "Runner-up" | "3rd Place" | "Playoffs" | "Did not qualify";
+
 export interface SeasonBreakdown {
   year: number;
   teamName: string;
@@ -88,17 +90,21 @@ export interface SeasonBreakdown {
   pointsFor: number;
   pointsAgainst: number;
   rank: number;
-  playoffResult: string;
+  playoffResult: PlayoffResult;
 }
 
+let cachedSeasons: SeasonFile[] | null = null;
+
 function loadSeasonFiles(): SeasonFile[] {
+  if (cachedSeasons) return cachedSeasons;
   const dir = join(process.cwd(), "src", "data", "seasons");
   try {
     const files = readdirSync(dir).filter((f) => f.endsWith(".json")).sort();
-    return files.map((f) => {
+    cachedSeasons = files.map((f) => {
       const raw = readFileSync(join(dir, f), "utf-8");
       return JSON.parse(raw) as SeasonFile;
     });
+    return cachedSeasons;
   } catch {
     return [];
   }
@@ -110,12 +116,12 @@ function nameMatch(a: string, b: string): boolean {
 
 const history = historyData as { seasons: HistorySeason[] };
 const standings = allTimeRecords.seasonStandings as SeasonStanding[];
+const members = membersData as {
+  active: { name: string; teamName: string }[];
+  emeritus: { name: string; teamName: string }[];
+};
 
 export function getAllManagerSlugs(): string[] {
-  const members = membersData as {
-    active: { name: string }[];
-    emeritus: { name: string }[];
-  };
   const names = new Set<string>();
   for (const m of [...members.active, ...members.emeritus]) {
     names.add(m.name);
@@ -131,11 +137,6 @@ export function getAllManagerSlugs(): string[] {
 
 export function getManagerCareerStats(slug: string): ManagerCareerStats | null {
   const name = slugToName(slug);
-  const members = membersData as {
-    active: { name: string; teamName: string }[];
-    emeritus: { name: string; teamName: string }[];
-  };
-
   const activeMember = members.active.find((m) => nameMatch(m.name, name));
   const emeritusMember = members.emeritus.find((m) => nameMatch(m.name, name));
 
@@ -240,9 +241,8 @@ export function getManagerPersonalRecords(slug: string): ManagerPersonalRecords 
       }
 
       const margin = myPoints - oppPoints;
-      const isWin = margin > 0;
 
-      if (isWin) {
+      if (margin > 0) {
         if (biggestWin === null || margin > biggestWin.value) {
           biggestWin = { label: "Biggest Win Margin", value: Math.round(margin * 100) / 100, detail: weekLabel };
         }
@@ -252,8 +252,8 @@ export function getManagerPersonalRecords(slug: string): ManagerPersonalRecords 
           maxWinStreak = currentWinStreak;
           winStreakDetail = `${season.season}`;
         }
-      } else {
-        if (closestLoss === null || (margin < 0 && Math.abs(margin) < closestLoss.value)) {
+      } else if (margin < 0) {
+        if (closestLoss === null || Math.abs(margin) < closestLoss.value) {
           closestLoss = { label: "Closest Loss", value: Math.round(Math.abs(margin) * 100) / 100, detail: weekLabel };
         }
         currentLossStreak++;
@@ -262,6 +262,9 @@ export function getManagerPersonalRecords(slug: string): ManagerPersonalRecords 
           maxLossStreak = currentLossStreak;
           lossStreakDetail = `${season.season}`;
         }
+      } else {
+        currentWinStreak = 0;
+        currentLossStreak = 0;
       }
     }
   }
@@ -289,7 +292,7 @@ export function getManagerSeasonBreakdowns(slug: string): SeasonBreakdown[] {
 
   return managerStandings
     .map((s) => {
-      let playoffResult = "Did not qualify";
+      let playoffResult: PlayoffResult = "Did not qualify";
 
       const seasonFile = seasons.find((sf) => sf.season === s.season);
       if (seasonFile) {
