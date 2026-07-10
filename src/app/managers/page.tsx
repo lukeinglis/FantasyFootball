@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { getAllManagerNames, buildManagerProfile, getManagerSlug } from "@/lib/managers";
+import { getManagerCareerStats } from "@/lib/manager-stats";
+import type { ManagerCareerStats } from "@/lib/manager-stats";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 
@@ -89,6 +91,8 @@ function ManagerCard({
     .slice(0, 3);
   const totalPicks = Object.values(profile.positionBreakdown).reduce((s, c) => s + c, 0);
 
+  const careerStats: ManagerCareerStats | null = getManagerCareerStats(profile.slug);
+
   return (
     <Link
       href={`/managers/${profile.slug}`}
@@ -123,6 +127,16 @@ function ManagerCard({
           </div>
         </div>
       </div>
+
+      {careerStats && careerStats.seasonsPlayed > 0 && (
+        <div className="mt-3 flex items-center gap-3 rounded-lg bg-white/5 px-3 py-2 text-xs">
+          <span className="text-gray-300 font-medium">
+            {careerStats.wins}-{careerStats.losses}{careerStats.ties > 0 ? `-${careerStats.ties}` : ""}
+          </span>
+          <span className="text-[#DD550C] font-bold">{careerStats.winPct}%</span>
+          <span className="text-gray-500 ml-auto">{careerStats.totalPointsFor.toLocaleString()} PF</span>
+        </div>
+      )}
 
       {/* Position tendency mini-bar */}
       {totalPicks > 0 && (

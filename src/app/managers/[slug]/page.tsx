@@ -3,6 +3,12 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { buildManagerProfile, slugToName, getAllManagerNames, getManagerSlug } from "@/lib/managers";
 import type { DraftDNA, DraftCapital, EraBreakdown, HeatmapCell } from "@/lib/managers";
+import {
+  getManagerCareerStats,
+  getManagerPersonalRecords,
+  getManagerSeasonBreakdowns,
+} from "@/lib/manager-stats";
+import type { PersonalRecord } from "@/lib/manager-stats";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import { Card, CardBody, CardHeader } from "@/components/Card";
@@ -78,6 +84,19 @@ export default async function ManagerProfilePage({
     .sort((a, b) => b[1] - a[1])
     .slice(0, 8);
 
+  const careerStats = getManagerCareerStats(slug);
+  const personalRecords = getManagerPersonalRecords(slug);
+  const seasonBreakdowns = getManagerSeasonBreakdowns(slug);
+
+  const recordCards = [
+    personalRecords.highestWeekScore,
+    personalRecords.lowestWeekScore,
+    personalRecords.biggestWinMargin,
+    personalRecords.closestLoss,
+    personalRecords.longestWinStreak,
+    personalRecords.longestLossStreak,
+  ].filter((r): r is PersonalRecord => r !== null);
+
   const podiumTotal = profile.championships + profile.runnerUpYears.length + profile.thirdPlaceYears.length;
   const keeperCount = profile.draftsByYear.reduce(
     (sum, d) => sum + d.picks.filter((p) => p.isKeeper).length, 0
@@ -134,6 +153,96 @@ export default async function ManagerProfilePage({
               </div>
             </CardBody>
           </Card>
+        </Container>
+      )}
+
+      {/* Career Stats */}
+      {careerStats && careerStats.seasonsPlayed > 0 && (
+        <Container className="pt-0">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-white mb-6">
+            Career Stats
+          </h2>
+          <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
+            <CareerStatTile label="Wins" value={String(careerStats.wins)} />
+            <CareerStatTile label="Losses" value={String(careerStats.losses)} />
+            <CareerStatTile label="Win %" value={`${careerStats.winPct}%`} highlight />
+            <CareerStatTile label="Points Scored" value={careerStats.totalPointsFor.toLocaleString()} />
+            <CareerStatTile label="Points Against" value={careerStats.totalPointsAgainst.toLocaleString()} />
+            <CareerStatTile
+              label="Championships"
+              value={String(careerStats.championships)}
+              highlight={careerStats.championships > 0}
+            />
+          </div>
+        </Container>
+      )}
+
+      {/* Personal Records */}
+      {recordCards.length > 0 && (
+        <Container className="pt-0">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-white mb-6">
+            Personal Records
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {recordCards.map((record) => (
+              <PersonalRecordTile key={record.label} record={record} />
+            ))}
+          </div>
+        </Container>
+      )}
+
+      {/* Season by Season */}
+      {seasonBreakdowns.length > 0 && (
+        <Container className="pt-0">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-white mb-6">
+            Season by Season
+          </h2>
+          <div className="overflow-x-auto">
+            <table className="w-full text-sm text-left">
+              <thead>
+                <tr className="border-b border-white/10 text-gray-400 uppercase text-xs tracking-wide">
+                  <th className="py-3 pr-4">Year</th>
+                  <th className="py-3 pr-4">Team</th>
+                  <th className="py-3 pr-4 text-center">Record</th>
+                  <th className="py-3 pr-4 text-right">PF</th>
+                  <th className="py-3 pr-4 text-right">PA</th>
+                  <th className="py-3 pr-4 text-center">Finish</th>
+                  <th className="py-3 text-center">Playoffs</th>
+                </tr>
+              </thead>
+              <tbody>
+                {seasonBreakdowns.map((s) => {
+                  const isChamp = s.playoffResult === "Champion";
+                  return (
+                    <tr
+                      key={s.year}
+                      className={`border-b border-white/5 ${isChamp ? "bg-[#DD550C]/5" : ""}`}
+                    >
+                      <td className="py-3 pr-4 font-medium text-white">{s.year}</td>
+                      <td className="py-3 pr-4 text-gray-300">{s.teamName}</td>
+                      <td className="py-3 pr-4 text-center text-gray-200">
+                        {s.wins}-{s.losses}{s.ties > 0 ? `-${s.ties}` : ""}
+                      </td>
+                      <td className="py-3 pr-4 text-right text-gray-300">{s.pointsFor.toLocaleString()}</td>
+                      <td className="py-3 pr-4 text-right text-gray-300">{s.pointsAgainst.toLocaleString()}</td>
+                      <td className="py-3 pr-4 text-center">
+                        <span className={s.rank <= 3 ? "text-emerald-400" : s.rank >= 10 ? "text-red-400" : "text-gray-300"}>
+                          #{s.rank}
+                        </span>
+                      </td>
+                      <td className="py-3 text-center">
+                        {isChamp && <span className="text-[#DD550C] font-semibold">Champion</span>}
+                        {s.playoffResult === "Runner-up" && <span className="text-gray-200">Runner-up</span>}
+                        {s.playoffResult === "3rd Place" && <span className="text-gray-300">3rd Place</span>}
+                        {s.playoffResult === "Playoffs" && <span className="text-gray-400">Playoffs</span>}
+                        {s.playoffResult === "Did not qualify" && <span className="text-gray-500">-</span>}
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </Container>
       )}
 
@@ -615,6 +724,32 @@ export default async function ManagerProfilePage({
 }
 
 // ── Sub-components ───────────────────────────────────────────────
+
+function CareerStatTile({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+  return (
+    <Card variant="glass">
+      <CardBody className="text-center py-5">
+        <p className={`text-2xl font-bold ${highlight ? "text-[#DD550C]" : "text-white"}`}>{value}</p>
+        <p className="text-xs text-gray-400 mt-1">{label}</p>
+      </CardBody>
+    </Card>
+  );
+}
+
+function PersonalRecordTile({ record }: { record: PersonalRecord }) {
+  const isStreak = record.label.includes("Streak");
+  return (
+    <Card variant="glass">
+      <CardBody className="py-5">
+        <p className="text-xs font-medium text-[#DD550C]/80 uppercase tracking-wide">{record.label}</p>
+        <p className="text-2xl font-bold text-white mt-1">
+          {isStreak ? `${record.value} games` : `${record.value} pts`}
+        </p>
+        <p className="text-xs text-gray-400 mt-1">{record.detail}</p>
+      </CardBody>
+    </Card>
+  );
+}
 
 function StatCard({ label, value, highlight, keeper }: { label: string; value: string; highlight?: boolean; keeper?: boolean }) {
   return (
