@@ -69,7 +69,7 @@ export default async function TeamsPage() {
                         </div>
                       )}
                       <div className="min-w-0">
-                        <h3 className="truncate font-[family-name:var(--font-heading)] text-sm font-bold text-white uppercase tracking-wide" style={{ textShadow: "1px 1px 0 rgba(0,0,0,0.3)" }}>
+                        <h3 className="truncate font-[family-name:var(--font-heading)] text-sm font-bold text-white uppercase tracking-wide text-shadow-sm">
                           {t.teamName}
                         </h3>
                         <p className="truncate text-xs text-white/70">

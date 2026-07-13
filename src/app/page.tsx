@@ -69,7 +69,7 @@ export default async function Home() {
               <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.3em] text-[#D4A847] sm:text-sm">
                 {season ? `${season} Season` : `${history.seasons.length} Seasons Strong`}
               </p>
-              <h1 className="mt-4 font-[family-name:var(--font-display)] text-5xl tracking-tight text-[#F5F0E8] sm:text-6xl lg:text-7xl" style={{ textShadow: "3px 3px 0 #5C3A1E, 0 0 20px rgba(0,0,0,0.3)" }}>
+              <h1 className="mt-4 font-[family-name:var(--font-display)] text-5xl tracking-tight text-[#F5F0E8] sm:text-6xl lg:text-7xl text-shadow-wood-lg">
                 Greybushes{" "}
                 <span className="text-[#FFD23F]">&amp;</span>{" "}
                 Chili Dogs
@@ -120,7 +120,7 @@ export default async function Home() {
                 <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#D4A847]">
                   {defendingChamp.year} Defending Champion
                 </p>
-                <p className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[#F5F0E8] sm:text-3xl" style={{ textShadow: "2px 2px 0 #5C3A1E" }}>
+                <p className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[#F5F0E8] sm:text-3xl text-shadow-wood">
                   {defendingChamp.champion}
                 </p>
                 <p className="text-sm text-[#F5F0E8]/50">
@@ -154,7 +154,7 @@ export default async function Home() {
             <CardBody>
               <div className="text-center">
                 <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">Seasons Played</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F]" style={{ textShadow: "0 0 6px rgba(255,210,63,0.3)" }}>{history.seasons.length}</p>
+                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">{history.seasons.length}</p>
                 <p className="mt-1 text-sm text-[#F5F0E8]/50">{history.seasons[history.seasons.length - 1]?.year} to {history.seasons[0]?.year}</p>
               </div>
             </CardBody>
@@ -163,7 +163,7 @@ export default async function Home() {
             <CardBody>
               <div className="text-center">
                 <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">Unique Champions</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F]" style={{ textShadow: "0 0 6px rgba(255,210,63,0.3)" }}>{stats.uniqueChamps}</p>
+                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">{stats.uniqueChamps}</p>
                 <p className="mt-1 text-sm text-[#F5F0E8]/50">No repeat winners</p>
               </div>
             </CardBody>
@@ -172,7 +172,7 @@ export default async function Home() {
             <CardBody>
               <div className="text-center">
                 <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">The Pot</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F]" style={{ textShadow: "0 0 6px rgba(255,210,63,0.3)" }}>${PAYOUTS.totalPot.toLocaleString()}</p>
+                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">${PAYOUTS.totalPot.toLocaleString()}</p>
                 <p className="mt-1 text-sm text-[#F5F0E8]/50">${PAYOUTS.buyIn} buy-in / {members.active.length} managers</p>
               </div>
             </CardBody>
@@ -181,7 +181,7 @@ export default async function Home() {
             <CardBody>
               <div className="text-center">
                 <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">Active Managers</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F]" style={{ textShadow: "0 0 6px rgba(255,210,63,0.3)" }}>{members.active.length}</p>
+                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">{members.active.length}</p>
                 <p className="mt-1 text-sm text-[#F5F0E8]/50">Plus {members.emeritus.length} emeritus</p>
               </div>
             </CardBody>
@@ -304,7 +304,7 @@ export default async function Home() {
           <div className="relative overflow-hidden rounded-xl border-[3px] border-[#8B5E3C] bg-[#2A4A3A] px-8 py-16 text-center shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_0_30px_rgba(0,0,0,0.2)]">
             <div className="relative">
               <p className="text-5xl" aria-hidden>🏈</p>
-              <h2 className="mt-4 font-[family-name:var(--font-display)] text-3xl tracking-wide text-[#F5F0E8] sm:text-4xl" style={{ textShadow: "2px 2px 0 rgba(0,0,0,0.4)" }}>
+              <h2 className="mt-4 font-[family-name:var(--font-display)] text-3xl tracking-wide text-[#F5F0E8] sm:text-4xl text-shadow-md">
                 Season Awaits
               </h2>
               <p className="mx-auto mt-3 max-w-lg text-[#F5F0E8]/70">

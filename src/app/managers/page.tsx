@@ -100,7 +100,7 @@ function ManagerCard({
     >
       {/* Trading-card header stripe */}
       <div className="bg-gradient-to-r from-[#D32F2F] to-[#8B1A1A] px-4 py-2 flex items-center justify-between">
-        <p className="truncate font-[family-name:var(--font-heading)] text-sm text-white tracking-wide" style={{ textShadow: '1px 1px 0 rgba(0,0,0,0.3)' }}>
+        <p className="truncate font-[family-name:var(--font-heading)] text-sm text-white tracking-wide text-shadow-sm">
           {profile.name}
         </p>
         {profile.championships > 0 && (
@@ -112,7 +112,7 @@ function ManagerCard({
 
       <div className="p-4">
         <div className="flex items-start gap-3">
-          <div className="relative flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#4A90D9] to-[#1565C0] border-3 border-[#A0784C] font-[family-name:var(--font-heading)] text-lg text-white" style={{ textShadow: '1px 1px 0 rgba(0,0,0,0.3)' }}>
+          <div className="relative flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#4A90D9] to-[#1565C0] border-3 border-[#A0784C] font-[family-name:var(--font-heading)] text-lg text-white text-shadow-sm">
             {initials}
           </div>
           <div className="min-w-0 flex-1">

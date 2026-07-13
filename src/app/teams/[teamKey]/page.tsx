@@ -285,9 +285,8 @@ function StatCard({
           </p>
           <p
             className={`mt-1 font-[family-name:var(--font-heading)] text-xl font-bold ${
-              highlight ? "text-[#FFD23F]" : "text-[#F5F0E8]"
+              highlight ? "text-[#FFD23F] text-shadow-glow-yellow" : "text-[#F5F0E8]"
             }`}
-            style={highlight ? { textShadow: "0 0 6px rgba(255,210,63,0.3)" } : undefined}
           >
             {value}
           </p>

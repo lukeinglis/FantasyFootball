@@ -38,7 +38,7 @@ export default function RulesPage() {
             <div key={section.title} data-testid="rules-section">
               <Card variant="chalkboard">
                 <div className="border-b border-[#8B5E3C]/30 px-5 py-4">
-                  <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[#F5F0E8]" style={{ textShadow: "0 0 4px rgba(245,240,232,0.2)" }}>
+                  <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[#F5F0E8] text-shadow-glow-chalk">
                     {section.title}
                   </h2>
                 </div>

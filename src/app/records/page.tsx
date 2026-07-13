@@ -631,7 +631,7 @@ function StatCard({ label, value, highlight }: { label: string; value: string; h
       <CardBody>
         <div className="text-center">
           <p className="font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">{label}</p>
-          <p className={`mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold ${highlight ? "text-[#FFD23F]" : "text-[#F5F0E8]"}`} style={highlight ? { textShadow: "0 0 6px rgba(255,210,63,0.3)" } : undefined}>{value}</p>
+          <p className={`mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold ${highlight ? "text-[#FFD23F] text-shadow-glow-yellow" : "text-[#F5F0E8]"}`}>{value}</p>
         </div>
       </CardBody>
     </Card>

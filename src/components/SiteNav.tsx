@@ -75,8 +75,7 @@ export default function SiteNav() {
         >
           <span aria-hidden className="text-xl">🏈</span>
           <span
-            className="font-[family-name:var(--font-heading)] text-base sm:text-lg tracking-wide"
-            style={{ textShadow: "2px 2px 0 rgba(0,0,0,0.5), 0 0 10px rgba(255,210,63,0.3)" }}
+            className="font-[family-name:var(--font-heading)] text-base sm:text-lg tracking-wide text-shadow-logo"
           >
             Greybushes <span className="text-[#F5F0E8]/70">&amp;</span> Chili Dogs
           </span>

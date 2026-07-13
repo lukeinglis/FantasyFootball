@@ -59,7 +59,7 @@ export default function WallOfShamePage() {
                         <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-widest text-[#D4A847]">
                           Season {p.season}
                         </p>
-                        <h3 className="mt-1 text-lg font-bold text-[#F5F0E8]" style={{ fontFamily: "var(--font-display)", textShadow: "0 0 4px rgba(245,240,232,0.2)" }}>
+                        <h3 className="mt-1 text-lg font-bold text-[#F5F0E8] text-shadow-glow-chalk" style={{ fontFamily: "var(--font-display)" }}>
                           {p.loser || "Unknown loser"}
                           {p.team && (
                             <span className="ml-2 text-sm font-normal italic text-[#F5F0E8]/50">

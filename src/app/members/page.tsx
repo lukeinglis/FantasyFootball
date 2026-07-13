@@ -32,12 +32,12 @@ function MemberCard({ member }: { member: Member }) {
     <div data-testid="member-card">
       <Card variant="trading-card" className="h-full">
         <div className="bg-[linear-gradient(135deg,#D32F2F,#8B1A1A)] px-4 py-3 flex items-center justify-between">
-          <h3 className="font-[family-name:var(--font-heading)] text-sm font-bold text-white uppercase tracking-wide" style={{ textShadow: "1px 1px 0 rgba(0,0,0,0.3)" }}>
+          <h3 className="font-[family-name:var(--font-heading)] text-sm font-bold text-white uppercase tracking-wide text-shadow-sm">
             {member.name}
           </h3>
         </div>
         <div className="flex items-center gap-4 px-4 py-4">
-          <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#4A90D9,#1565C0)] font-[family-name:var(--font-heading)] text-base font-bold text-white border-[3px] border-[#A0784C]" style={{ textShadow: "1px 1px 0 rgba(0,0,0,0.3)" }}>
+          <div className="flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-[linear-gradient(135deg,#4A90D9,#1565C0)] font-[family-name:var(--font-heading)] text-base font-bold text-white border-[3px] border-[#A0784C] text-shadow-sm">
             {initials || "?"}
           </div>
           <div className="min-w-0">

@@ -20,8 +20,7 @@ export default function PageHeader({
           <div>
             {pennant && (
               <div
-                className="mb-3 inline-block bg-[#C62828] px-6 py-1.5 font-[family-name:var(--font-heading)] text-sm uppercase tracking-widest text-[#F5F0E8] [clip-path:polygon(0_0,100%_0,92%_100%,0_100%)]"
-                style={{ textShadow: "1px 1px 0 rgba(0,0,0,0.3)" }}
+                className="mb-3 inline-block bg-[#C62828] px-6 py-1.5 font-[family-name:var(--font-heading)] text-sm uppercase tracking-widest text-[#F5F0E8] [clip-path:polygon(0_0,100%_0,92%_100%,0_100%)] text-shadow-sm"
               >
                 {pennant}
               </div>
@@ -33,15 +32,13 @@ export default function PageHeader({
             )}
             <h1
               data-testid="page-title"
-              className="mt-1 font-[family-name:var(--font-display)] text-4xl tracking-tight text-[#F5F0E8] sm:text-5xl"
-              style={{ textShadow: "3px 3px 0 #5C3A1E, 0 0 20px rgba(0,0,0,0.3)" }}
+              className="mt-1 font-[family-name:var(--font-display)] text-4xl tracking-tight text-[#F5F0E8] sm:text-5xl text-shadow-wood-lg"
             >
               {title}
             </h1>
             {subtitle && (
               <p
-                className="mt-2 max-w-2xl font-[family-name:var(--font-body)] text-sm font-semibold text-[rgba(245,240,232,0.7)] sm:text-base"
-                style={{ textShadow: "1px 1px 0 rgba(0,0,0,0.3)" }}
+                className="mt-2 max-w-2xl font-[family-name:var(--font-body)] text-sm font-semibold text-[rgba(245,240,232,0.7)] sm:text-base text-shadow-sm"
               >
                 {subtitle}
               </p>

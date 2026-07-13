@@ -23,8 +23,8 @@ export default function GlobalError({
           <div className="text-center">
             <p className="text-5xl" aria-hidden>🏈</p>
             <h1
-              className="mt-4 text-3xl sm:text-4xl font-bold text-[#F5F0E8]"
-              style={{ fontFamily: "var(--font-display)", textShadow: "0 0 4px rgba(245,240,232,0.2)" }}
+              className="mt-4 text-3xl sm:text-4xl font-bold text-[#F5F0E8] text-shadow-glow-chalk"
+              style={{ fontFamily: "var(--font-display)" }}
             >
               Fumble!
             </h1>

@@ -121,8 +121,7 @@ function CountdownUnit({ value, label }: { value: number; label: string }) {
   return (
     <div>
       <p
-        className="font-[family-name:var(--font-heading)] font-bold text-4xl text-white sm:text-5xl"
-        style={{ textShadow: "0 0 20px rgba(221, 85, 12, 0.4)" }}
+        className="font-[family-name:var(--font-heading)] font-bold text-4xl text-white sm:text-5xl text-shadow-glow-orange"
       >
         {String(value).padStart(2, "0")}
       </p>
