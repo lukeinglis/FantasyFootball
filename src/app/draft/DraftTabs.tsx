@@ -3,12 +3,13 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback, type ReactNode } from "react";
 import TabNav from "@/components/TabNav";
+import TabErrorBoundary from "@/components/TabErrorBoundary";
 
 const TABS = [
-  { id: "board", label: "Board" },
-  { id: "history", label: "History" },
-  { id: "insights", label: "Insights" },
-  { id: "trends", label: "Trends" },
+  { id: "board", label: "Board", description: "Current season picks" },
+  { id: "history", label: "History", description: "Every pick, every year" },
+  { id: "insights", label: "Insights", description: "Draft tendencies & archetypes" },
+  { id: "trends", label: "Trends", description: "Position & value analysis" },
 ];
 
 interface DraftTabsProps {
@@ -48,11 +49,11 @@ export default function DraftTabs({
   return (
     <>
       <TabNav tabs={TABS} activeTab={validTab} onTabChange={handleTabChange} />
-      <div>
-        {validTab === "board" && boardContent}
-        {validTab === "history" && historyContent}
-        {validTab === "insights" && insightsContent}
-        {validTab === "trends" && trendsContent}
+      <div key={validTab} className="animate-fade-in-up">
+        {validTab === "board" && <TabErrorBoundary fallbackLabel="Draft board unavailable">{boardContent}</TabErrorBoundary>}
+        {validTab === "history" && <TabErrorBoundary fallbackLabel="Draft history unavailable">{historyContent}</TabErrorBoundary>}
+        {validTab === "insights" && <TabErrorBoundary fallbackLabel="Draft insights unavailable">{insightsContent}</TabErrorBoundary>}
+        {validTab === "trends" && <TabErrorBoundary fallbackLabel="Draft trends unavailable">{trendsContent}</TabErrorBoundary>}
       </div>
     </>
   );

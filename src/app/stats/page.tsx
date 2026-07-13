@@ -58,7 +58,7 @@ export default async function StatsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="Analytics"
+        eyebrow="2025 Season"
         title="League Stats"
         subtitle="The numbers behind the madness. Superlatives, rankings, and bragging rights."
       />

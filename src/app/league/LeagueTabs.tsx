@@ -3,10 +3,11 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback, type ReactNode } from "react";
 import TabNav from "@/components/TabNav";
+import TabErrorBoundary from "@/components/TabErrorBoundary";
 
 const TABS = [
-  { id: "rules", label: "Rules" },
-  { id: "payouts", label: "Payouts" },
+  { id: "rules", label: "Rules", description: "League bylaws" },
+  { id: "payouts", label: "Payouts", description: "Prize structure" },
 ];
 
 interface LeagueTabsProps {
@@ -42,9 +43,9 @@ export default function LeagueTabs({
   return (
     <>
       <TabNav tabs={TABS} activeTab={validTab} onTabChange={handleTabChange} />
-      <div>
-        {validTab === "rules" && rulesContent}
-        {validTab === "payouts" && payoutsContent}
+      <div key={validTab} className="animate-fade-in-up">
+        {validTab === "rules" && <TabErrorBoundary fallbackLabel="Rules unavailable">{rulesContent}</TabErrorBoundary>}
+        {validTab === "payouts" && <TabErrorBoundary fallbackLabel="Payouts unavailable">{payoutsContent}</TabErrorBoundary>}
       </div>
     </>
   );

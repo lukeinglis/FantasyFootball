@@ -32,6 +32,7 @@ export default async function StandingsPage() {
     <>
       <PageHeader
         eyebrow="Live"
+        pennant="2025 Season"
         title="Standings"
         subtitle="Top 6 qualify for playoffs. Everyone else gets to think about their life choices."
       />
@@ -141,7 +142,7 @@ export default async function StandingsPage() {
                           {formatPoints(team.pointsAgainst, 1)}
                         </td>
                         <td className="px-3 py-3 text-right font-mono text-[#F5F0E8]/60 hidden lg:table-cell">
-                          {team.streak || "—"}
+                          {team.streak || "-"}
                         </td>
                       </tr>
                     );

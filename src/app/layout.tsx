@@ -51,8 +51,9 @@ export default function RootLayout({
       <body
         className={`${luckiestGuy.variable} ${bangers.variable} ${nunito.variable} font-[family-name:var(--font-body)] bg-[#2D8C3C] text-white min-h-screen flex flex-col antialiased`}
       >
+        <div className="yard-lines" aria-hidden />
         <SiteNav />
-        <main className="flex-1">{children}</main>
+        <main className="flex-1 relative z-[1] grass-bg">{children}</main>
         <SiteFooter />
       </body>
     </html>
