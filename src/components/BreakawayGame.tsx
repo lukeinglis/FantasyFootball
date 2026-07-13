@@ -16,7 +16,7 @@ const YARD_NUM_COLOR = "rgba(255,255,255,0.22)";
 const HASH_COLOR = "rgba(255,255,255,0.2)";
 const PLAYER_COLOR = "#DD550C";
 const PLAYER_GLOW = "rgba(221,85,12,0.5)";
-const TACKLER_COLOR = "#0C2340";
+const TACKLER_COLOR = "#2C1810";
 const TACKLER_OUTLINE = "#1a3a5c";
 const POWERUP_COLOR = "#FFD700";
 const ENDZONE_COLOR = "#DD550C";
@@ -941,7 +941,7 @@ export default function BreakawayGame() {
 
       {/* Leaderboard */}
       <div className="w-full lg:w-72 flex-shrink-0">
-        <div className="rounded-xl border border-white/10 bg-[#112d4e] overflow-hidden">
+        <div className="rounded-xl border border-[#D4A847]/20 bg-[#2C1810] overflow-hidden">
           <div className="border-b border-white/10 px-4 py-3">
             <h3 className="font-[family-name:var(--font-heading)] text-sm font-semibold uppercase tracking-wide text-[#DD550C]">
               Leaderboard

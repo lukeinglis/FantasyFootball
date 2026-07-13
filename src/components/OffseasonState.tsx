@@ -4,7 +4,7 @@ interface OffseasonStateProps {
 
 export default function OffseasonState({ resource }: OffseasonStateProps) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#0a1c30] to-[#112d4e] px-6 py-10 text-center">
+    <div className="relative overflow-hidden rounded-2xl border border-[#D4A847]/20 bg-gradient-to-br from-[#1A0F08] to-[#2C1810] px-6 py-10 text-center">
       <div className="stripe-pattern pointer-events-none absolute inset-0 opacity-40" aria-hidden />
       <div className="relative">
         <div className="mb-4 text-5xl" aria-hidden>

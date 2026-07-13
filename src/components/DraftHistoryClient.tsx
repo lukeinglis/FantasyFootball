@@ -150,7 +150,7 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
               placeholder="Search players, managers, or teams..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-[#0C2340] px-4 py-2 text-sm text-white placeholder-gray-500 focus:border-[#DD550C]/40 focus:outline-none"
+              className="w-full rounded-lg border border-white/10 bg-[#2C1810] px-4 py-2 text-sm text-white placeholder-gray-500 focus:border-[#DD550C]/40 focus:outline-none"
             />
           </div>
         </div>
@@ -159,9 +159,9 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
         {!isFiltering ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#0C2340] text-[10px] uppercase tracking-wider text-gray-400">
+              <thead className="bg-[#2C1810] text-[10px] uppercase tracking-wider text-gray-400">
                 <tr>
-                  <th className="sticky left-0 z-10 bg-[#0C2340] px-2 py-2">Rd</th>
+                  <th className="sticky left-0 z-10 bg-[#2C1810] px-2 py-2">Rd</th>
                   {teamOrder.map((t) => (
                     <th key={t.teamKey} className="px-2 py-2 min-w-[110px] text-left">
                       <p className="truncate font-semibold text-white">{t.managerName}</p>
@@ -171,8 +171,8 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
               </thead>
               <tbody className="divide-y divide-white/5">
                 {Array.from({ length: totalRounds }, (_, r) => r + 1).map((round) => (
-                  <tr key={round} className="bg-[#112d4e]/40 hover:bg-[#112d4e]">
-                    <td className="sticky left-0 z-10 bg-[#0C2340] px-2 py-2 font-mono text-[#DD550C] font-bold">
+                  <tr key={round} className="bg-[#2C1810]/40 hover:bg-[#2C1810]">
+                    <td className="sticky left-0 z-10 bg-[#2C1810] px-2 py-2 font-mono text-[#DD550C] font-bold">
                       R{round}
                     </td>
                     {teamOrder.map((t) => {
@@ -235,7 +235,7 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
 
         {/* Legend */}
         {keeperCount > 0 && !isFiltering && (
-          <div className="border-t border-white/10 bg-[#0C2340]/60 px-4 py-2 flex items-center gap-4 text-[10px] text-gray-500">
+          <div className="border-t border-white/10 bg-[#2C1810]/60 px-4 py-2 flex items-center gap-4 text-[10px] text-gray-500">
             <span className="flex items-center gap-1.5">
               <span className="rounded bg-amber-500/20 px-1 py-0 text-[8px] font-bold text-amber-300">K</span>
               Keeper from previous season ({keeperCount} total)

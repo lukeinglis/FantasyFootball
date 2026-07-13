@@ -27,7 +27,7 @@ export default function GameZone() {
   const [activeTab, setActiveTab] = useState<GameTab>("breakaway");
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#183558] to-[#0a1c30] p-6 sm:p-8">
+    <div className="relative overflow-hidden rounded-2xl border border-[#D4A847]/20 bg-gradient-to-br from-[#2C1810] to-[#1A0F08] p-6 sm:p-8">
       <div
         className="stripe-pattern pointer-events-none absolute inset-0 opacity-30"
         aria-hidden

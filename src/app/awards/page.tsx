@@ -39,7 +39,7 @@ export default function AwardsPage() {
           </h2>
           <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
             {champions.map((c) => (
-              <Card key={c.year} variant="glass" className="text-center">
+              <Card key={c.year} variant="chalkboard" className="text-center">
                 <CardBody className="py-5">
                   <p className="text-3xl" aria-hidden>{"\u{1F3C6}"}</p>
                   <p className="mt-2 font-[family-name:var(--font-heading)] text-2xl font-bold text-[#FFD700]">
@@ -68,7 +68,7 @@ export default function AwardsPage() {
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {coreAwards.map((award) => (
-              <Card key={award.name} variant="glass">
+              <Card key={award.name} variant="chalkboard">
                 <CardBody>
                   <div className="flex items-start gap-3">
                     <span className="text-3xl flex-shrink-0" aria-hidden>
@@ -107,7 +107,7 @@ export default function AwardsPage() {
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {superlatives.map((s) => (
-              <Card key={s.name} variant="glass">
+              <Card key={s.name} variant="chalkboard">
                 <CardBody>
                   <div className="flex items-start gap-3">
                     <span className="text-3xl flex-shrink-0" aria-hidden>

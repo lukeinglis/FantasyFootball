@@ -11,9 +11,9 @@ import { useCallback, useEffect, useRef, useState } from "react";
 const FIELD_GREEN = "#2d5a27";
 const FIELD_GREEN_ALT = "#2a5224";
 const ORANGE = "#DD550C";
-const NAVY = "#0C2340";
+const NAVY = "#2C1810";
 const GOALPOST_YELLOW = "#FFD700";
-const SKY_TOP = "#0a1c30";
+const SKY_TOP = "#1A0F08";
 const SKY_BOTTOM = "#1a3a5c";
 
 // --- Canvas dimensions ---
@@ -514,7 +514,7 @@ export default function FieldGoalGame() {
         const cx = baseX + col * 2 * dirX + row * dirX * 0.5;
         const cy = HORIZON_Y + row * 15 + col * 3 + 10;
         if (cy > CANVAS_H - 10) continue;
-        const colors = ["#DD550C", "#0C2340", "#fff", "#aaa", "#DD550C"];
+        const colors = ["#DD550C", "#2C1810", "#fff", "#aaa", "#DD550C"];
         ctx.fillStyle = colors[i % colors.length];
         ctx.globalAlpha = 0.4;
         ctx.fillRect(cx, cy, 2, 3);
@@ -1141,7 +1141,7 @@ export default function FieldGoalGame() {
 
       {/* Leaderboard */}
       <div className="w-full lg:w-72 flex-shrink-0">
-        <div className="rounded-xl border border-white/10 bg-[#112d4e] overflow-hidden">
+        <div className="rounded-xl border border-[#D4A847]/20 bg-[#2C1810] overflow-hidden">
           <div className="border-b border-white/10 px-4 py-3">
             <h3 className="font-[family-name:var(--font-heading)] text-sm font-semibold uppercase tracking-wide text-[#DD550C]">
               Leaderboard

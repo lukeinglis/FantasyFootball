@@ -14,7 +14,7 @@ export default function EmptyState({
   action,
 }: EmptyStateProps) {
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-[#112d4e]/40 px-6 py-12 text-center">
+    <div className="relative overflow-hidden rounded-2xl border border-[#D4A847]/20 bg-[#2C1810]/40 px-6 py-12 text-center">
       <div className="stripe-pattern pointer-events-none absolute inset-0 opacity-30" aria-hidden />
       <div className="relative">
         {icon && (

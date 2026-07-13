@@ -33,7 +33,7 @@ export default function ArticlesPreview() {
               <li key={a.slug}>
                 <Link
                   href={`/articles/${a.slug}`}
-                  className="block rounded-lg bg-[#0C2340]/60 px-3 py-2 transition-colors hover:bg-[#0C2340]"
+                  className="block rounded-lg bg-[#2C1810]/60 px-3 py-2 transition-colors hover:bg-[#2C1810]"
                 >
                   <p className="font-medium text-white">{a.title}</p>
                   <p className="mt-1 line-clamp-2 text-xs text-gray-400">
