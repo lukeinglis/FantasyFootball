@@ -17,7 +17,6 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic";
 
 function teamSlug(teamKey: string): string {
-  // Yahoo team keys are like "nfl.l.123.t.4" — use the entire key URL-encoded.
   return encodeURIComponent(teamKey);
 }
 
@@ -41,8 +40,8 @@ export default async function TeamsPage() {
             <ApiError resource="teams" detail={result.message} />
           )
         ) : result.data.length === 0 ? (
-          <Card>
-            <div className="px-5 py-8 text-center text-sm text-gray-400">
+          <Card variant="scoreboard">
+            <div className="px-5 py-8 text-center text-sm text-[#F5F0E8]/50">
               No teams found.
             </div>
           </Card>
@@ -52,51 +51,55 @@ export default async function TeamsPage() {
               <li key={t.teamKey}>
                 <Link
                   href={`/teams/${teamSlug(t.teamKey)}`}
-                  className="block h-full rounded-xl border border-white/10 bg-[#112d4e] p-5 transition-colors hover:border-[#DD550C]/40 hover:bg-[#183558]"
+                  className="group block h-full"
                 >
-                  <div className="flex items-start gap-3">
-                    {t.logoUrl ? (
-                      // eslint-disable-next-line @next/next/no-img-element
-                      <img
-                        src={t.logoUrl}
-                        alt=""
-                        className="h-12 w-12 flex-shrink-0 rounded-md object-cover"
-                        loading="lazy"
-                      />
-                    ) : (
-                      <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-md bg-[#DD550C]/20 text-lg font-bold text-[#DD550C]">
-                        {t.teamName.charAt(0).toUpperCase()}
+                  <Card variant="trading-card" className="h-full">
+                    <div className="bg-[linear-gradient(135deg,#D32F2F,#8B1A1A)] px-4 py-3 flex items-center gap-3">
+                      {t.logoUrl ? (
+                        // eslint-disable-next-line @next/next/no-img-element
+                        <img
+                          src={t.logoUrl}
+                          alt=""
+                          className="h-10 w-10 flex-shrink-0 rounded-md object-cover border-2 border-white/20"
+                          loading="lazy"
+                        />
+                      ) : (
+                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-md bg-[#FFD700] font-[family-name:var(--font-heading)] text-lg font-bold text-[#2C1810]">
+                          {t.teamName.charAt(0).toUpperCase()}
+                        </div>
+                      )}
+                      <div className="min-w-0">
+                        <h3 className="truncate font-[family-name:var(--font-heading)] text-sm font-bold text-white uppercase tracking-wide text-shadow-sm">
+                          {t.teamName}
+                        </h3>
+                        <p className="truncate text-xs text-white/70">
+                          {t.managerName}
+                        </p>
                       </div>
-                    )}
-                    <div className="min-w-0">
-                      <h3 className="truncate font-semibold text-white">
-                        {t.teamName}
-                      </h3>
-                      <p className="truncate text-xs text-gray-400">
-                        {t.managerName}
-                      </p>
                     </div>
-                  </div>
-                  <dl className="mt-4 grid grid-cols-3 gap-2 text-center text-xs">
-                    <div>
-                      <dt className="text-gray-500">Record</dt>
-                      <dd className="mt-0.5 font-mono text-white">
-                        {formatRecord(t.wins, t.losses, t.ties)}
-                      </dd>
+                    <div className="px-4 py-3">
+                      <dl className="grid grid-cols-3 gap-2 text-center text-xs">
+                        <div>
+                          <dt className="text-[#6B5744] font-semibold uppercase tracking-wider text-[10px]">Record</dt>
+                          <dd className="mt-0.5 font-[family-name:var(--font-heading)] text-sm text-[#2C1810]">
+                            {formatRecord(t.wins, t.losses, t.ties)}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-[#6B5744] font-semibold uppercase tracking-wider text-[10px]">PF</dt>
+                          <dd className="mt-0.5 font-[family-name:var(--font-heading)] text-sm text-[#DD550C]">
+                            {formatPoints(t.pointsFor, 1)}
+                          </dd>
+                        </div>
+                        <div>
+                          <dt className="text-[#6B5744] font-semibold uppercase tracking-wider text-[10px]">PA</dt>
+                          <dd className="mt-0.5 font-[family-name:var(--font-heading)] text-sm text-[#2C1810]">
+                            {formatPoints(t.pointsAgainst, 1)}
+                          </dd>
+                        </div>
+                      </dl>
                     </div>
-                    <div>
-                      <dt className="text-gray-500">PF</dt>
-                      <dd className="mt-0.5 font-mono text-[#DD550C]">
-                        {formatPoints(t.pointsFor, 1)}
-                      </dd>
-                    </div>
-                    <div>
-                      <dt className="text-gray-500">PA</dt>
-                      <dd className="mt-0.5 font-mono text-gray-300">
-                        {formatPoints(t.pointsAgainst, 1)}
-                      </dd>
-                    </div>
-                  </dl>
+                  </Card>
                 </Link>
               </li>
             ))}

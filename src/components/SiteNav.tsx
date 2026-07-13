@@ -49,13 +49,11 @@ export default function SiteNav() {
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
 
-  // Close menus on route change
   useEffect(() => {
     setMobileOpen(false);
     setMoreOpen(false);
   }, [pathname]);
 
-  // Close "More" dropdown on outside click
   useEffect(() => {
     function handleClick(e: MouseEvent) {
       if (moreRef.current && !moreRef.current.contains(e.target as Node)) {
@@ -69,16 +67,18 @@ export default function SiteNav() {
   const isMoreActive = MORE_ITEMS.some((item) => isActive(pathname, item.href));
 
   return (
-    <header className="sticky top-0 z-40 border-b border-white/10 bg-[#0C2340]/95 backdrop-blur supports-[backdrop-filter]:bg-[#0C2340]/80 shadow-lg shadow-black/20 relative">
+    <header className="sticky top-0 z-40 bg-[linear-gradient(180deg,#8B5E3C,#5C3A1E)] border-b-4 border-[#D4A847] shadow-[0_4px_16px_rgba(0,0,0,0.4)]">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-3 sm:px-6 lg:px-8">
         <Link
           href="/"
           data-testid="site-logo"
-          className="flex items-center gap-2 text-[#DD550C] hover:text-orange-400 transition-colors"
+          className="flex items-center gap-2 text-[#FFD23F] hover:text-[#FFD23F]/80 transition-colors"
         >
           <span aria-hidden className="text-xl">🏈</span>
-          <span className="font-[family-name:var(--font-heading)] font-bold uppercase tracking-wide text-base sm:text-lg">
-            Greybushes <span className="text-white/70">&amp;</span> Chili Dogs
+          <span
+            className="font-[family-name:var(--font-heading)] text-base sm:text-lg tracking-wide text-shadow-logo"
+          >
+            Greybushes <span className="text-[#F5F0E8]/70">&amp;</span> Chili Dogs
           </span>
         </Link>
 
@@ -91,10 +91,10 @@ export default function SiteNav() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                className={`px-3 py-2 rounded-md font-[family-name:var(--font-body)] font-extrabold text-xs uppercase tracking-widest transition-all ${
                   active
-                    ? "bg-[#DD550C] text-[#0C2340]"
-                    : "text-gray-200 hover:bg-white/5 hover:text-[#DD550C]"
+                    ? "bg-[#DD550C] text-white shadow-[0_2px_8px_rgba(221,85,12,0.4)]"
+                    : "text-[#F5F0E8] hover:bg-white/12 hover:text-[#FFD23F] hover:-translate-y-px"
                 }`}
               >
                 {item.label}
@@ -108,10 +108,10 @@ export default function SiteNav() {
               type="button"
               onClick={() => setMoreOpen((v) => !v)}
               aria-expanded={moreOpen}
-              className={`px-3 py-2 rounded-md text-sm font-medium transition-colors inline-flex items-center gap-1 ${
+              className={`px-3 py-2 rounded-md font-[family-name:var(--font-body)] font-extrabold text-xs uppercase tracking-widest transition-all inline-flex items-center gap-1 ${
                 isMoreActive
-                  ? "bg-[#DD550C] text-[#0C2340]"
-                  : "text-gray-200 hover:bg-white/5 hover:text-[#DD550C]"
+                  ? "bg-[#DD550C] text-white shadow-[0_2px_8px_rgba(221,85,12,0.4)]"
+                  : "text-[#F5F0E8] hover:bg-white/12 hover:text-[#FFD23F] hover:-translate-y-px"
               }`}
             >
               More
@@ -132,17 +132,17 @@ export default function SiteNav() {
               </svg>
             </button>
             {moreOpen && (
-              <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-white/10 bg-[#112d4e] py-1 shadow-xl shadow-black/40">
+              <div className="absolute right-0 top-full mt-1 w-48 rounded-lg border border-[#D4A847]/20 bg-[#5C3A1E] py-1 shadow-xl shadow-black/40">
                 {MORE_ITEMS.map((item) => {
                   const active = isActive(pathname, item.href);
                   return (
                     <Link
                       key={item.href}
                       href={item.href}
-                      className={`block px-4 py-2 text-sm transition-colors ${
+                      className={`block px-4 py-2 font-[family-name:var(--font-body)] font-extrabold text-xs uppercase tracking-widest transition-colors ${
                         active
-                          ? "bg-[#DD550C]/10 text-[#DD550C] font-medium"
-                          : "text-gray-200 hover:bg-white/5 hover:text-[#DD550C]"
+                          ? "bg-[#DD550C]/10 text-[#FFD23F] font-medium"
+                          : "text-[#F5F0E8] hover:bg-white/12 hover:text-[#FFD23F]"
                       }`}
                     >
                       {item.label}
@@ -153,7 +153,7 @@ export default function SiteNav() {
             )}
           </div>
 
-          <div className="ml-2 border-l border-white/10 pl-3">
+          <div className="ml-2 border-l border-[#D4A847]/20 pl-3">
             <UserMenu />
           </div>
         </nav>
@@ -168,7 +168,7 @@ export default function SiteNav() {
           aria-expanded={mobileOpen}
           aria-controls="mobile-nav"
           onClick={() => setMobileOpen((v) => !v)}
-          className="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-[#DD550C] hover:bg-white/5"
+          className="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-[#FFD23F] hover:bg-white/12"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -203,7 +203,7 @@ export default function SiteNav() {
         <nav
           id="mobile-nav"
           aria-label="Primary mobile"
-          className="lg:hidden border-t border-white/10 bg-[#0C2340]"
+          className="lg:hidden border-t border-[#D4A847]/20 bg-[#5C3A1E]"
         >
           <ul className="flex flex-col gap-1 px-4 py-3 sm:px-6">
             {ALL_ITEMS.map((item) => {
@@ -213,10 +213,10 @@ export default function SiteNav() {
                   <Link
                     href={item.href}
                     aria-current={active ? "page" : undefined}
-                    className={`block px-3 py-2 rounded-md text-sm font-medium transition-colors ${
+                    className={`block px-3 py-2 rounded-md font-[family-name:var(--font-body)] font-extrabold text-xs uppercase tracking-widest transition-colors ${
                       active
-                        ? "bg-[#DD550C] text-[#0C2340]"
-                        : "text-gray-200 hover:bg-white/5 hover:text-[#DD550C]"
+                        ? "bg-[#DD550C] text-white"
+                        : "text-[#F5F0E8] hover:bg-white/12 hover:text-[#FFD23F]"
                     }`}
                   >
                     {item.label}
@@ -227,7 +227,6 @@ export default function SiteNav() {
           </ul>
         </nav>
       )}
-      <div className="absolute bottom-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-[#DD550C]/30 to-transparent" aria-hidden />
     </header>
   );
 }

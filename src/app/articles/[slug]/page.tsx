@@ -51,7 +51,7 @@ export default async function ArticlePage({
       >
         <Link
           href="/articles"
-          className="rounded-md border border-white/10 px-3 py-1.5 text-xs text-gray-200 hover:bg-white/5"
+          className="rounded-md border border-[#D4A847]/30 px-3 py-1.5 text-xs text-[#F5F0E8]/70 hover:bg-white/5"
         >
           ← All articles
         </Link>

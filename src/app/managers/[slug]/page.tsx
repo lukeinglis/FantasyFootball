@@ -159,7 +159,7 @@ export default async function ManagerProfilePage({
       {/* Career Stats */}
       {careerStats && careerStats.seasonsPlayed > 0 && (
         <Container className="pt-0">
-          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-white mb-6">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-[#D4A847] mb-6">
             Career Stats
           </h2>
           <div className="grid gap-3 grid-cols-2 sm:grid-cols-3 lg:grid-cols-6">
@@ -180,7 +180,7 @@ export default async function ManagerProfilePage({
       {/* Personal Records */}
       {recordCards.length > 0 && (
         <Container className="pt-0">
-          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-white mb-6">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-[#D4A847] mb-6">
             Personal Records
           </h2>
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
@@ -194,7 +194,7 @@ export default async function ManagerProfilePage({
       {/* Season by Season */}
       {seasonBreakdowns.length > 0 && (
         <Container className="pt-0">
-          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-white mb-6">
+          <h2 className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-[#D4A847] mb-6">
             Season by Season
           </h2>
           <div className="overflow-x-auto">
@@ -323,7 +323,7 @@ export default async function ManagerProfilePage({
             />
             <CardBody>
               {/* Style narrative */}
-              <div className="mb-6 rounded-xl bg-[#0C2340] border border-white/10 p-4">
+              <div className="mb-6 rounded-xl bg-[#2C1810] border border-white/10 p-4">
                 <p className="text-sm leading-relaxed text-gray-300 italic">
                   &ldquo;{profile.styleNarrative}&rdquo;
                 </p>
@@ -354,7 +354,7 @@ export default async function ManagerProfilePage({
               <table className="w-full text-center text-xs">
                 <thead>
                   <tr className="border-b border-white/10">
-                    <th className="sticky left-0 bg-[#112d4e] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400">
+                    <th className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400">
                       Round
                     </th>
                     {CORE_POS_ORDER.map((pos) => (
@@ -369,7 +369,7 @@ export default async function ManagerProfilePage({
                 <tbody>
                   {Array.from({ length: maxRound }, (_, i) => i + 1).map((round) => (
                     <tr key={round} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                      <td className="sticky left-0 bg-[#112d4e] px-3 py-1.5 text-left font-mono text-gray-400">
+                      <td className="sticky left-0 bg-[#2C1810] px-3 py-1.5 text-left font-mono text-gray-400">
                         R{round}
                       </td>
                       {CORE_POS_ORDER.map((pos) => {
@@ -483,7 +483,7 @@ export default async function ManagerProfilePage({
 
               {/* Trend arrows for key positions */}
               {profile.eraBreakdowns.length >= 2 && (
-                <div className="mt-6 rounded-xl bg-[#0C2340] border border-white/10 p-4">
+                <div className="mt-6 rounded-xl bg-[#2C1810] border border-white/10 p-4">
                   <p className="font-[family-name:var(--font-heading)] text-xs font-bold uppercase tracking-[0.2em] text-gray-400 mb-3">Key Changes</p>
                   <div className="flex flex-wrap gap-3">
                     {CORE_POS_ORDER.map((pos) => {
@@ -686,7 +686,7 @@ export default async function ManagerProfilePage({
           <CardBody className="!p-0">
             {profile.draftsByYear.map((draft) => (
               <div key={draft.year}>
-                <div className="bg-[#0C2340] px-5 py-2 border-t border-white/10">
+                <div className="bg-[#2C1810] px-5 py-2 border-t border-white/10">
                   <p className="font-[family-name:var(--font-heading)] text-sm font-bold uppercase tracking-wide text-[#DD550C]">
                     {draft.year} Draft
                     <span className="ml-2 text-xs font-normal text-gray-400">
@@ -727,10 +727,10 @@ export default async function ManagerProfilePage({
 
 function CareerStatTile({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
   return (
-    <Card variant="glass">
+    <Card variant="scoreboard">
       <CardBody className="text-center py-5">
-        <p className={`text-2xl font-bold ${highlight ? "text-[#DD550C]" : "text-white"}`}>{value}</p>
-        <p className="text-xs text-gray-400 mt-1">{label}</p>
+        <p className={`font-[family-name:var(--font-heading)] text-2xl font-bold ${highlight ? "text-[#DD550C]" : "text-[#F5F0E8]"}`}>{value}</p>
+        <p className="text-xs text-[rgba(245,240,232,0.5)] mt-1">{label}</p>
       </CardBody>
     </Card>
   );
@@ -739,13 +739,13 @@ function CareerStatTile({ label, value, highlight }: { label: string; value: str
 function PersonalRecordTile({ record }: { record: PersonalRecord }) {
   const isStreak = record.label.includes("Streak");
   return (
-    <Card variant="glass">
+    <Card variant="chalkboard">
       <CardBody className="py-5">
-        <p className="text-xs font-medium text-[#DD550C]/80 uppercase tracking-wide">{record.label}</p>
-        <p className="text-2xl font-bold text-white mt-1">
+        <p className="text-xs font-medium text-[#D4A847] uppercase tracking-wide">{record.label}</p>
+        <p className="font-[family-name:var(--font-heading)] text-2xl font-bold text-[#F5F0E8] mt-1">
           {isStreak ? `${record.value} games` : `${record.value} pts`}
         </p>
-        <p className="text-xs text-gray-400 mt-1">{record.detail}</p>
+        <p className="text-xs text-[rgba(245,240,232,0.6)] mt-1">{record.detail}</p>
       </CardBody>
     </Card>
   );
@@ -753,9 +753,9 @@ function PersonalRecordTile({ record }: { record: PersonalRecord }) {
 
 function StatCard({ label, value, highlight, keeper }: { label: string; value: string; highlight?: boolean; keeper?: boolean }) {
   return (
-    <div className="rounded-2xl border border-white/10 bg-[#112d4e] p-4 text-center">
-      <p className={`font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] ${keeper ? "text-amber-400" : "text-gray-400"}`}>{label}</p>
-      <p className={`mt-1 font-[family-name:var(--font-heading)] text-2xl font-bold ${highlight ? "text-gradient" : keeper ? "text-amber-300" : "text-white"}`}>{value}</p>
+    <div className="rounded-xl border-3 border-[#D4A847] bg-gradient-to-b from-[#2C1810] to-[#1A0F08] p-4 text-center shadow-lg">
+      <p className={`font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] ${keeper ? "text-amber-400" : "text-[rgba(245,240,232,0.5)]"}`}>{label}</p>
+      <p className={`mt-1 font-[family-name:var(--font-heading)] text-2xl font-bold ${highlight ? "text-[#D4A847]" : keeper ? "text-amber-300" : "text-[#F5F0E8]"}`}>{value}</p>
     </div>
   );
 }

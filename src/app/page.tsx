@@ -57,26 +57,24 @@ export default async function Home() {
   return (
     <>
       {/* Hero */}
-      <section className="relative overflow-hidden border-b border-white/10 bg-gradient-to-br from-[#1a3a5c] via-[#112d4e] to-[#0a1c30]">
-        <div className="stripe-pattern pointer-events-none absolute inset-0 opacity-80" aria-hidden />
-        <div aria-hidden className="pointer-events-none absolute inset-0 dot-pattern opacity-[0.04]" />
+      <section className="relative overflow-hidden border-b-4 border-[#D4A847] bg-[linear-gradient(180deg,#2C1810,#1A0F08)]">
         <div
           aria-hidden
           className="pointer-events-none absolute left-0 top-0 h-full w-1/2"
-          style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(221, 85, 12, 0.12), transparent 70%)" }}
+          style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(212,168,71,0.08), transparent 70%)" }}
         />
         <Container className="relative py-20 sm:py-24 lg:py-32">
           <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
             <div className="animate-fade-in-up">
-              <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.3em] text-[#DD550C] sm:text-sm">
+              <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.3em] text-[#D4A847] sm:text-sm">
                 {season ? `${season} Season` : `${history.seasons.length} Seasons Strong`}
               </p>
-              <h1 className="mt-4 font-[family-name:var(--font-heading)] text-5xl font-extrabold uppercase tracking-tight text-white sm:text-6xl lg:text-7xl">
+              <h1 className="mt-4 font-[family-name:var(--font-display)] text-5xl tracking-tight text-[#F5F0E8] sm:text-6xl lg:text-7xl text-shadow-wood-lg">
                 Greybushes{" "}
-                <span className="text-gradient">&amp;</span>{" "}
+                <span className="text-[#FFD23F]">&amp;</span>{" "}
                 Chili Dogs
               </h1>
-              <p className="mt-4 max-w-2xl text-xl text-gray-300/90 sm:text-2xl">
+              <p className="mt-4 max-w-2xl text-xl text-[#F5F0E8]/70 sm:text-2xl">
                 A bunch of degenerates who claim to be extraordinary swindlers.
               </p>
               <div className="mt-10 flex flex-wrap gap-3">
@@ -88,13 +86,13 @@ export default async function Home() {
                 </Link>
                 <Link
                   href="/history"
-                  className="font-[family-name:var(--font-heading)] rounded-lg border border-[#DD550C]/40 px-6 py-3 text-base font-bold uppercase tracking-wide text-[#DD550C] transition-all hover:bg-[#DD550C]/10"
+                  className="font-[family-name:var(--font-heading)] rounded-lg border border-[#D4A847]/40 px-6 py-3 text-base font-bold uppercase tracking-wide text-[#D4A847] transition-all hover:bg-[#D4A847]/10"
                 >
                   Hall of Champions
                 </Link>
                 <Link
                   href="/wall-of-shame"
-                  className="font-[family-name:var(--font-heading)] rounded-lg border border-white/15 px-6 py-3 text-base font-bold uppercase tracking-wide text-white transition-all hover:bg-white/5"
+                  className="font-[family-name:var(--font-heading)] rounded-lg border border-[#F5F0E8]/15 px-6 py-3 text-base font-bold uppercase tracking-wide text-[#F5F0E8] transition-all hover:bg-white/5"
                 >
                   Wall of Shame
                 </Link>
@@ -112,27 +110,27 @@ export default async function Home() {
       {/* Defending Champion Banner */}
       {defendingChamp && (
         <Container>
-          <div className="relative overflow-hidden rounded-2xl border border-[#DD550C]/30 bg-gradient-to-r from-[#DD550C]/10 via-[#112d4e] to-[#DD550C]/10 p-6 sm:p-8">
-            <div className="stripe-pattern pointer-events-none absolute inset-0 opacity-30" aria-hidden />
+          <div className="relative overflow-hidden rounded-xl border-[3px] border-[#D4A847] bg-[linear-gradient(180deg,#2C1810,#1A0F08)] p-6 sm:p-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
+            <div className="pointer-events-none absolute top-0 left-0 right-0 h-[3px] bg-[linear-gradient(90deg,transparent,#D4A847_20%,#D4A847_80%,transparent)]" aria-hidden />
             <div className="relative flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
               <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#DD550C] to-[#a33d08] text-3xl shadow-lg shadow-[#DD550C]/30">
                 🏆
               </div>
               <div>
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#DD550C]">
+                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#D4A847]">
                   {defendingChamp.year} Defending Champion
                 </p>
-                <p className="mt-1 font-[family-name:var(--font-heading)] text-2xl font-bold uppercase text-white sm:text-3xl">
+                <p className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[#F5F0E8] sm:text-3xl text-shadow-wood">
                   {defendingChamp.champion}
                 </p>
-                <p className="text-sm text-gray-400">
+                <p className="text-sm text-[#F5F0E8]/50">
                   {defendingChamp.championTeam}
                 </p>
               </div>
               <div className="hidden sm:block sm:ml-auto">
                 <Link
                   href="/history"
-                  className="font-[family-name:var(--font-heading)] rounded-lg border border-[#DD550C]/40 px-4 py-2 text-sm font-bold uppercase tracking-wide text-[#DD550C] transition-all hover:bg-[#DD550C]/10"
+                  className="font-[family-name:var(--font-heading)] rounded-lg border border-[#D4A847]/40 px-4 py-2 text-sm font-bold uppercase tracking-wide text-[#D4A847] transition-all hover:bg-[#D4A847]/10"
                 >
                   Full History
                 </Link>
@@ -152,39 +150,39 @@ export default async function Home() {
       {/* League by the Numbers */}
       <Container className="pt-0">
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Card variant="glass">
+          <Card variant="scoreboard">
             <CardBody>
               <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Seasons Played</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-gradient">{history.seasons.length}</p>
-                <p className="mt-1 text-sm text-gray-400">{history.seasons[history.seasons.length - 1]?.year} to {history.seasons[0]?.year}</p>
+                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">Seasons Played</p>
+                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">{history.seasons.length}</p>
+                <p className="mt-1 text-sm text-[#F5F0E8]/50">{history.seasons[history.seasons.length - 1]?.year} to {history.seasons[0]?.year}</p>
               </div>
             </CardBody>
           </Card>
-          <Card variant="glass">
+          <Card variant="scoreboard">
             <CardBody>
               <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Unique Champions</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-gradient">{stats.uniqueChamps}</p>
-                <p className="mt-1 text-sm text-gray-400">No repeat winners</p>
+                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">Unique Champions</p>
+                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">{stats.uniqueChamps}</p>
+                <p className="mt-1 text-sm text-[#F5F0E8]/50">No repeat winners</p>
               </div>
             </CardBody>
           </Card>
-          <Card variant="glass">
+          <Card variant="scoreboard">
             <CardBody>
               <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">The Pot</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-gradient">${PAYOUTS.totalPot.toLocaleString()}</p>
-                <p className="mt-1 text-sm text-gray-400">${PAYOUTS.buyIn} buy-in / {members.active.length} managers</p>
+                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">The Pot</p>
+                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">${PAYOUTS.totalPot.toLocaleString()}</p>
+                <p className="mt-1 text-sm text-[#F5F0E8]/50">${PAYOUTS.buyIn} buy-in / {members.active.length} managers</p>
               </div>
             </CardBody>
           </Card>
-          <Card variant="glass">
+          <Card variant="scoreboard">
             <CardBody>
               <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Active Managers</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-gradient">{members.active.length}</p>
-                <p className="mt-1 text-sm text-gray-400">Plus {members.emeritus.length} emeritus</p>
+                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">Active Managers</p>
+                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">{members.active.length}</p>
+                <p className="mt-1 text-sm text-[#F5F0E8]/50">Plus {members.emeritus.length} emeritus</p>
               </div>
             </CardBody>
           </Card>
@@ -195,24 +193,24 @@ export default async function Home() {
       <Container className="pt-0">
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Recent Champions */}
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden" variant="scoreboard">
             <CardHeader
               title="Recent Champions"
-              action={<Link href="/history" className="text-xs font-medium text-[#DD550C] hover:underline">View all &rarr;</Link>}
+              action={<Link href="/history" className="text-xs font-medium text-[#D4A847] hover:underline">View all &rarr;</Link>}
             />
             <CardBody className="!p-0">
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-[#D4A847]/10">
                 {recentSeasons.map((s, i) => (
-                  <div key={s.year} className="flex items-center gap-4 px-5 py-3 hover:bg-white/5 transition-colors">
-                    <span className="font-[family-name:var(--font-heading)] font-mono text-lg font-bold text-[#DD550C]">{s.year}</span>
+                  <div key={s.year} className="flex items-center gap-4 px-5 py-3 hover:bg-[rgba(212,168,71,0.08)] transition-colors">
+                    <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-[#FFD23F]">{s.year}</span>
                     <div className="min-w-0 flex-1">
-                      <p className="truncate font-semibold text-white">
+                      <p className="truncate font-semibold text-[#F5F0E8]">
                         {i === 0 && <span className="mr-1.5">🏆</span>}
                         {s.champion}
                       </p>
-                      <p className="truncate text-xs text-gray-400">{s.championTeam}</p>
+                      <p className="truncate text-xs text-[#F5F0E8]/50">{s.championTeam}</p>
                     </div>
-                    <div className="hidden sm:block text-right text-xs text-gray-500">
+                    <div className="hidden sm:block text-right text-xs text-[#F5F0E8]/40">
                       <p>2nd: {s.runnerUp}</p>
                       <p>3rd: {s.third}</p>
                     </div>
@@ -223,25 +221,25 @@ export default async function Home() {
           </Card>
 
           {/* Dynasty Rankings */}
-          <Card className="overflow-hidden">
+          <Card className="overflow-hidden" variant="scoreboard">
             <CardHeader
               title="Dynasty Rankings"
               description="Most top-3 finishes all time"
             />
             <CardBody className="!p-0">
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-[#D4A847]/10">
                 {stats.top3List.slice(0, 6).map(([name, count], i) => {
                   const titleCount = stats.titles[name] || 0;
                   return (
-                    <div key={name} className="flex items-center gap-4 px-5 py-3 hover:bg-white/5 transition-colors">
+                    <div key={name} className="flex items-center gap-4 px-5 py-3 hover:bg-[rgba(212,168,71,0.08)] transition-colors">
                       <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-sm font-bold ${
-                        i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"
+                        i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-[#F5F0E8]/60"
                       }`}>
                         {i + 1}
                       </span>
                       <div className="min-w-0 flex-1">
-                        <p className="truncate font-semibold text-white">{name}</p>
-                        <p className="text-xs text-gray-400">
+                        <p className="truncate font-semibold text-[#F5F0E8]">{name}</p>
+                        <p className="text-xs text-[#F5F0E8]/50">
                           {titleCount > 0 ? `${titleCount} title${titleCount > 1 ? "s" : ""}` : "0 titles"}
                           {" / "}
                           {count} top-3 finish{count > 1 ? "es" : ""}
@@ -269,7 +267,7 @@ export default async function Home() {
       {/* The Roster strip */}
       <Container className="pt-0">
         <div className="text-center">
-          <h2 className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#DD550C]">
+          <h2 className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#D4A847]">
             The Roster
           </h2>
           <div className="mt-4 flex flex-wrap justify-center gap-3">
@@ -285,12 +283,12 @@ export default async function Home() {
                   }`}>
                     {initials}
                     {titleCount > 0 && (
-                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#DD550C] text-[8px] font-bold text-white ring-2 ring-[#0C2340]">
+                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#D4A847] text-[8px] font-bold text-[#2C1810] ring-2 ring-[#2D8C3C]">
                         {titleCount}
                       </span>
                     )}
                   </div>
-                  <span className="text-[10px] text-gray-400 group-hover:text-[#DD550C] transition-colors">
+                  <span className="text-[10px] text-[#F5F0E8]/60 group-hover:text-[#D4A847] transition-colors">
                     {m.name}
                   </span>
                 </Link>
@@ -303,22 +301,21 @@ export default async function Home() {
       {/* Two-column previews (in-season) or Season Awaits banner (offseason) */}
       {isOffseason ? (
         <Container className="pt-0">
-          <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-gradient-to-br from-[#183558] to-[#0a1c30] px-8 py-16 text-center">
-            <div className="stripe-pattern pointer-events-none absolute inset-0 opacity-50" aria-hidden />
+          <div className="relative overflow-hidden rounded-xl border-[3px] border-[#8B5E3C] bg-[#2A4A3A] px-8 py-16 text-center shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_0_30px_rgba(0,0,0,0.2)]">
             <div className="relative">
               <p className="text-5xl" aria-hidden>🏈</p>
-              <h2 className="mt-4 font-[family-name:var(--font-heading)] text-3xl font-bold uppercase tracking-wide text-white sm:text-4xl">
+              <h2 className="mt-4 font-[family-name:var(--font-display)] text-3xl tracking-wide text-[#F5F0E8] sm:text-4xl text-shadow-md">
                 Season Awaits
               </h2>
-              <p className="mx-auto mt-3 max-w-lg text-gray-300">
+              <p className="mx-auto mt-3 max-w-lg text-[#F5F0E8]/70">
                 Study the record book. Review the rules. Start the trash talk early.
                 When the season opens, this site lights up with live data.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <Link href="/rules" className="font-[family-name:var(--font-heading)] rounded-lg border border-[#DD550C]/40 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-[#DD550C] transition-all hover:bg-[#DD550C]/10">
+                <Link href="/rules" className="font-[family-name:var(--font-heading)] rounded-lg border border-[#D4A847]/40 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-[#D4A847] transition-all hover:bg-[#D4A847]/10">
                   League Rules
                 </Link>
-                <Link href="/records" className="font-[family-name:var(--font-heading)] rounded-lg border border-white/15 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-white transition-all hover:bg-white/5">
+                <Link href="/records" className="font-[family-name:var(--font-heading)] rounded-lg border border-[#F5F0E8]/15 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-[#F5F0E8] transition-all hover:bg-white/5">
                   Record Book
                 </Link>
               </div>

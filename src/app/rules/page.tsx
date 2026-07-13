@@ -36,18 +36,18 @@ export default function RulesPage() {
         <div className="space-y-6">
           {data.sections.map((section) => (
             <div key={section.title} data-testid="rules-section">
-              <Card>
-                <div className="border-b border-white/10 px-5 py-4">
-                  <h2 className="text-lg font-semibold text-[#DD550C]">
+              <Card variant="chalkboard">
+                <div className="border-b border-[#8B5E3C]/30 px-5 py-4">
+                  <h2 className="font-[family-name:var(--font-display)] text-lg font-bold text-[#F5F0E8] text-shadow-glow-chalk">
                     {section.title}
                   </h2>
                 </div>
-                <CardBody>
+                <CardBody variant="chalkboard">
                   <ul className="space-y-2">
                     {section.rules.map((rule, i) => (
                       <li key={i} className="flex items-start gap-3 text-sm">
-                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#DD550C]/60" />
-                        <span className="text-gray-200">{rule}</span>
+                        <span className="mt-1.5 h-1.5 w-1.5 flex-shrink-0 rounded-full bg-[#D4A847]/60" />
+                        <span className="text-[rgba(245,240,232,0.85)]">{rule}</span>
                       </li>
                     ))}
                   </ul>
@@ -58,7 +58,7 @@ export default function RulesPage() {
         </div>
 
         {data.notes && (
-          <p className="mt-6 text-center text-xs text-gray-500 italic">
+          <p className="mt-6 text-center text-xs text-[#F5F0E8]/40 italic">
             {data.notes}
           </p>
         )}

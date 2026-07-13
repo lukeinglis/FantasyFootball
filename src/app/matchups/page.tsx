@@ -47,7 +47,7 @@ function statusBadge(status: Matchup["status"]): string {
     case "inprogress":
       return "bg-red-500/20 text-red-300 border-red-500/30";
     case "postgame":
-      return "bg-white/10 text-gray-300 border-white/20";
+      return "bg-white/10 text-[#F5F0E8]/60 border-[#D4A847]/20";
     default:
       return "bg-[#DD550C]/20 text-[#DD550C] border-[#DD550C]/30";
   }
@@ -67,7 +67,6 @@ export default async function MatchupsPage({
     fetchSettings(),
   ]);
 
-  // Use league settings for endWeek instead of hardcoded 18
   const endWeek = settingsResult.ok ? settingsResult.data.endWeek : 18;
 
   return (
@@ -112,8 +111,8 @@ export default async function MatchupsPage({
               const aWinner = isFinal && aPts > bPts;
               const bWinner = isFinal && bPts > aPts;
               return (
-                <Card key={m.matchupId} className="overflow-hidden">
-                  <div className="flex items-center justify-between border-b border-white/10 bg-[#0C2340]/60 px-4 py-2">
+                <Card key={m.matchupId} variant="scoreboard" className="overflow-hidden">
+                  <div className="flex items-center justify-between border-b border-[#D4A847]/20 px-4 py-2">
                     <span
                       className={`inline-flex items-center rounded-full border px-2 py-0.5 text-[11px] font-medium uppercase tracking-wide ${statusBadge(
                         m.status
@@ -121,7 +120,7 @@ export default async function MatchupsPage({
                     >
                       {statusLabel(m.status)}
                     </span>
-                    <span className="text-[11px] uppercase tracking-wide text-gray-500">
+                    <span className="text-[11px] uppercase tracking-wide text-[#F5F0E8]/40">
                       {m.isPlayoffs
                         ? "Playoffs"
                         : m.isConsolation
@@ -137,10 +136,10 @@ export default async function MatchupsPage({
                       projected={a.projectedPoints}
                       winner={aWinner}
                     />
-                    <div className="my-2 flex items-center gap-3 text-[11px] uppercase tracking-wider text-gray-500">
-                      <span className="flex-1 border-t border-white/10" />
+                    <div className="my-2 flex items-center gap-3 text-[11px] uppercase tracking-wider text-[#F5F0E8]/30">
+                      <span className="flex-1 border-t border-[#D4A847]/15" />
                       vs
-                      <span className="flex-1 border-t border-white/10" />
+                      <span className="flex-1 border-t border-[#D4A847]/15" />
                     </div>
                     <MatchupRow
                       name={b.teamName}
@@ -178,23 +177,23 @@ function MatchupRow({
       <div className="min-w-0">
         <p
           className={`truncate font-semibold ${
-            winner ? "text-[#DD550C]" : "text-white"
+            winner ? "text-[#DD550C]" : "text-[#F5F0E8]"
           }`}
         >
           {name}
           {winner && <span className="ml-1 text-xs">🏆</span>}
         </p>
-        <p className="truncate text-xs text-gray-400">{manager}</p>
+        <p className="truncate text-xs text-[#F5F0E8]/50">{manager}</p>
       </div>
       <div className="text-right">
         <p
-          className={`font-mono text-2xl font-bold ${
-            winner ? "text-[#DD550C]" : "text-white"
+          className={`font-[family-name:var(--font-heading)] text-2xl font-bold ${
+            winner ? "text-[#DD550C]" : "text-[#F5F0E8]"
           }`}
         >
           {formatPoints(points, 1)}
         </p>
-        <p className="text-[11px] uppercase tracking-wide text-gray-500">
+        <p className="text-[11px] uppercase tracking-wide text-[#F5F0E8]/40">
           Proj {formatPoints(projected, 1)}
         </p>
       </div>
