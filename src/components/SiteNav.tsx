@@ -13,27 +13,21 @@ interface NavItem {
 const PRIMARY_ITEMS: NavItem[] = [
   { href: "/", label: "Home" },
   { href: "/standings", label: "Standings" },
-  { href: "/power-rankings", label: "Power Rankings" },
   { href: "/matchups", label: "Matchups" },
   { href: "/teams", label: "Teams" },
-  { href: "/stats", label: "Stats" },
   { href: "/draft", label: "Draft" },
 ];
 
 const MORE_ITEMS: NavItem[] = [
-  { href: "/draft-history", label: "Draft History" },
-  { href: "/draft-insights", label: "Draft Insights" },
-  { href: "/draft-trends", label: "Draft Trends" },
-  { href: "/transactions", label: "Transactions" },
-  { href: "/records", label: "Records" },
-  { href: "/awards", label: "Awards" },
+  { href: "/stats", label: "Stats" },
+  { href: "/records", label: "Record Book" },
   { href: "/head-to-head", label: "Head-to-Head" },
   { href: "/history", label: "History" },
-  { href: "/wall-of-shame", label: "Wall of Shame" },
-  { href: "/rules", label: "Rules" },
   { href: "/managers", label: "Managers" },
-  { href: "/payouts", label: "Payouts" },
+  { href: "/transactions", label: "Transactions" },
+  { href: "/league", label: "League Info" },
   { href: "/articles", label: "Articles" },
+  { href: "/power-rankings", label: "Power Rankings" },
 ];
 
 const ALL_ITEMS = [...PRIMARY_ITEMS, ...MORE_ITEMS];
