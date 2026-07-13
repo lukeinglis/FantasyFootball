@@ -36,10 +36,10 @@ export default async function StandingsPreview() {
             {result.data.teams.slice(0, 5).map((team) => (
               <li
                 key={team.teamKey}
-                className="flex items-center justify-between gap-3 rounded-lg bg-[#0C2340]/60 px-3 py-2"
+                className="flex items-center justify-between gap-3 rounded-lg bg-[#2C1810]/60 px-3 py-2"
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#DD550C] text-xs font-bold text-[#0C2340]">
+                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#DD550C] text-xs font-bold text-white">
                     {team.rank}
                   </span>
                   <div className="min-w-0">

@@ -44,7 +44,7 @@ export default async function ScoreboardPreview() {
               return (
                 <li
                   key={m.matchupId}
-                  className="rounded-lg bg-[#0C2340]/60 px-3 py-2"
+                  className="rounded-lg bg-[#2C1810]/60 px-3 py-2"
                 >
                   <div className="flex items-center justify-between gap-2 text-sm">
                     <span className="truncate font-medium text-white">

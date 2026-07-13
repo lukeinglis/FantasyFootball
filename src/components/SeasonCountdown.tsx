@@ -75,7 +75,7 @@ export default function SeasonCountdown() {
   const progress = getOffseasonProgress(target);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-[#DD550C]/30 bg-gradient-to-br from-[#112d4e] to-[#0a1c30] p-8 shadow-xl shadow-black/30">
+    <div className="relative overflow-hidden rounded-2xl border border-[#DD550C]/30 bg-gradient-to-br from-[#2C1810] to-[#1A0F08] p-8 shadow-xl shadow-black/30">
       <div className="stripe-pattern pointer-events-none absolute inset-0 opacity-60" aria-hidden />
       <div
         className="pointer-events-none absolute -top-8 left-1/2 h-24 w-48 -translate-x-1/2 rounded-full bg-[#DD550C]/15 blur-3xl"
