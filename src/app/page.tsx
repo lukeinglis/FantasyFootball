@@ -91,7 +91,7 @@ export default async function Home() {
                   Hall of Champions
                 </Link>
                 <Link
-                  href="/wall-of-shame"
+                  href="/records?tab=hall-of-shame"
                   className="font-[family-name:var(--font-heading)] rounded-lg border border-[#F5F0E8]/15 px-6 py-3 text-base font-bold uppercase tracking-wide text-[#F5F0E8] transition-all hover:bg-white/5"
                 >
                   Wall of Shame
@@ -312,7 +312,7 @@ export default async function Home() {
                 When the season opens, this site lights up with live data.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <Link href="/rules" className="font-[family-name:var(--font-heading)] rounded-lg border border-[#D4A847]/40 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-[#D4A847] transition-all hover:bg-[#D4A847]/10">
+                <Link href="/league?tab=rules" className="font-[family-name:var(--font-heading)] rounded-lg border border-[#D4A847]/40 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-[#D4A847] transition-all hover:bg-[#D4A847]/10">
                   League Rules
                 </Link>
                 <Link href="/records" className="font-[family-name:var(--font-heading)] rounded-lg border border-[#F5F0E8]/15 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-[#F5F0E8] transition-all hover:bg-white/5">

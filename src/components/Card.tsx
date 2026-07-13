@@ -9,7 +9,7 @@ interface CardProps {
 
 const variantStyles: Record<string, string> = {
   scoreboard: [
-    "relative overflow-hidden rounded-xl border-[3px] border-[#D4A847]",
+    "relative overflow-hidden rounded-xl border-[3px] border-[#8B5E3C]",
     "bg-[linear-gradient(180deg,#2C1810,#1A0F08)]",
     "shadow-[0_8px_32px_rgba(0,0,0,0.4)]",
   ].join(" "),
@@ -80,7 +80,7 @@ export function CardHeader({
       ? "border-[#A0784C]/20"
       : variant === "chalkboard"
         ? "border-[#8B5E3C]/30"
-        : "border-[#D4A847]/20";
+        : "border-[#8B5E3C]/30";
 
   return (
     <div

@@ -104,7 +104,7 @@ html, body {
 
 /* Scoreboard card */
 .scoreboard {
-  background: linear-gradient(180deg, #2C1810, #1A0F08);
+  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 3px), linear-gradient(180deg, #2C1810, #1A0F08);
   border: 3px solid #D4A847;
   border-radius: 12px;
   box-shadow:
@@ -115,7 +115,7 @@ html, body {
 
 /* Chalkboard card */
 .chalkboard {
-  background: #2A4A3A;
+  background: repeating-linear-gradient(45deg, rgba(245,240,232,0.02) 0px, transparent 2px, transparent 6px), #2A4A3A;
   border: 3px solid #8B5E3C;
   border-radius: 8px;
   box-shadow:

@@ -3,11 +3,12 @@
 import { useSearchParams, useRouter, usePathname } from "next/navigation";
 import { useCallback, type ReactNode } from "react";
 import TabNav from "@/components/TabNav";
+import TabErrorBoundary from "@/components/TabErrorBoundary";
 
 const TABS = [
-  { id: "records", label: "Records" },
-  { id: "awards", label: "Awards" },
-  { id: "hall-of-shame", label: "Hall of Shame" },
+  { id: "records", label: "Records", description: "All-time bests" },
+  { id: "awards", label: "Awards", description: "Seasonal superlatives" },
+  { id: "hall-of-shame", label: "Hall of Shame", description: "Last-place punishments" },
 ];
 
 interface RecordsTabsProps {
@@ -45,10 +46,10 @@ export default function RecordsTabs({
   return (
     <>
       <TabNav tabs={TABS} activeTab={validTab} onTabChange={handleTabChange} />
-      <div>
-        {validTab === "records" && recordsContent}
-        {validTab === "awards" && awardsContent}
-        {validTab === "hall-of-shame" && shameContent}
+      <div key={validTab} className="animate-fade-in-up">
+        {validTab === "records" && <TabErrorBoundary fallbackLabel="Records unavailable">{recordsContent}</TabErrorBoundary>}
+        {validTab === "awards" && <TabErrorBoundary fallbackLabel="Awards unavailable">{awardsContent}</TabErrorBoundary>}
+        {validTab === "hall-of-shame" && <TabErrorBoundary fallbackLabel="Hall of Shame unavailable">{shameContent}</TabErrorBoundary>}
       </div>
     </>
   );
