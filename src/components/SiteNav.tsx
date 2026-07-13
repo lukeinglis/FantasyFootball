@@ -26,6 +26,7 @@ const MORE_ITEMS: NavItem[] = [
   { href: "/draft-trends", label: "Draft Trends" },
   { href: "/transactions", label: "Transactions" },
   { href: "/records", label: "Records" },
+  { href: "/awards", label: "Awards" },
   { href: "/head-to-head", label: "Head-to-Head" },
   { href: "/history", label: "History" },
   { href: "/wall-of-shame", label: "Wall of Shame" },
