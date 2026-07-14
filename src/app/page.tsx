@@ -6,7 +6,7 @@ import ScoreboardPreview from "@/components/home/ScoreboardPreview";
 import ArticlesPreview from "@/components/home/ArticlesPreview";
 import SeasonAtAGlance from "@/components/home/SeasonAtAGlance";
 import SeasonCountdown from "@/components/SeasonCountdown";
-import GameZone from "@/components/home/GameZone";
+import BackyardHub from "@/components/home/BackyardHub";
 import { Card, CardBody, CardHeader } from "@/components/Card";
 import { fetchSettings } from "@/lib/server-data";
 import membersData from "@/data/members.json";
@@ -56,56 +56,8 @@ export default async function Home() {
 
   return (
     <>
-      {/* Hero */}
-      <section className="relative overflow-hidden border-b-4 border-[#D4A847] bg-[linear-gradient(180deg,#2C1810,#1A0F08)]">
-        <div
-          aria-hidden
-          className="pointer-events-none absolute left-0 top-0 h-full w-1/2"
-          style={{ background: "radial-gradient(ellipse at 30% 50%, rgba(212,168,71,0.08), transparent 70%)" }}
-        />
-        <Container className="relative py-20 sm:py-24 lg:py-32">
-          <div className="flex flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">
-            <div className="animate-fade-in-up">
-              <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.3em] text-[#D4A847] sm:text-sm">
-                {season ? `${season} Season` : `${history.seasons.length} Seasons Strong`}
-              </p>
-              <h1 className="mt-4 font-[family-name:var(--font-display)] text-5xl tracking-tight text-[#F5F0E8] sm:text-6xl lg:text-7xl text-shadow-wood-lg">
-                Greybushes{" "}
-                <span className="text-[#FFD23F]">&amp;</span>{" "}
-                Chili Dogs
-              </h1>
-              <p className="mt-4 max-w-2xl text-xl text-[#F5F0E8]/70 sm:text-2xl">
-                A bunch of degenerates who claim to be extraordinary swindlers.
-              </p>
-              <div className="mt-10 flex flex-wrap gap-3">
-                <Link
-                  href="/standings"
-                  className="font-[family-name:var(--font-heading)] rounded-lg bg-[#DD550C] px-6 py-3 text-base font-bold uppercase tracking-wide text-white shadow-lg shadow-[#DD550C]/20 transition-all hover:bg-orange-500 hover:shadow-[#DD550C]/40"
-                >
-                  View Standings
-                </Link>
-                <Link
-                  href="/history"
-                  className="font-[family-name:var(--font-heading)] rounded-lg border border-[#D4A847]/40 px-6 py-3 text-base font-bold uppercase tracking-wide text-[#D4A847] transition-all hover:bg-[#D4A847]/10"
-                >
-                  Hall of Champions
-                </Link>
-                <Link
-                  href="/records?tab=hall-of-shame"
-                  className="font-[family-name:var(--font-heading)] rounded-lg border border-[#F5F0E8]/15 px-6 py-3 text-base font-bold uppercase tracking-wide text-[#F5F0E8] transition-all hover:bg-white/5"
-                >
-                  Wall of Shame
-                </Link>
-              </div>
-            </div>
-            {isOffseason && (
-              <div className="lg:w-96 flex-shrink-0 animate-fade-in-up" style={{ animationDelay: "0.2s" }}>
-                <SeasonCountdown />
-              </div>
-            )}
-          </div>
-        </Container>
-      </section>
+      {/* The Backyard — interactive hub navigation */}
+      <BackyardHub />
 
       {/* Defending Champion Banner */}
       {defendingChamp && (
@@ -335,10 +287,6 @@ export default async function Home() {
         </Container>
       )}
 
-      {/* Game Zone: Breakaway + Field Goal Frenzy */}
-      <Container className="pt-0">
-        <GameZone />
-      </Container>
 
       {/* Articles */}
       <Container className="pt-0">
