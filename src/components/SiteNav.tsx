@@ -28,6 +28,7 @@ const MORE_ITEMS: NavItem[] = [
   { href: "/league", label: "League Info" },
   { href: "/articles", label: "Articles" },
   { href: "/power-rankings", label: "Power Rankings" },
+  { href: "/games", label: "Arcade" },
 ];
 
 const ALL_ITEMS = [...PRIMARY_ITEMS, ...MORE_ITEMS];
