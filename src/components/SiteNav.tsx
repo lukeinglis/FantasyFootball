@@ -19,7 +19,7 @@ const PRIMARY_ITEMS: NavItem[] = [
 ];
 
 const MORE_ITEMS: NavItem[] = [
-  { href: "/stats", label: "Stats" },
+  { href: "/stats", label: "Stats & Rankings" },
   { href: "/records", label: "Record Book" },
   { href: "/head-to-head", label: "Head-to-Head" },
   { href: "/history", label: "History" },
@@ -27,7 +27,7 @@ const MORE_ITEMS: NavItem[] = [
   { href: "/transactions", label: "Transactions" },
   { href: "/league", label: "League Info" },
   { href: "/articles", label: "Articles" },
-  { href: "/power-rankings", label: "Power Rankings" },
+  { href: "/games", label: "Arcade" },
 ];
 
 const ALL_ITEMS = [...PRIMARY_ITEMS, ...MORE_ITEMS];
