@@ -6,6 +6,7 @@ import Container from "@/components/Container";
 import NotConnected, { ApiError } from "@/components/NotConnected";
 import OffseasonState from "@/components/OffseasonState";
 import { Card } from "@/components/Card";
+import PullToRefresh from "@/components/PullToRefresh";
 import { formatPercent, formatPoints, formatRecord } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -29,7 +30,7 @@ export default async function StandingsPage() {
     : DEFAULT_PLAYOFF_CUTOFF;
 
   return (
-    <>
+    <PullToRefresh>
       <PageHeader
         eyebrow="Live"
         pennant="2025 Season"
@@ -157,6 +158,6 @@ export default async function StandingsPage() {
           </Card>
         )}
       </Container>
-    </>
+    </PullToRefresh>
   );
 }

@@ -48,12 +48,12 @@ export default function WeekSelector({
           </option>
         ))}
       </select>
-      <div className="hidden sm:flex items-center gap-1">
+      <div className="flex items-center gap-1">
         <button
           type="button"
           onClick={() => navigateTo(Math.max(start, current - 1))}
           disabled={current <= start}
-          className="rounded-md border border-[#D4A847]/20 bg-[#2C1810] px-2 py-1.5 text-xs text-gray-200 hover:bg-[#5C3A1E] disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-md border border-[#D4A847]/20 bg-[#2C1810] min-h-[44px] min-w-[44px] px-2 py-1.5 text-xs text-gray-200 hover:bg-[#5C3A1E] disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Previous week"
         >
           ‹ Prev
@@ -62,7 +62,7 @@ export default function WeekSelector({
           type="button"
           onClick={() => navigateTo(Math.min(end, current + 1))}
           disabled={current >= end}
-          className="rounded-md border border-[#D4A847]/20 bg-[#2C1810] px-2 py-1.5 text-xs text-gray-200 hover:bg-[#5C3A1E] disabled:cursor-not-allowed disabled:opacity-40"
+          className="rounded-md border border-[#D4A847]/20 bg-[#2C1810] min-h-[44px] min-w-[44px] px-2 py-1.5 text-xs text-gray-200 hover:bg-[#5C3A1E] disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Next week"
         >
           Next ›
