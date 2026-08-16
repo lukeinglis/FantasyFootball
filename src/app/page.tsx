@@ -8,6 +8,7 @@ import SeasonAtAGlance from "@/components/home/SeasonAtAGlance";
 import SeasonCountdown from "@/components/SeasonCountdown";
 import BackyardHub from "@/components/home/BackyardHub";
 import MobileHub from "@/components/home/MobileHub";
+import PullToRefresh from "@/components/PullToRefresh";
 import { Card, CardBody, CardHeader } from "@/components/Card";
 import { fetchSettings } from "@/lib/server-data";
 import membersData from "@/data/members.json";
@@ -56,7 +57,7 @@ export default async function Home() {
   const recentSeasons = history.seasons.slice(0, 5);
 
   return (
-    <>
+    <PullToRefresh>
       {/* Mobile hub card stack */}
       <MobileHub isOffseason={isOffseason} defendingChamp={defendingChamp} />
 
@@ -298,6 +299,6 @@ export default async function Home() {
       <Container className="pt-0">
         <ArticlesPreview />
       </Container>
-    </>
+    </PullToRefresh>
   );
 }
