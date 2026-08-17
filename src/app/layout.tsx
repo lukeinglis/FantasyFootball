@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Luckiest_Guy, Bangers, Nunito } from "next/font/google";
 import "./globals.css";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
+import MobileNav from "@/components/MobileNav";
 
 const luckiestGuy = Luckiest_Guy({
   subsets: ["latin"],
@@ -24,6 +25,10 @@ const nunito = Nunito({
   display: "swap",
   weight: ["400", "600", "700", "800", "900"],
 });
+
+export const viewport: Viewport = {
+  viewportFit: "cover",
+};
 
 export const metadata: Metadata = {
   title: {
@@ -53,8 +58,9 @@ export default function RootLayout({
       >
         <div className="yard-lines" aria-hidden />
         <SiteNav />
-        <main className="flex-1 relative z-[1] grass-bg">{children}</main>
+        <main className="flex-1 relative z-[1] grass-bg pb-16 md:pb-0">{children}</main>
         <SiteFooter />
+        <MobileNav />
       </body>
     </html>
   );

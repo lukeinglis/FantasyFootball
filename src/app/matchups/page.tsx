@@ -8,6 +8,8 @@ import OffseasonState from "@/components/OffseasonState";
 import { Card, CardBody } from "@/components/Card";
 import EmptyState from "@/components/EmptyState";
 import WeekSelector from "@/components/WeekSelector";
+import SwipeableWeekNav from "@/components/SwipeableWeekNav";
+import PullToRefresh from "@/components/PullToRefresh";
 import { formatPoints, toFiniteNumber } from "@/lib/format";
 
 export const metadata: Metadata = {
@@ -69,7 +71,10 @@ export default async function MatchupsPage({
 
   const endWeek = settingsResult.ok ? settingsResult.data.endWeek : 18;
 
-  return (
+  const currentWeek = result.ok ? result.data.week : 1;
+  const computedEndWeek = result.ok ? Math.max(result.data.week, endWeek) : endWeek;
+
+  const content = (
     <>
       <PageHeader
         eyebrow="Matchups"
@@ -82,7 +87,7 @@ export default async function MatchupsPage({
           <WeekSelector
             current={result.data.week}
             startWeek={1}
-            endWeek={Math.max(result.data.week, endWeek)}
+            endWeek={computedEndWeek}
           />
         )}
       </PageHeader>
@@ -156,6 +161,18 @@ export default async function MatchupsPage({
         )}
       </Container>
     </>
+  );
+
+  return (
+    <PullToRefresh>
+      <SwipeableWeekNav
+        currentWeek={currentWeek}
+        startWeek={1}
+        endWeek={computedEndWeek}
+      >
+        {content}
+      </SwipeableWeekNav>
+    </PullToRefresh>
   );
 }
 

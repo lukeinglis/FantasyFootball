@@ -48,6 +48,11 @@
   50% { transform: translateY(-6px); }
 }
 
+@keyframes slide-up {
+  from { transform: translateY(100%); }
+  to { transform: translateY(0); }
+}
+
 :root {
   color-scheme: dark;
 }

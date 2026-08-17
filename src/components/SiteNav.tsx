@@ -30,8 +30,6 @@ const MORE_ITEMS: NavItem[] = [
   { href: "/games", label: "Arcade" },
 ];
 
-const ALL_ITEMS = [...PRIMARY_ITEMS, ...MORE_ITEMS];
-
 function isActive(currentPath: string, href: string): boolean {
   if (href === "/") return currentPath === "/";
   return currentPath === href || currentPath.startsWith(`${href}/`);
@@ -39,12 +37,10 @@ function isActive(currentPath: string, href: string): boolean {
 
 export default function SiteNav() {
   const pathname = usePathname() ?? "/";
-  const [mobileOpen, setMobileOpen] = useState(false);
   const [moreOpen, setMoreOpen] = useState(false);
   const moreRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    setMobileOpen(false);
     setMoreOpen(false);
   }, [pathname]);
 
@@ -152,75 +148,11 @@ export default function SiteNav() {
           </div>
         </nav>
 
-        {/* Mobile: user menu + toggle */}
-        <div className="flex items-center gap-2 lg:hidden">
+        {/* Desktop user menu (hidden on mobile where MobileNav handles navigation) */}
+        <div className="hidden md:flex lg:hidden items-center gap-2">
           <UserMenu />
         </div>
-        <button
-          type="button"
-          aria-label={mobileOpen ? "Close menu" : "Open menu"}
-          aria-expanded={mobileOpen}
-          aria-controls="mobile-nav"
-          onClick={() => setMobileOpen((v) => !v)}
-          className="lg:hidden inline-flex items-center justify-center rounded-md p-2 text-[#FFD23F] hover:bg-white/12"
-        >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            aria-hidden="true"
-          >
-            {mobileOpen ? (
-              <>
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </>
-            ) : (
-              <>
-                <line x1="3" y1="6" x2="21" y2="6" />
-                <line x1="3" y1="12" x2="21" y2="12" />
-                <line x1="3" y1="18" x2="21" y2="18" />
-              </>
-            )}
-          </svg>
-        </button>
       </div>
-
-      {/* Mobile nav drawer */}
-      {mobileOpen && (
-        <nav
-          id="mobile-nav"
-          aria-label="Primary mobile"
-          className="lg:hidden border-t border-[#D4A847]/20 bg-[#5C3A1E]"
-        >
-          <ul className="flex flex-col gap-1 px-4 py-3 sm:px-6">
-            {ALL_ITEMS.map((item) => {
-              const active = isActive(pathname, item.href);
-              return (
-                <li key={item.href}>
-                  <Link
-                    href={item.href}
-                    aria-current={active ? "page" : undefined}
-                    className={`block px-3 py-2 rounded-md font-[family-name:var(--font-body)] font-extrabold text-xs uppercase tracking-widest transition-colors ${
-                      active
-                        ? "bg-[#DD550C] text-white"
-                        : "text-[#F5F0E8] hover:bg-white/12 hover:text-[#FFD23F]"
-                    }`}
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              );
-            })}
-          </ul>
-        </nav>
-      )}
     </header>
   );
 }

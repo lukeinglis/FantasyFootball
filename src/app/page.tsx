@@ -7,6 +7,8 @@ import ArticlesPreview from "@/components/home/ArticlesPreview";
 import SeasonAtAGlance from "@/components/home/SeasonAtAGlance";
 import SeasonCountdown from "@/components/SeasonCountdown";
 import BackyardHub from "@/components/home/BackyardHub";
+import MobileHub from "@/components/home/MobileHub";
+import PullToRefresh from "@/components/PullToRefresh";
 import { Card, CardBody, CardHeader } from "@/components/Card";
 import { fetchSettings } from "@/lib/server-data";
 import membersData from "@/data/members.json";
@@ -55,13 +57,18 @@ export default async function Home() {
   const recentSeasons = history.seasons.slice(0, 5);
 
   return (
-    <>
-      {/* The Backyard — interactive hub navigation */}
-      <BackyardHub />
+    <PullToRefresh>
+      {/* Mobile hub card stack */}
+      <MobileHub isOffseason={isOffseason} defendingChamp={defendingChamp} />
 
-      {/* Defending Champion Banner */}
+      {/* Desktop: The Backyard — interactive hub navigation */}
+      <div className="hidden md:block">
+        <BackyardHub />
+      </div>
+
+      {/* Defending Champion Banner (desktop only, mobile has it in MobileHub) */}
       {defendingChamp && (
-        <Container>
+        <Container className="hidden md:block">
           <div className="relative overflow-hidden rounded-xl border-[3px] border-[#D4A847] bg-[linear-gradient(180deg,#2C1810,#1A0F08)] p-6 sm:p-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
             <div className="pointer-events-none absolute top-0 left-0 right-0 h-[3px] bg-[linear-gradient(90deg,transparent,#D4A847_20%,#D4A847_80%,transparent)]" aria-hidden />
             <div className="relative flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
@@ -292,6 +299,6 @@ export default async function Home() {
       <Container className="pt-0">
         <ArticlesPreview />
       </Container>
-    </>
+    </PullToRefresh>
   );
 }
