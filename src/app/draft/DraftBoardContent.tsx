@@ -1,8 +1,7 @@
 import { fetchDraft, fetchTeams } from "@/lib/server-data";
 import type { DraftResult, Team } from "@/lib/yahoo/types";
 import Container from "@/components/Container";
-import NotConnected, { ApiError } from "@/components/NotConnected";
-import OffseasonState from "@/components/OffseasonState";
+import DataState from "@/components/DataState";
 import { Card } from "@/components/Card";
 import EmptyState from "@/components/EmptyState";
 import { POS_COLORS } from "@/lib/records";
@@ -93,13 +92,7 @@ export default async function DraftBoardContent() {
   if (!draftRes.ok) {
     return (
       <Container>
-        {draftRes.notConfigured ? (
-          <NotConnected resource="draft results" />
-        ) : draftRes.offseason ? (
-          <OffseasonState resource="draft results" />
-        ) : (
-          <ApiError resource="draft results" detail={draftRes.message} />
-        )}
+        <DataState result={draftRes} resource="draft results" />
       </Container>
     );
   }

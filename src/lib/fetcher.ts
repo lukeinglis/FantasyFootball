@@ -38,13 +38,48 @@ export type FetchResult<T> =
       message: string;
       /** True when the API returned a config-related error (Yahoo not connected). */
       notConfigured: boolean;
+      /**
+       * True when Yahoo accepted the request, identified us, and refused.
+       * Distinct from `notConfigured`, which means we never got that far, and
+       * from `offseason`, which means the API answered and had nothing to say.
+       * Nothing the reader does will fix this one.
+       */
+      accessDenied: boolean;
       /** True when the API is connected but no active season data exists (offseason). */
       offseason: boolean;
     };
 
-/** Best-effort detection that the API is reporting a config issue. */
+/**
+ * Yahoo refusing an authenticated request.
+ *
+ * This used to be folded into the offseason branch, so a revoked API grant
+ * rendered as "Countdown to Kickoff" and the site cheerfully told readers the
+ * season had not started while it was underway. Worth keeping separate: the
+ * offseason ends on its own, and this does not.
+ */
+function looksLikeAccessDenied(status: number, message: string): boolean {
+  const lower = (message || "").toLowerCase();
+  return (
+    status === 403 ||
+    lower.includes("not authorized to perform this action") ||
+    lower.includes("additional_authorization_required") ||
+    lower.includes("invalid_scope") ||
+    lower.includes("token_rejected") ||
+    lower.includes(": 403") ||
+    lower.includes("(403)")
+  );
+}
+
+/**
+ * Best-effort detection that the API is reporting a config issue.
+ *
+ * A 403 is deliberately not treated as one. "Not configured" tells the reader
+ * the commissioner needs to connect Yahoo, which is actionable and, when Yahoo
+ * has revoked the grant, false.
+ */
 function looksLikeConfigError(status: number, message: string): boolean {
-  if (status === 401 || status === 403) return true;
+  if (looksLikeAccessDenied(status, message)) return false;
+  if (status === 401) return true;
   const lower = (message || "").toLowerCase();
   return (
     lower.includes("yahoo_client_id") ||
@@ -55,12 +90,19 @@ function looksLikeConfigError(status: number, message: string): boolean {
   );
 }
 
-/** Detect offseason/no-active-season errors from structured API responses. */
+/**
+ * Detect offseason/no-active-season errors from structured API responses.
+ *
+ * Only ever true when Yahoo has not refused us. A failure to resolve the game
+ * key reads as "no season yet" on its own, but reads as "we are locked out"
+ * when it arrives with a 403 attached, and the second reading wins.
+ */
 function looksLikeOffseasonError(status: number, body: Record<string, unknown> | null, message: string): boolean {
-  if (body?.offseason === true) return true;
   const bodyText = String(body?.error ?? body?.detail ?? "").toLowerCase();
   const msgLower = (message || "").toLowerCase();
   const combined = `${bodyText} ${msgLower}`;
+  if (looksLikeAccessDenied(status, combined)) return false;
+  if (body?.offseason === true) return true;
   return (
     combined.includes("no active season") ||
     combined.includes("temporary problem") ||
@@ -102,6 +144,7 @@ export async function apiFetch<T>(
         status: res.status,
         message,
         notConfigured: looksLikeConfigError(res.status, message),
+        accessDenied: looksLikeAccessDenied(res.status, message),
         offseason: looksLikeOffseasonError(res.status, body, message),
       };
     }
@@ -117,6 +160,7 @@ export async function apiFetch<T>(
       status: 0,
       message,
       notConfigured: looksLikeConfigError(0, message),
+      accessDenied: looksLikeAccessDenied(0, message),
       offseason: looksLikeOffseasonError(0, null, message),
     };
   }

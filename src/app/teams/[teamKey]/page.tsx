@@ -4,8 +4,7 @@ import { fetchTeams, fetchRoster, fetchTeamMatchups } from "@/lib/server-data";
 import type { Matchup, Roster, Team } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
-import NotConnected, { ApiError } from "@/components/NotConnected";
-import OffseasonState from "@/components/OffseasonState";
+import DataState from "@/components/DataState";
 import { Card, CardBody, CardHeader } from "@/components/Card";
 import { formatPoints, formatRecord } from "@/lib/format";
 import { POS_TEXT } from "@/lib/records";
@@ -50,22 +49,14 @@ export default async function TeamDetailPage({
     : undefined;
 
   if (!allTeams.ok && !roster.ok) {
-    const notConfigured = allTeams.notConfigured || roster.notConfigured;
-    const offseason = (!allTeams.ok && allTeams.offseason) || (!roster.ok && roster.offseason);
+    // Both calls failed, so either failure explains the page. Report the teams
+    // one: it is the broader request, and when Yahoo is refusing us wholesale
+    // the two say the same thing anyway.
     return (
       <>
         <PageHeader title="Team" subtitle="Roster and team detail." />
         <Container>
-          {notConfigured ? (
-            <NotConnected resource="team detail" />
-          ) : offseason ? (
-            <OffseasonState resource="team detail" />
-          ) : (
-            <ApiError
-              resource="team detail"
-              detail={allTeams.ok ? roster.message : allTeams.message}
-            />
-          )}
+          <DataState result={allTeams} resource="team detail" />
           <div className="mt-4">
             <Link
               href="/teams"
@@ -121,11 +112,7 @@ export default async function TeamDetailPage({
           <CardBody className="!p-0">
             {!roster.ok ? (
               <div className="px-5 py-6">
-                {roster.notConfigured ? (
-                  <NotConnected resource="roster" />
-                ) : (
-                  <ApiError resource="roster" detail={roster.message} />
-                )}
+                <DataState result={roster} resource="roster" />
               </div>
             ) : roster.data.players.length === 0 ? (
               <div className="px-5 py-6 text-sm text-ink-muted">

@@ -1,18 +1,24 @@
 import Link from "next/link";
 import { fetchStandings } from "@/lib/server-data";
 import { Card, CardBody, CardHeader } from "@/components/Card";
-import NotConnected, { ApiError } from "@/components/NotConnected";
-import OffseasonState from "@/components/OffseasonState";
+import DataState from "@/components/DataState";
 import { formatPoints, formatRecord } from "@/lib/format";
 
 export default async function StandingsPreview() {
   const result = await fetchStandings();
 
+  // The old copy read "Live from Yahoo, refreshed every 15 minutes" no matter
+  // what came back, including when nothing did. Say which of the two we are
+  // actually showing.
+  const description = result.ok
+    ? "Live from Yahoo."
+    : "Live standings are unavailable right now.";
+
   return (
     <Card>
       <CardHeader
         title="Top of the Standings"
-        description="Live from Yahoo, refreshed every 15 minutes."
+        description={description}
         action={
           <Link
             href="/standings"
@@ -24,13 +30,7 @@ export default async function StandingsPreview() {
       />
       <CardBody>
         {!result.ok ? (
-          result.notConfigured ? (
-            <NotConnected resource="standings" />
-          ) : result.offseason ? (
-            <OffseasonState resource="standings" />
-          ) : (
-            <ApiError resource="standings" detail={result.message} />
-          )
+          <DataState result={result} resource="standings" />
         ) : (
           <ol className="space-y-2">
             {result.data.teams.slice(0, 5).map((team) => (

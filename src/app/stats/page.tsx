@@ -4,8 +4,7 @@ import type { Scoreboard } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import { LAST_COMPLETED_SEASON } from "@/lib/season";
-import NotConnected, { ApiError } from "@/components/NotConnected";
-import OffseasonState from "@/components/OffseasonState";
+import DataState from "@/components/DataState";
 import StatsTabs from "./StatsTabs";
 import StatsContent from "./StatsContent";
 import PowerRankingsContent from "./PowerRankingsContent";
@@ -46,13 +45,7 @@ export default async function StatsPage() {
           subtitle="The numbers behind the madness. Superlatives, rankings, and bragging rights."
         />
         <Container>
-          {standingsResult.notConfigured ? (
-            <NotConnected resource="stats" />
-          ) : standingsResult.offseason ? (
-            <OffseasonState resource="stats" />
-          ) : (
-            <ApiError resource="stats" detail={standingsResult.message} />
-          )}
+          <DataState result={standingsResult} resource="stats" />
         </Container>
       </>
     );

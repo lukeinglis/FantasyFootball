@@ -13,14 +13,11 @@ export default function OffseasonState({ resource }: OffseasonStateProps) {
         <p className="mx-auto mt-2 max-w-sm text-sm text-ink-muted">
           Live {resource} data will be available once the new NFL season kicks off.
         </p>
-        {/* Connection state, not an alert. A pulsing dot on a red wash read as
-            a warning about the very thing it was confirming was fine. */}
-        <div className="mt-4 inline-flex items-center gap-2 border border-rule bg-paper px-3 py-1.5">
-          <span className="h-1.5 w-1.5 flex-shrink-0 bg-record" />
-          <span className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.14em] text-ink-muted">
-            Yahoo API connected
-          </span>
-        </div>
+        {/* There used to be a badge here reading "Yahoo API connected". We reach
+            this state by failing to resolve a game key, which is what an
+            offseason looks like but is not proof the feed is healthy. The badge
+            was asserting something we had not checked, and it was doing it
+            directly under a kickoff countdown during week two. */}
       </div>
     </div>
   );
