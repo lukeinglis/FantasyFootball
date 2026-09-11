@@ -118,7 +118,18 @@ async function getGameKey(): Promise<string> {
   });
 
   if (!response.ok) {
-    throw new Error(`Failed to resolve NFL game key: ${response.status}`);
+    // Yahoo puts the actual reason in the body, and this call used to discard
+    // it, so every failure arrived as a bare status code. A 403 here can mean
+    // the app has lost its Fantasy Sports permission, or that the account is
+    // being rate limited, and those need opposite fixes. Carry the body.
+    const body = await response.text().catch(() => "<unreadable>");
+    logger.error(
+      { module: "yahoo/client", status: response.status, body: body.slice(0, 500) },
+      "game key lookup rejected"
+    );
+    throw new Error(
+      `Failed to resolve NFL game key: ${response.status} ${body.slice(0, 300)}`
+    );
   }
 
   const data = await response.json();
@@ -149,8 +160,17 @@ async function getLeagueKey(): Promise<string> {
       _isFallbackSeason = false;
       return primaryKey;
     }
-  } catch {
-    // Current season unavailable, fall through to fallback
+    logger.warn(
+      { module: "yahoo/client", key: primaryKey, status: testRes.status },
+      "current season league probe rejected"
+    );
+  } catch (err) {
+    // Current season unavailable, fall through to fallback. This used to be a
+    // bare `catch {}`, which hid the reason the current season was skipped.
+    logger.warn(
+      { module: "yahoo/client", err: (err as Error)?.message },
+      "current season league probe threw"
+    );
   }
 
   // Fall back to most recent historical season
@@ -169,7 +189,18 @@ async function getLeagueKey(): Promise<string> {
         _isFallbackSeason = true;
         return fallbackKey;
       }
-    } catch {
+      // Eleven seasons of known-good league keys are tried here, and until now
+      // every rejection was silent. When all eleven fail, the site goes dark
+      // with an error about the *game key*, which is not where it failed.
+      logger.warn(
+        { module: "yahoo/client", season: entry.season, status: testRes.status },
+        "fallback season probe rejected"
+      );
+    } catch (err) {
+      logger.warn(
+        { module: "yahoo/client", season: entry.season, err: (err as Error)?.message },
+        "fallback season probe threw"
+      );
       continue;
     }
   }
