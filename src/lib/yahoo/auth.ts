@@ -32,17 +32,35 @@ function getRedirectUri(): string {
   );
 }
 
+// This request used to omit `scope` entirely, because omitting it meant "grant
+// everything this app is registered for" and the app is registered for Fantasy
+// Sports. Yahoo changed that default to grant nothing, so tokens kept being
+// issued and kept being refused, which surfaced as a 403 reading "This
+// application is not authorized to perform this action" on every endpoint.
+//
+// Only ask for what the app is actually entitled to. Yahoo rejects the whole
+// request with invalid_scope if any single scope is not registered, so adding
+// email or profile here would break authorization outright rather than
+// degrading. Confirmed against the consent endpoint: openid and fspt-r are
+// accepted, email, profile, fspt-w and sdct-r are not.
+export const DEFAULT_SCOPE = "openid fspt-r";
+
 /**
  * Build the Yahoo OAuth consent URL.
  * Redirect the user here to authorize the app.
+ *
+ * Pass a scope to override the default. Passing an empty string omits the
+ * parameter entirely, which reproduces the pre-fspt-r behaviour and is the
+ * escape hatch if Yahoo rejects the scope outright and blocks sign-in.
  */
-export function getAuthUrl(): string {
+export function getAuthUrl(scope: string = DEFAULT_SCOPE): string {
   const params = new URLSearchParams({
     client_id: getClientId(),
     redirect_uri: getRedirectUri(),
     response_type: "code",
     language: "en-us",
   });
+  if (scope) params.set("scope", scope);
   return `${YAHOO_AUTH_URL}?${params.toString()}`;
 }
 
