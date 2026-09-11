@@ -6,19 +6,11 @@ import type { ManagerCareerStats } from "@/lib/manager-stats";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
 import { Card } from "@/components/Card";
+import { POS_FILL, POS_TEXT } from "@/lib/records";
 
 export const metadata: Metadata = {
   title: "Managers",
   description: "Every manager who has ever played in Greybushes & Chili Dogs, with full draft profiles.",
-};
-
-const POS_COLORS: Record<string, string> = {
-  QB: "text-rose-600",
-  RB: "text-emerald-700",
-  WR: "text-sky-600",
-  TE: "text-amber-600",
-  K: "text-violet-600",
-  DEF: "text-slate-500",
 };
 
 export default function ManagersPage() {
@@ -43,7 +35,7 @@ export default function ManagersPage() {
         subtitle={`${profiles.length} managers across ${new Set(profiles.flatMap((p) => p.yearsActive)).size > 0 ? "11" : "0"} seasons of Greybushes & Chili Dogs history.`}
       />
       <Container>
-        <h2 className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#DD550C]">
+        <h2 className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-result">
           Active ({active.length})
         </h2>
         <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -56,10 +48,10 @@ export default function ManagersPage() {
 
         {others.length > 0 && (
           <>
-            <h2 className="mt-12 font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#DD550C]">
+            <h2 className="mt-12 font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-result">
               Alumni ({others.length})
             </h2>
-            <p className="mt-1 max-w-xl text-xs text-gray-500">
+            <p className="mt-1 max-w-xl text-xs text-ink-muted">
               Former managers who left their mark on the league.
             </p>
             <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -96,60 +88,71 @@ function ManagerCard({
 
   return (
     <Link href={`/managers/${profile.slug}`} className="group block">
+      {/* Seventeen of these sit on one page, so the chrome stays quiet: a
+          hairline box, the name in the display face, and colour reserved for
+          the one fact that is actually rare, a title. A solid red bar on every
+          card made the page shout and made the champions impossible to spot. */}
       <Card variant="trading-card">
-        <div className="bg-gradient-to-r from-[#D32F2F] to-[#8B1A1A] px-4 py-2 flex items-center justify-between">
-          <p className="truncate font-[family-name:var(--font-heading)] text-sm text-white tracking-wide text-shadow-sm">
+        <div className="flex items-baseline justify-between gap-2 border-b border-ink px-4 py-2">
+          <p className="truncate font-[family-name:var(--wire-display)] text-[15px] font-extrabold uppercase tracking-[0.02em] text-ink">
             {profile.name}
           </p>
           {profile.championships > 0 && (
-            <span className="rounded bg-[#FFD700] px-1.5 py-0.5 font-[family-name:var(--font-heading)] text-[10px] text-[#2C1810] tracking-wide">
-              {profile.championships}x Champ
+            <span className="flex-shrink-0 bg-record px-1.5 py-0.5 font-[family-name:var(--wire-mono)] text-[9px] uppercase tracking-[0.1em] text-white">
+              {profile.championships}
+              {profile.championships === 1 ? " title" : " titles"}
             </span>
           )}
         </div>
 
         <div className="p-4">
           <div className="flex items-start gap-3">
-            <div className="relative flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#4A90D9] to-[#1565C0] border-3 border-[#A0784C] font-[family-name:var(--font-heading)] text-lg text-white text-shadow-sm">
+            <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center border border-ink bg-paper font-[family-name:var(--wire-display)] text-[17px] font-extrabold uppercase text-ink">
               {initials}
             </div>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm text-[#6B5744] italic">
+              <p className="truncate font-[family-name:var(--wire-body)] text-sm italic text-ink-soft">
                 {profile.currentTeamName || "No team"}
               </p>
-              <div className="mt-1 flex items-center gap-3 text-xs text-[#6B5744]">
+              <div className="mt-1 flex items-center gap-2 font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.08em] text-ink-muted">
                 <span>{profile.yearsActive.length} seasons</span>
-                <span className="text-[#A0784C]">·</span>
+                <span className="text-rule">·</span>
                 <span>{profile.totalPicks} picks</span>
               </div>
             </div>
           </div>
 
           {careerStats && careerStats.seasonsPlayed > 0 && (
-            <div className="mt-3 flex items-center gap-3 border-t border-dashed border-[#A0784C]/30 pt-2 text-xs">
-              <span className="text-[#2C1810] font-semibold">
+            <div className="mt-3 flex items-baseline gap-3 border-t border-rule pt-2 font-[family-name:var(--wire-mono)] text-[12px] tabular-nums">
+              <span className="font-semibold text-ink">
                 {careerStats.wins}-{careerStats.losses}{careerStats.ties > 0 ? `-${careerStats.ties}` : ""}
               </span>
-              <span className="text-[#DD550C] font-bold">{careerStats.winPct}%</span>
-              <span className="text-[#6B5744] ml-auto">{careerStats.totalPointsFor.toLocaleString()} PF</span>
+              {/* Above .500 or below it is the only thing this number says.
+                  Painting all seventeen of them red said nothing. */}
+              <span className={careerStats.winPct >= 50 ? "text-ink" : "text-ink-muted"}>
+                {careerStats.winPct}%
+              </span>
+              <span className="ml-auto text-ink-muted">{careerStats.totalPointsFor.toLocaleString()} PF</span>
             </div>
           )}
 
           {totalPicks > 0 && (
             <div className="mt-3 flex items-center gap-2">
-              <div className="flex h-1.5 flex-1 overflow-hidden rounded-full bg-[#A0784C]/20">
+              <div className="flex h-1.5 flex-1 overflow-hidden bg-rule">
                 {topPos.map(([pos, count]) => {
                   const pct = (count / totalPicks) * 100;
-                  const colorClass = POS_COLORS[pos] || "text-slate-500";
-                  const bgColor = colorClass.replace("text-", "bg-").replace("-600", "-500/60").replace("-700", "-600/60").replace("-500", "-400/60");
                   return (
-                    <div key={pos} className={`h-full ${bgColor}`} style={{ width: `${pct}%` }} />
+                    <div
+                      key={pos}
+                      className={`h-full ${POS_FILL[pos] ?? "bg-slate-500"}`}
+                      style={{ width: `${pct}%` }}
+                    />
                   );
                 })}
               </div>
-              <div className="flex gap-1.5 text-[9px] font-bold">
+              <div className="flex gap-1.5 font-[family-name:var(--wire-mono)] text-[9px] font-bold">
                 {topPos.slice(0, 3).map(([pos]) => (
-                  <span key={pos} className={POS_COLORS[pos] || "text-slate-500"}>
+                  <span key={pos} className={POS_TEXT[pos] ?? "text-slate-700"}>
                     {pos}
                   </span>
                 ))}

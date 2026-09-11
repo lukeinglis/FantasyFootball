@@ -36,7 +36,6 @@ export default function PowerRankingsContent({
   if (teams.length === 0) {
     return (
       <EmptyState
-        icon={<span>📊</span>}
         title="No data yet"
         description="Power rankings will generate once games are played."
       />
@@ -146,12 +145,12 @@ export default function PowerRankingsContent({
               <div className="flex items-center gap-4">
                 <div className="flex flex-col items-center gap-1">
                   <span
-                    className={`flex h-10 w-10 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-lg font-bold ${
-                      t.rank <= 3
-                        ? "bg-[#DD550C] text-white"
+                    className={`flex h-10 w-10 items-center justify-center font-[family-name:var(--font-heading)] text-lg font-bold ${
+ t.rank <= 3
+                        ? "bg-result text-white"
                         : t.rank <= 6
-                        ? "bg-[#DD550C]/20 text-[#DD550C]"
-                        : "bg-white/10 text-[#F5F0E8]/60"
+                        ? "bg-result/20 text-result"
+                        : "bg-paper text-ink-muted"
                     }`}
                   >
                     {t.rank}
@@ -159,9 +158,9 @@ export default function PowerRankingsContent({
                   {t.movement !== 0 && (
                     <span
                       className={`text-[10px] font-bold ${
-                        t.movement > 0
-                          ? "text-emerald-400"
-                          : "text-red-400"
+ t.movement > 0
+                          ? "text-money"
+                          : "text-result"
                       }`}
                     >
                       {t.movement > 0 ? `+${t.movement}` : t.movement}
@@ -171,15 +170,15 @@ export default function PowerRankingsContent({
 
                 <div className="flex-1 min-w-0">
                   <div className="flex items-baseline gap-3">
-                    <h3 className="text-lg font-bold text-[#F5F0E8] truncate">
+                    <h3 className="text-lg font-bold text-ink truncate">
                       {t.teamName}
                     </h3>
-                    <span className="text-xs text-[#F5F0E8]/50 hidden sm:inline">
+                    <span className="text-xs text-ink-muted hidden sm:inline">
                       {t.managerName}
                     </span>
                   </div>
-                  <div className="mt-1 flex items-center gap-4 text-xs text-[#F5F0E8]/50">
-                    <span className="font-[family-name:var(--font-heading)] tracking-wide text-[#4CAF50]">
+                  <div className="mt-1 flex items-center gap-4 text-xs text-ink-muted">
+                    <span className="font-[family-name:var(--wire-display)] tabular-nums tracking-wide text-ink">
                       {formatRecord(t.wins, t.losses, t.ties)}
                     </span>
                     <span>
@@ -201,10 +200,10 @@ export default function PowerRankingsContent({
                 </div>
 
                 <div className="flex-shrink-0 text-center">
-                  <p className="font-[family-name:var(--font-heading)] text-3xl font-bold text-[#DD550C]">
+                  <p className="font-[family-name:var(--font-heading)] text-3xl font-bold text-result">
                     {t.powerScore}
                   </p>
-                  <p className="text-[10px] uppercase tracking-wider text-[#F5F0E8]/40">
+                  <p className="text-[10px] uppercase tracking-wider text-ink-faint">
                     PWR
                   </p>
                 </div>
@@ -214,7 +213,7 @@ export default function PowerRankingsContent({
         ))}
       </div>
 
-      <p className="mt-6 text-center text-xs text-[#F5F0E8]/40">
+      <p className="mt-6 text-center text-xs text-ink-faint">
         Power rankings update automatically. Movement shown relative to
         standings rank.
       </p>
@@ -227,12 +226,12 @@ function ScoreBar({ label, value }: { label: string; value: number }) {
   return (
     <div>
       <div className="flex justify-between mb-0.5">
-        <span className="text-[#F5F0E8]/40">{label}</span>
-        <span className="font-[family-name:var(--font-heading)] text-[#F5F0E8]/70">{value}</span>
+        <span className="text-ink-faint">{label}</span>
+        <span className="font-[family-name:var(--font-heading)] text-ink-soft">{value}</span>
       </div>
-      <div className="h-1.5 rounded-full bg-white/10">
+      <div className="h-1.5 bg-paper">
         <div
-          className="h-1.5 rounded-full bg-[#DD550C]/60"
+          className="h-1.5 bg-result/60"
           style={{ width: `${width}%` }}
         />
       </div>

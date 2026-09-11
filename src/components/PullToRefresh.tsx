@@ -81,9 +81,9 @@ export default function PullToRefresh({ children }: PullToRefreshProps) {
         className="flex items-center justify-center overflow-hidden transition-[height] duration-200"
         style={{ height: pullDistance > 10 ? pullDistance : 0 }}
       >
-        <div className="flex items-center gap-2 text-xs text-[#D4A847]/70">
+        <div className="flex items-center gap-2 text-xs text-record/70">
           {refreshing ? (
-            <span className="inline-block h-4 w-4 animate-spin rounded-full border-2 border-[#D4A847]/30 border-t-[#D4A847]" />
+            <span className="inline-block h-4 w-4 animate-spin border-2 border-record/30 border-t-record" />
           ) : (
             <span
               className="inline-block text-sm transition-transform duration-200"

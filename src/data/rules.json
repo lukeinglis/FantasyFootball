@@ -43,10 +43,10 @@
     {
       "title": "Payouts",
       "rules": [
-        "$150 buy-in per team",
-        "1st Place: $800",
-        "2nd Place: $340",
-        "3rd Place: $200",
+        "$250 buy-in per team, 12 teams, $3,000 pot",
+        "$100 paid out each week for 14 weeks ($1,400 total)",
+        "$1,600 held back for the end of the season",
+        "The first, second and third place split is not written down anywhere",
         "All dues must be paid before the draft"
       ]
     },
@@ -60,5 +60,5 @@
       ]
     }
   ],
-  "notes": "Rules are updated annually before the draft. Edit this file to reflect your league's actual rules."
+  "notes": "Rules are updated annually before the draft. Anything not written here is the commissioner's call."
 }

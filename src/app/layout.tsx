@@ -1,29 +1,38 @@
 import type { Metadata, Viewport } from "next";
-import { Luckiest_Guy, Bangers, Nunito } from "next/font/google";
+import { Saira_Condensed, Source_Serif_4, IBM_Plex_Mono } from "next/font/google";
 import "./globals.css";
 import SiteNav from "@/components/SiteNav";
 import SiteFooter from "@/components/SiteFooter";
 import MobileNav from "@/components/MobileNav";
 
-const luckiestGuy = Luckiest_Guy({
+/**
+ * Three faces, three jobs. Condensed grotesque for headlines so long manager
+ * names and team names fit without shrinking; a serif for body copy because
+ * this site is mostly read, not skimmed; monospace for anything that is a
+ * number, a label or a record, so columns align.
+ *
+ * `--font-*` aliases are kept alongside the `--wire-*` names because pages
+ * across the site still reference the old variables.
+ */
+const display = Saira_Condensed({
   subsets: ["latin"],
-  variable: "--font-display",
+  variable: "--wire-display",
   display: "swap",
-  weight: "400",
+  weight: ["600", "700", "800"],
 });
 
-const bangers = Bangers({
+const body = Source_Serif_4({
   subsets: ["latin"],
-  variable: "--font-heading",
+  variable: "--wire-body",
   display: "swap",
-  weight: "400",
+  weight: ["400", "600"],
 });
 
-const nunito = Nunito({
+const mono = IBM_Plex_Mono({
   subsets: ["latin"],
-  variable: "--font-body",
+  variable: "--wire-mono",
   display: "swap",
-  weight: ["400", "600", "700", "800", "900"],
+  weight: ["400", "500", "600"],
 });
 
 export const viewport: Viewport = {
@@ -54,11 +63,10 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${luckiestGuy.variable} ${bangers.variable} ${nunito.variable} font-[family-name:var(--font-body)] bg-[#2D8C3C] text-white min-h-screen flex flex-col antialiased`}
+        className={`${display.variable} ${body.variable} ${mono.variable} font-[family-name:var(--wire-body)] bg-paper text-ink min-h-screen flex flex-col antialiased`}
       >
-        <div className="yard-lines" aria-hidden />
         <SiteNav />
-        <main className="flex-1 relative z-[1] grass-bg pb-16 md:pb-0">{children}</main>
+        <main className="flex-1 pb-16 md:pb-0">{children}</main>
         <SiteFooter />
         <MobileNav />
       </body>

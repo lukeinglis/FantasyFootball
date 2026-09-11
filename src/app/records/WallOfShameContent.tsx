@@ -30,7 +30,6 @@ export default function WallOfShameContent() {
     <Container>
       {items.length === 0 ? (
         <EmptyState
-          icon={<span>💀</span>}
           title="The wall is empty (for now)"
           description="No punishments have been recorded yet. The first last-place finisher to accept their fate will be eternally enshrined here."
         />
@@ -42,24 +41,21 @@ export default function WallOfShameContent() {
                 <CardBody variant="chalkboard">
                   <div className="flex items-start justify-between gap-3">
                     <div>
-                      <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-widest text-[#D4A847]">
+                      <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-widest text-record">
                         Season {p.season}
                       </p>
-                      <h3 className="mt-1 text-lg font-bold text-[#F5F0E8] text-shadow-glow-chalk" style={{ fontFamily: "var(--font-display)" }}>
+                      <h3 className="mt-1 text-lg font-bold text-ink" style={{ fontFamily: "var(--font-display)" }}>
                         {p.loser || "Unknown loser"}
                         {p.team && (
-                          <span className="ml-2 text-sm font-normal italic text-[#F5F0E8]/50">
+                          <span className="ml-2 text-sm font-normal italic text-ink-muted">
                             {p.team}
                           </span>
                         )}
                       </h3>
                     </div>
-                    <span className="text-3xl" aria-hidden>
-                      💀
-                    </span>
                   </div>
                   {(p.punishment || p.description) && (
-                    <p className="mt-3 text-sm text-[rgba(245,240,232,0.85)]">
+                    <p className="mt-3 text-sm text-ink-muted">
                       {p.punishment || p.description}
                     </p>
                   )}
@@ -68,7 +64,7 @@ export default function WallOfShameContent() {
                       href={p.evidenceUrl}
                       target="_blank"
                       rel="noreferrer noopener"
-                      className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-[#DD550C] hover:underline"
+                      className="mt-3 inline-flex items-center gap-1 text-xs font-medium text-result hover:underline"
                     >
                       {p.evidenceLabel || "View the evidence"} →
                     </a>

@@ -6,33 +6,16 @@ const BreakawayGame = dynamic(() => import("@/components/BreakawayGame"), {
   ssr: false,
   loading: () => (
     <div className="flex justify-center">
-      <div className="h-[400px] w-full max-w-[400px] animate-pulse rounded-xl bg-white/5" />
+      <div className="h-[400px] w-full max-w-[400px] animate-pulse bg-paper" />
     </div>
   ),
 });
 
+/**
+ * No heading here. The page header says "Arcade", the tab says "Breakaway" and
+ * the game's own start screen says it a third time; the section used to add a
+ * fourth. It renders the game and nothing else, matching FieldGoalSection.
+ */
 export default function BreakawaySection() {
-  return (
-    <div className="relative overflow-hidden rounded-2xl border border-[#D4A847]/20 bg-gradient-to-br from-[#2C1810] to-[#1A0F08] p-6 sm:p-8">
-      <div
-        className="stripe-pattern pointer-events-none absolute inset-0 opacity-30"
-        aria-hidden
-      />
-      <div className="relative">
-        <div className="mb-6 text-center">
-          <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.3em] text-[#DD550C]">
-            Mini Game
-          </p>
-          <h2 className="mt-2 font-[family-name:var(--font-heading)] text-3xl font-bold uppercase tracking-wide text-white sm:text-4xl">
-            Breakaway
-          </h2>
-          <p className="mx-auto mt-2 max-w-md text-sm text-gray-400">
-            Dodge tacklers, grab golden footballs for invincibility, and rack up
-            yards. Sign in to save your score to the leaderboard.
-          </p>
-        </div>
-        <BreakawayGame />
-      </div>
-    </div>
-  );
+  return <BreakawayGame />;
 }

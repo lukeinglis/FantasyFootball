@@ -16,7 +16,7 @@ export default async function StandingsPreview() {
         action={
           <Link
             href="/standings"
-            className="text-xs font-medium text-[#DD550C] hover:underline"
+            className="text-xs font-medium text-result hover:underline"
           >
             View all →
           </Link>
@@ -36,26 +36,26 @@ export default async function StandingsPreview() {
             {result.data.teams.slice(0, 5).map((team) => (
               <li
                 key={team.teamKey}
-                className="flex items-center justify-between gap-3 rounded-lg bg-[#2C1810]/60 px-3 py-2"
+                className="flex items-center justify-between gap-3 bg-surface px-3 py-2"
               >
                 <div className="flex min-w-0 items-center gap-3">
-                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#DD550C] text-xs font-bold text-white">
+                  <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center bg-result text-xs font-bold text-white">
                     {team.rank}
                   </span>
                   <div className="min-w-0">
-                    <p className="truncate font-medium text-white">
+                    <p className="truncate font-medium text-ink">
                       {team.teamName}
                     </p>
-                    <p className="truncate text-xs text-gray-400">
+                    <p className="truncate text-xs text-ink-muted">
                       {team.managerName}
                     </p>
                   </div>
                 </div>
                 <div className="flex flex-shrink-0 items-center gap-4 text-xs">
-                  <span className="font-mono text-gray-300">
+                  <span className="font-mono text-ink-soft">
                     {formatRecord(team.wins, team.losses, team.ties)}
                   </span>
-                  <span className="font-mono text-[#DD550C]">
+                  <span className="font-mono text-result">
                     {formatPoints(team.pointsFor, 1)}
                   </span>
                 </div>

@@ -1,10 +1,11 @@
 {
-  "buyIn": 150,
-  "totalPot": 1350,
-  "yearly": {
-    "first": 800,
-    "second": 340,
-    "third": 200
-  },
+  "_comment": "Money figures are confirmed by the commissioner and live in src/lib/constants.ts (PAYOUTS). They are mirrored here only so this file is not misleading. The first/second/third split of the $1,600 year-end pool is not recorded anywhere, so it is deliberately absent rather than guessed. Only weeklyPayouts is read from this file.",
+  "buyIn": 250,
+  "teams": 12,
+  "totalPot": 3000,
+  "weeklyPerWeek": 100,
+  "weeklyWeeks": 14,
+  "weeklyPool": 1400,
+  "yearEndPool": 1600,
   "weeklyPayouts": []
 }

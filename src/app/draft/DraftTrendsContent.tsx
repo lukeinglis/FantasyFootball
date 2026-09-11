@@ -3,30 +3,19 @@ import { computeDraftTrends } from "@/lib/draft-trends";
 import { getManagerSlug } from "@/lib/managers";
 import Container from "@/components/Container";
 import { Card, CardBody, CardHeader } from "@/components/Card";
-
-const POS_COLORS: Record<string, string> = {
-  QB: "bg-rose-500/20 text-rose-300 border-rose-500/30",
-  RB: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
-  WR: "bg-sky-500/20 text-sky-300 border-sky-500/30",
-  TE: "bg-amber-500/20 text-amber-300 border-amber-500/30",
-};
-
-const POS_BG_SOLID: Record<string, string> = {
-  QB: "bg-rose-500",
-  RB: "bg-emerald-500",
-  WR: "bg-sky-500",
-  TE: "bg-amber-500",
-};
+import { POS_COLORS, POS_FILL } from "@/lib/records";
 
 const SKILL_POSITIONS = ["QB", "RB", "WR", "TE"];
 
 function QuickStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border-3 border-[#D4A847] bg-gradient-to-b from-[#2C1810] to-[#1A0F08] p-4 text-center shadow-lg">
-      <p className="font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">
+    // Four counts of the same kind. A gold 3px ring on each made them look
+    // like four separate awards rather than one row of totals.
+    <div className="border border-rule bg-surface p-4 text-center">
+      <p className="font-[family-name:var(--wire-mono)] text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-muted">
         {label}
       </p>
-      <p className="mt-1 font-[family-name:var(--font-heading)] text-2xl font-bold text-[#F5F0E8]">
+      <p className="mt-1 font-[family-name:var(--wire-display)] text-2xl font-extrabold tabular-nums text-ink">
         {value}
       </p>
     </div>
@@ -63,13 +52,13 @@ export default function DraftTrendsContent() {
           <CardBody className="!p-0 overflow-x-auto">
             <table className="w-full text-center text-xs">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400">
+                <tr className="border-b border-rule">
+                  <th className="sticky left-0 bg-surface px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-ink-muted">
                     Year
                   </th>
                   {SKILL_POSITIONS.map((pos) => (
                     <th key={pos} className="px-3 py-2">
-                      <span className={`inline-block rounded-full border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>
+                      <span className={`inline-block border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>
                         {pos}
                       </span>
                     </th>
@@ -78,8 +67,8 @@ export default function DraftTrendsContent() {
               </thead>
               <tbody>
                 {data.trends.map((t) => (
-                  <tr key={t.year} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                    <td className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] font-mono text-sm font-bold text-[#DD550C]">
+                  <tr key={t.year} className="border-b border-rule hover:bg-paper transition-colors">
+                    <td className="sticky left-0 bg-surface px-3 py-2 text-left font-[family-name:var(--wire-mono)] text-sm font-bold tabular-nums text-ink">
                       {t.year}
                     </td>
                     {SKILL_POSITIONS.map((pos) => {
@@ -87,13 +76,13 @@ export default function DraftTrendsContent() {
                       return (
                         <td key={pos} className="px-3 py-2">
                           <div className="flex flex-col items-center gap-1">
-                            <div className="w-14 h-3 rounded-full bg-white/10 overflow-hidden">
+                            <div className="w-14 h-3 bg-paper overflow-hidden">
                               <div
-                                className={`h-full rounded-full ${POS_BG_SOLID[pos]}`}
+                                className={`h-full ${POS_FILL[pos]}`}
                                 style={{ width: `${Math.min(pct, 100)}%` }}
                               />
                             </div>
-                            <span className={`font-mono text-[10px] ${pct > 0 ? "text-gray-300" : "text-gray-600"}`}>
+                            <span className={`font-mono text-[10px] ${pct > 0 ? "text-ink-soft" : "text-ink-muted"}`}>
                               {pct}%
                             </span>
                           </div>
@@ -117,13 +106,13 @@ export default function DraftTrendsContent() {
           <CardBody className="!p-0 overflow-x-auto">
             <table className="w-full text-center text-xs">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400">
+                <tr className="border-b border-rule">
+                  <th className="sticky left-0 bg-surface px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-ink-muted">
                     Year
                   </th>
                   {SKILL_POSITIONS.map((pos) => (
                     <th key={pos} className="px-3 py-2">
-                      <span className={`inline-block rounded-full border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>
+                      <span className={`inline-block border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>
                         {pos}
                       </span>
                     </th>
@@ -132,28 +121,28 @@ export default function DraftTrendsContent() {
               </thead>
               <tbody>
                 {data.trends.map((t) => (
-                  <tr key={t.year} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                    <td className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] font-mono text-sm font-bold text-[#DD550C]">
+                  <tr key={t.year} className="border-b border-rule hover:bg-paper transition-colors">
+                    <td className="sticky left-0 bg-surface px-3 py-2 text-left font-[family-name:var(--wire-mono)] text-sm font-bold tabular-nums text-ink">
                       {t.year}
                     </td>
                     {SKILL_POSITIONS.map((pos) => {
                       const avg = t.avgRoundByPosition[pos];
                       if (avg == null) {
                         return (
-                          <td key={pos} className="px-3 py-2 text-gray-700">
+                          <td key={pos} className="px-3 py-2 text-ink">
                             &middot;
                           </td>
                         );
                       }
                       const roundClass =
                         avg <= 4
-                          ? "bg-[#DD550C]/20 text-[#DD550C] font-bold"
+                          ? "bg-ink font-bold text-white"
                           : avg <= 8
-                            ? "bg-sky-600/20 text-sky-300"
-                            : "text-gray-500";
+                            ? "bg-rule text-ink"
+                            : "text-ink-muted";
                       return (
                         <td key={pos} className="px-3 py-2">
-                          <span className={`inline-block rounded-md px-2 py-0.5 font-mono text-[11px] ${roundClass}`}>
+                          <span className={`inline-block px-2 py-0.5 font-mono text-[11px] ${roundClass}`}>
                             R{avg}
                           </span>
                         </td>
@@ -179,15 +168,15 @@ export default function DraftTrendsContent() {
                 <Link
                   key={s.name}
                   href={`/managers/${s.slug}`}
-                  className="rounded-xl border-2 border-[#D4A847]/30 bg-gradient-to-b from-[#2C1810] to-[#1A0F08] p-4 hover:border-[#D4A847]/60 transition-all shadow-md"
+                  className="border border-rule bg-surface p-4 transition-colors hover:border-ink"
                 >
                   <div className="flex items-center gap-3 mb-3">
-                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#DD550C]/10 border border-[#DD550C]/30 font-[family-name:var(--font-heading)] text-sm font-bold text-[#DD550C]">
+                    <span className="flex h-9 w-9 flex-shrink-0 items-center justify-center border border-ink bg-paper font-[family-name:var(--wire-display)] text-sm font-extrabold uppercase text-ink">
                       {s.name.charAt(0)}
                     </span>
                     <div className="min-w-0">
-                      <p className="text-sm font-semibold text-white truncate">{s.name}</p>
-                      <p className="text-[10px] text-gray-400">
+                      <p className="text-sm font-semibold text-ink truncate">{s.name}</p>
+                      <p className="text-[10px] text-ink-muted">
                         {s.seasonsCount} season{s.seasonsCount !== 1 ? "s" : ""},{" "}
                         {s.totalPicks} picks
                       </p>
@@ -201,16 +190,16 @@ export default function DraftTrendsContent() {
                       const barWidth = Math.max(5, Math.min(100, ((16 - avg) / 15) * 100));
                       return (
                         <div key={pos} className="flex items-center gap-2">
-                          <span className={`w-7 text-right rounded-full border px-1 py-0 text-[9px] font-bold ${POS_COLORS[pos]}`}>
+                          <span className={`w-7 text-right border px-1 py-0 text-[9px] font-bold ${POS_COLORS[pos]}`}>
                             {pos}
                           </span>
-                          <div className="flex-1 h-2 rounded-full bg-white/10 overflow-hidden">
+                          <div className="flex-1 h-2 bg-paper overflow-hidden">
                             <div
-                              className={`h-full rounded-full ${POS_BG_SOLID[pos]} opacity-70`}
+                              className={`h-full ${POS_FILL[pos]}`}
                               style={{ width: `${barWidth}%` }}
                             />
                           </div>
-                          <span className="w-8 text-right font-mono text-[10px] text-gray-400">
+                          <span className="w-8 text-right font-mono text-[10px] text-ink-muted">
                             R{avg}
                           </span>
                         </div>
@@ -219,11 +208,11 @@ export default function DraftTrendsContent() {
                   </div>
 
                   <div className="mt-3 flex items-center justify-between text-[10px]">
-                    <span className="text-gray-400">
-                      Earliest: <span className="text-white font-bold">{s.earliestPosition}</span>
+                    <span className="text-ink-muted">
+                      Earliest: <span className="text-ink font-bold">{s.earliestPosition}</span>
                     </span>
-                    <span className="text-gray-400">
-                      Latest: <span className="text-white font-bold">{s.latestPosition}</span>
+                    <span className="text-ink-muted">
+                      Latest: <span className="text-ink font-bold">{s.latestPosition}</span>
                     </span>
                   </div>
                 </Link>
@@ -241,32 +230,32 @@ export default function DraftTrendsContent() {
               description="Players drafted significantly earlier than their position average"
             />
             <CardBody className="!p-0">
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-rule">
                 {data.bestValues.map((v, i) => (
                   <div
                     key={`${v.year}-${v.pick}-${v.playerName}`}
-                    className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors"
+                    className="flex items-center gap-3 px-5 py-2.5 hover:bg-paper transition-colors"
                   >
-                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${
-                      i < 3 ? "bg-emerald-600 text-white" : "bg-white/10 text-gray-300"
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center font-[family-name:var(--font-heading)] text-xs font-bold ${
+ i < 3 ? "bg-ink text-white" : "bg-paper text-ink-soft"
                     }`}>
                       {i + 1}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="truncate text-white">
+                      <p className="truncate text-ink">
                         <span className="font-semibold">{v.playerName}</span>
                       </p>
-                      <p className="text-xs text-gray-400">
-                        <Link href={`/managers/${getManagerSlug(v.managerName)}`} className="hover:text-[#DD550C]">
+                      <p className="text-xs text-ink-muted">
+                        <Link href={`/managers/${getManagerSlug(v.managerName)}`} className="hover:text-result">
                           {v.managerName}
                         </Link>{" "}
                         · R{v.round} Pick {v.pick} · {v.year}
                       </p>
                     </div>
-                    <span className={`rounded-full border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[v.position]}`}>
+                    <span className={`border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[v.position]}`}>
                       {v.position}
                     </span>
-                    <span className="font-[family-name:var(--font-heading)] text-sm font-bold text-emerald-400">
+                    <span className="font-[family-name:var(--wire-display)] text-sm font-bold tabular-nums text-ink">
                       +{v.valueDelta}
                     </span>
                   </div>
@@ -281,32 +270,32 @@ export default function DraftTrendsContent() {
               description="Players drafted much later than their position average"
             />
             <CardBody className="!p-0">
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-rule">
                 {data.worstValues.map((v, i) => (
                   <div
                     key={`${v.year}-${v.pick}-${v.playerName}`}
-                    className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors"
+                    className="flex items-center gap-3 px-5 py-2.5 hover:bg-paper transition-colors"
                   >
-                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${
-                      i < 3 ? "bg-red-600 text-white" : "bg-white/10 text-gray-300"
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center font-[family-name:var(--font-heading)] text-xs font-bold ${
+ i < 3 ? "bg-ink text-white" : "bg-paper text-ink-soft"
                     }`}>
                       {i + 1}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="truncate text-white">
+                      <p className="truncate text-ink">
                         <span className="font-semibold">{v.playerName}</span>
                       </p>
-                      <p className="text-xs text-gray-400">
-                        <Link href={`/managers/${getManagerSlug(v.managerName)}`} className="hover:text-[#DD550C]">
+                      <p className="text-xs text-ink-muted">
+                        <Link href={`/managers/${getManagerSlug(v.managerName)}`} className="hover:text-result">
                           {v.managerName}
                         </Link>{" "}
                         · R{v.round} Pick {v.pick} · {v.year}
                       </p>
                     </div>
-                    <span className={`rounded-full border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[v.position]}`}>
+                    <span className={`border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[v.position]}`}>
                       {v.position}
                     </span>
-                    <span className="font-[family-name:var(--font-heading)] text-sm font-bold text-red-400">
+                    <span className="font-[family-name:var(--wire-display)] text-sm font-bold tabular-nums text-ink">
                       {v.valueDelta}
                     </span>
                   </div>
@@ -326,18 +315,18 @@ export default function DraftTrendsContent() {
           <CardBody className="!p-0 overflow-x-auto">
             <table className="w-full text-center text-xs">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400 min-w-[100px]">
+                <tr className="border-b border-rule">
+                  <th className="sticky left-0 bg-surface px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-ink-muted min-w-[100px]">
                     Manager
                   </th>
                   {SKILL_POSITIONS.map((pos) => (
                     <th key={pos} className="px-2 py-2">
-                      <span className={`inline-block rounded-full border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>
+                      <span className={`inline-block border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>
                         {pos}
                       </span>
                     </th>
                   ))}
-                  <th className="px-2 py-2 text-[10px] uppercase tracking-[0.15em] text-gray-400">
+                  <th className="px-2 py-2 text-[10px] uppercase tracking-[0.15em] text-ink-muted">
                     Total
                   </th>
                 </tr>
@@ -350,11 +339,11 @@ export default function DraftTrendsContent() {
                       0,
                     ) || 1;
                   return (
-                    <tr key={s.name} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                      <td className="sticky left-0 bg-[#2C1810] px-3 py-1.5 text-left">
+                    <tr key={s.name} className="border-b border-rule hover:bg-paper transition-colors">
+                      <td className="sticky left-0 bg-surface px-3 py-1.5 text-left">
                         <Link
                           href={`/managers/${s.slug}`}
-                          className="text-sm font-semibold text-white hover:text-[#DD550C] transition-colors"
+                          className="text-sm font-semibold text-ink hover:text-result transition-colors"
                         >
                           {s.name}
                         </Link>
@@ -365,13 +354,13 @@ export default function DraftTrendsContent() {
                         return (
                           <td key={pos} className="px-2 py-1.5">
                             <div className="flex flex-col items-center gap-0.5">
-                              <span className="font-mono text-[11px] text-white">{count}</span>
-                              <span className="font-mono text-[9px] text-gray-500">{pct}%</span>
+                              <span className="font-mono text-[11px] text-ink">{count}</span>
+                              <span className="font-mono text-[9px] text-ink-muted">{pct}%</span>
                             </div>
                           </td>
                         );
                       })}
-                      <td className="px-2 py-1.5 font-mono text-[11px] text-gray-400">
+                      <td className="px-2 py-1.5 font-mono text-[11px] text-ink-muted">
                         {s.totalPicks}
                       </td>
                     </tr>

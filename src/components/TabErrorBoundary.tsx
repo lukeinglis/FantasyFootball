@@ -24,14 +24,11 @@ export default class TabErrorBoundary extends Component<Props, State> {
   render() {
     if (this.state.hasError) {
       return (
-        <div className="chalkboard rounded-lg p-8 text-center my-4 mx-auto max-w-md">
-          <p className="text-3xl mb-2" aria-hidden>
-            🏈
-          </p>
-          <h3 className="font-[family-name:var(--font-display)] text-xl text-[#F5F0E8] text-shadow-glow-chalk">
+        <div className="chalkboard p-8 text-center my-4 mx-auto max-w-md">
+          <h3 className="font-[family-name:var(--font-display)] text-xl text-ink">
             Fumble!
           </h3>
-          <p className="mt-2 text-sm text-[#F5F0E8]/70">
+          <p className="mt-2 text-sm text-ink-soft">
             {this.props.fallbackLabel ||
               "This section hit a snag. Try refreshing."}
           </p>

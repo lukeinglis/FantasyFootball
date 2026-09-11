@@ -3,6 +3,7 @@ import { fetchStandings, fetchSettings, fetchScoreboard } from "@/lib/server-dat
 import type { Scoreboard } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
+import { LAST_COMPLETED_SEASON } from "@/lib/season";
 import NotConnected, { ApiError } from "@/components/NotConnected";
 import OffseasonState from "@/components/OffseasonState";
 import StatsTabs from "./StatsTabs";
@@ -40,7 +41,7 @@ export default async function StatsPage() {
     return (
       <>
         <PageHeader
-          eyebrow="2025 Season"
+          eyebrow={`${LAST_COMPLETED_SEASON} season`}
           title="Stats & Rankings"
           subtitle="The numbers behind the madness. Superlatives, rankings, and bragging rights."
         />
@@ -62,7 +63,7 @@ export default async function StatsPage() {
   return (
     <>
       <PageHeader
-        eyebrow="2025 Season"
+        eyebrow={`${LAST_COMPLETED_SEASON} season`}
         title="Stats & Rankings"
         subtitle="The numbers behind the madness. Superlatives, rankings, and bragging rights."
       />

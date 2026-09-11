@@ -16,12 +16,12 @@ export default function PowerRankingsLoading() {
             <Card key={i}>
               <CardBody>
                 <div className="flex items-center gap-4">
-                  <div className="h-10 w-10 animate-pulse rounded-full bg-white/10" />
+                  <div className="h-10 w-10 animate-pulse bg-paper" />
                   <div className="flex-1 space-y-2">
-                    <div className="h-5 w-48 animate-pulse rounded bg-white/10" />
-                    <div className="h-3 w-32 animate-pulse rounded bg-white/10" />
+                    <div className="h-5 w-48 animate-pulse bg-paper" />
+                    <div className="h-3 w-32 animate-pulse bg-paper" />
                   </div>
-                  <div className="h-10 w-14 animate-pulse rounded bg-white/10" />
+                  <div className="h-10 w-14 animate-pulse bg-paper" />
                 </div>
               </CardBody>
             </Card>

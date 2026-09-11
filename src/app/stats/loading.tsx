@@ -19,7 +19,7 @@ export default function StatsLoading() {
                   {Array.from({ length: 4 }).map((_, j) => (
                     <div
                       key={j}
-                      className="h-10 animate-pulse rounded-md bg-white/10"
+                      className="h-10 animate-pulse bg-paper"
                     />
                   ))}
                 </div>

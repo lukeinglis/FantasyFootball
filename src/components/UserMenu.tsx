@@ -23,7 +23,7 @@ export default function UserMenu() {
 
   if (loading) {
     return (
-      <div className="h-8 w-20 animate-pulse rounded-md bg-white/10" />
+      <div className="h-8 w-20 animate-pulse bg-paper" />
     );
   }
 
@@ -31,7 +31,7 @@ export default function UserMenu() {
     return (
       <a
         href="/api/auth/yahoo"
-        className="inline-flex items-center gap-1.5 rounded-md border border-[#DD550C]/50 px-3 py-1.5 text-xs font-semibold text-[#DD550C] transition-all hover:bg-[#DD550C]/10 hover:border-[#DD550C]"
+        className="inline-flex items-center gap-1.5 border border-result/50 px-3 py-1.5 text-xs font-semibold text-result transition-all hover:bg-result/10 hover:border-result"
       >
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -62,15 +62,15 @@ export default function UserMenu() {
 
   return (
     <div className="flex items-center gap-2">
-      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-gradient-to-br from-[#DD550C] to-[#a33d08] text-[10px] font-bold text-white shadow-md shadow-[#DD550C]/20">
+      <div className="flex h-7 w-7 items-center justify-center bg-result font-[family-name:var(--wire-mono)] text-[10px] font-bold text-white">
         {initials}
       </div>
-      <span className="hidden text-xs font-medium text-gray-200 sm:inline">
+      <span className="hidden text-xs font-medium text-ink-soft sm:inline">
         {user.name}
       </span>
       <a
         href="/api/auth/signout"
-        className="text-[10px] text-gray-400 hover:text-[#DD550C] transition-colors"
+        className="text-[10px] text-ink-muted hover:text-result transition-colors"
         title="Sign out"
       >
         <svg

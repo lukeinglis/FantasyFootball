@@ -6,7 +6,7 @@ const FieldGoalGame = dynamic(() => import("@/components/FieldGoalGame"), {
   ssr: false,
   loading: () => (
     <div className="flex justify-center">
-      <div className="h-[400px] w-full max-w-[500px] animate-pulse rounded-xl bg-white/5" />
+      <div className="h-[400px] w-full max-w-[500px] animate-pulse bg-paper" />
     </div>
   ),
 });

@@ -12,7 +12,7 @@ const BreakawaySection = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex justify-center">
-        <div className="h-[400px] w-full max-w-[400px] animate-pulse rounded-xl bg-white/5" />
+        <div className="h-[400px] w-full max-w-[400px] animate-pulse bg-paper" />
       </div>
     ),
   },
@@ -24,7 +24,7 @@ const FieldGoalSection = dynamic(
     ssr: false,
     loading: () => (
       <div className="flex justify-center">
-        <div className="h-[400px] w-full max-w-[500px] animate-pulse rounded-xl bg-white/5" />
+        <div className="h-[400px] w-full max-w-[500px] animate-pulse bg-paper" />
       </div>
     ),
   },

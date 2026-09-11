@@ -94,10 +94,10 @@ export default function HistoryPage() {
             <Card variant="scoreboard">
               <CardBody>
                 <div className="text-center">
-                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">
+                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-ink-muted">
                     Seasons
                   </p>
-                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-[#D4A847]">
+                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-record">
                     {seasons.length}
                   </p>
                 </div>
@@ -106,10 +106,10 @@ export default function HistoryPage() {
             <Card variant="scoreboard">
               <CardBody>
                 <div className="text-center">
-                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">
+                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-ink-muted">
                     Unique Champions
                   </p>
-                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-[#D4A847]">
+                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-record">
                     {uniqueChamps}
                   </p>
                 </div>
@@ -118,10 +118,10 @@ export default function HistoryPage() {
             <Card variant="scoreboard">
               <CardBody>
                 <div className="text-center">
-                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">
+                  <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-ink-muted">
                     Defending Champ
                   </p>
-                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-[#D4A847]">
+                  <p className="mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold text-record">
                     {seasons[0]?.champion || "—"}
                   </p>
                 </div>
@@ -132,7 +132,6 @@ export default function HistoryPage() {
 
         {seasons.length === 0 ? (
           <EmptyState
-            icon={<span>🏆</span>}
             title="Seasons coming soon"
             description="We're still digging through old screenshots and group chats. Past champions will be added as we recover the receipts."
           />
@@ -140,40 +139,46 @@ export default function HistoryPage() {
           <div className="grid gap-10 lg:grid-cols-3">
             {/* Timeline: 2 columns on large screens */}
             <div className="lg:col-span-2">
-              <div data-testid="history-timeline" className="relative border-s-2 border-[#D4A847]/40 ms-4 sm:ms-6">
+              {/* The spine is chrome: it tells you these eleven cards are one
+                  sequence and nothing more. A gold rule down the page gave it
+                  the weight of a finding. */}
+              <div data-testid="history-timeline" className="relative border-s border-rule ms-4 sm:ms-6">
                 {seasons.map((s, i) => {
                   const isLatest = i === 0;
                   const milestones = s.milestones?.filter(Boolean) ?? [];
                   return (
                     <div key={`${s.year}-${i}`} data-testid="season-card" className="mb-8 ms-6 sm:ms-8 last:mb-0">
-                      {/* Timeline dot */}
+                      {/* Timeline marker. The ring has to match the page
+                          background so it punches a gap in the spine rule
+                          behind it; anything else reads as a coloured chip. */}
                       <span
-                        className={`absolute -start-[9px] flex h-4 w-4 items-center justify-center rounded-full ring-4 ring-[#2D8C3C] ${
-                          isLatest
-                            ? "bg-[#D4A847] shadow-lg shadow-[#D4A847]/40"
-                            : "bg-[#8B5E3C] border border-[#D4A847]/40"
+                        className={`absolute -start-[7px] mt-1.5 h-3 w-3 ring-4 ring-paper ${
+                          isLatest ? "bg-result" : "bg-ink-faint"
                         }`}
                       />
 
                       <Card
                         variant="scoreboard"
-                        className={isLatest ? "border-[#DD550C]/30" : ""}
+                        className={isLatest ? "border-result/30" : ""}
                       >
                         <CardBody>
                           {/* Year badge */}
                           <div className="mb-3 flex flex-wrap items-center gap-2">
-                            <span data-testid="season-year" className="font-[family-name:var(--font-heading)] text-2xl font-bold text-[#DD550C]">
+                            {/* A year is a label, not a result. Red on both the
+                                year and the "1st" line put the same emphasis on
+                                the index and the finding it indexes. */}
+                            <span data-testid="season-year" className="font-[family-name:var(--wire-display)] text-2xl font-extrabold tabular-nums text-ink">
                               {s.year}
                             </span>
                             {isLatest && (
-                              <span className="rounded-full bg-[#DD550C]/20 px-2.5 py-0.5 text-xs font-semibold text-[#DD550C]">
+                              <span className="bg-result/20 px-2.5 py-0.5 text-xs font-semibold text-result">
                                 Current
                               </span>
                             )}
                             {milestones.map((m) => (
                               <span
                                 key={m}
-                                className="rounded-full border border-white/10 bg-white/5 px-2.5 py-0.5 text-xs text-gray-300"
+                                className="border border-rule bg-paper px-2.5 py-0.5 text-xs text-ink-soft"
                               >
                                 {m}
                               </span>
@@ -183,33 +188,33 @@ export default function HistoryPage() {
                           {/* Results */}
                           <div className="space-y-1.5 text-sm">
                             <div className="flex items-baseline gap-2">
-                              <span className="text-base" aria-hidden>
-                                🏆
+                              <span className="w-8 flex-shrink-0 font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.1em] text-result">
+                                1st
                               </span>
-                              <span className="font-semibold text-white">
+                              <span className="font-semibold text-ink">
                                 {nameAndTeam(s.champion, s.championTeam)}
                               </span>
                             </div>
                             <div className="flex items-baseline gap-2">
-                              <span className="text-base" aria-hidden>
-                                🥈
+                              <span className="w-8 flex-shrink-0 font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.1em] text-ink-muted">
+                                2nd
                               </span>
-                              <span className="text-gray-300">
+                              <span className="text-ink-soft">
                                 {nameAndTeam(s.runnerUp, s.runnerUpTeam)}
                               </span>
                             </div>
                             <div className="flex items-baseline gap-2">
-                              <span className="text-base" aria-hidden>
-                                🥉
+                              <span className="w-8 flex-shrink-0 font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.1em] text-ink-faint">
+                                3rd
                               </span>
-                              <span className="text-[rgba(245,240,232,0.5)]">
+                              <span className="text-ink-muted">
                                 {nameAndTeam(s.third, s.thirdTeam)}
                               </span>
                             </div>
                           </div>
 
                           {s.notes && (
-                            <p className="mt-2 text-xs text-gray-500">
+                            <p className="mt-2 text-xs text-ink-muted">
                               {s.notes}
                             </p>
                           )}
@@ -234,14 +239,16 @@ export default function HistoryPage() {
                     <ol className="space-y-3">
                       {beltTracker.map((reign, i) => (
                         <li key={`${reign.holder}-${reign.from}-${i}`} className="flex items-center gap-3">
-                          <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full bg-[#DD550C]/20 font-[family-name:var(--font-heading)] text-xs font-bold text-[#DD550C]">
+                          {/* Sequence numbers, matching the rank badges used on
+                              every other ordered list on the site. */}
+                          <span className="flex h-7 w-7 flex-shrink-0 items-center justify-center bg-ink font-[family-name:var(--wire-mono)] text-xs font-bold tabular-nums text-white">
                             {i + 1}
                           </span>
                           <div className="min-w-0">
-                            <p className="truncate font-semibold text-white text-sm">
+                            <p className="truncate font-semibold text-ink text-sm">
                               {reign.holder}
                             </p>
-                            <p className="text-xs text-[rgba(245,240,232,0.5)]">
+                            <p className="text-xs text-ink-muted">
                               {reign.from === reign.to
                                 ? String(reign.from)
                                 : `${reign.from}–${reign.to}`}
@@ -264,17 +271,17 @@ export default function HistoryPage() {
                     <ul className="space-y-2">
                       {titleCounts.map((t) => (
                         <li key={t.name} className="flex items-center justify-between text-sm">
-                          <span className="text-gray-200">{t.name}</span>
+                          <span className="text-ink-soft">{t.name}</span>
                           <div className="flex items-center gap-1.5">
                             <div className="flex gap-0.5">
                               {Array.from({ length: t.count }).map((_, j) => (
                                 <span
                                   key={j}
-                                  className="inline-block h-2.5 w-2.5 rounded-full bg-[#DD550C]"
+                                  className="inline-block h-2.5 w-2.5 bg-result"
                                 />
                               ))}
                             </div>
-                            <span className="w-4 text-right font-mono text-xs text-[rgba(245,240,232,0.5)]">
+                            <span className="w-4 text-right font-mono text-xs text-ink-muted">
                               {t.count}
                             </span>
                           </div>

@@ -7,34 +7,33 @@ import { useEffect, useState, useCallback } from "react";
 interface NavItem {
   href: string;
   label: string;
-  icon: string;
-  iconActive: string;
 }
 
+/**
+ * The Wire sets navigation in type, not icons. Emoji glyphs render differently
+ * on every platform and carry no information the label doesn't already give,
+ * so the tab bar is condensed uppercase text with a red rule marking position.
+ */
 const TAB_ITEMS: NavItem[] = [
-  { href: "/", label: "Home", icon: "🏠", iconActive: "🏠" },
-  { href: "/matchups", label: "Matchups", icon: "📋", iconActive: "📋" },
-  { href: "/standings", label: "Standings", icon: "📊", iconActive: "📊" },
-  { href: "/teams", label: "My Team", icon: "👕", iconActive: "👕" },
+  { href: "/", label: "Home" },
+  { href: "/matchups", label: "Matchups" },
+  { href: "/standings", label: "Table" },
+  { href: "/records", label: "Records" },
 ];
 
-interface MoreItem {
-  href: string;
-  label: string;
-  icon: string;
-}
-
-const MORE_ITEMS: MoreItem[] = [
-  { href: "/draft", label: "Draft", icon: "🃏" },
-  { href: "/stats", label: "Stats & Rankings", icon: "📈" },
-  { href: "/records", label: "Record Book", icon: "📖" },
-  { href: "/head-to-head", label: "Head-to-Head", icon: "⚔️" },
-  { href: "/history", label: "History", icon: "🏆" },
-  { href: "/managers", label: "Managers", icon: "🎴" },
-  { href: "/transactions", label: "Transactions", icon: "🤝" },
-  { href: "/league", label: "League Info", icon: "ℹ️" },
-  { href: "/articles", label: "Articles", icon: "🔥" },
-  { href: "/games", label: "Arcade", icon: "🕹️" },
+const MORE_ITEMS: NavItem[] = [
+  { href: "/teams", label: "Teams" },
+  { href: "/draft", label: "Draft" },
+  { href: "/stats", label: "Stats & Rankings" },
+  { href: "/head-to-head", label: "Head-to-Head" },
+  { href: "/history", label: "History" },
+  { href: "/managers", label: "Managers" },
+  { href: "/wall-of-shame", label: "Wall of Shame" },
+  { href: "/payouts", label: "Payouts" },
+  { href: "/transactions", label: "Transactions" },
+  { href: "/league", label: "League Info" },
+  { href: "/articles", label: "Articles" },
+  { href: "/games", label: "Arcade" },
 ];
 
 function isActive(currentPath: string, href: string): boolean {
@@ -68,18 +67,32 @@ export default function MobileNav() {
     return () => vv.removeEventListener("resize", handleResize);
   }, []);
 
+  useEffect(() => {
+    function handleKey(e: KeyboardEvent) {
+      if (e.key === "Escape") setSheetOpen(false);
+    }
+    document.addEventListener("keydown", handleKey);
+    return () => document.removeEventListener("keydown", handleKey);
+  }, []);
+
   const closeSheet = useCallback(() => setSheetOpen(false), []);
 
   if (keyboardVisible) return null;
 
+  const tabClass = (active: boolean) =>
+    `flex min-h-[52px] flex-1 flex-col items-center justify-center border-t-2 px-1 font-[family-name:var(--wire-display)] text-[12px] font-bold uppercase tracking-[0.04em] transition-colors ${
+      active
+        ? "border-result text-white"
+        : "border-transparent text-night-muted active:text-white"
+    }`;
+
   return (
     <>
-      {/* Bottom tab bar */}
       <nav
         role="navigation"
         aria-label="Mobile navigation"
         data-testid="mobile-nav"
-        className="fixed bottom-0 left-0 right-0 z-50 md:hidden bg-[linear-gradient(0deg,#8B5E3C,#5C3A1E)] border-t-[3px] border-[#D4A847] shadow-[0_-4px_16px_rgba(0,0,0,0.4)] pb-[env(safe-area-inset-bottom)]"
+        className="fixed bottom-0 left-0 right-0 z-50 bg-night pb-[env(safe-area-inset-bottom)] md:hidden"
       >
         <div className="flex items-stretch justify-around">
           {TAB_ITEMS.map((item) => {
@@ -89,94 +102,67 @@ export default function MobileNav() {
                 key={item.href}
                 href={item.href}
                 aria-current={active ? "page" : undefined}
-                className={`flex flex-col items-center justify-center min-h-12 min-w-12 flex-1 py-1.5 transition-colors ${
-                  active
-                    ? "bg-[#DD550C] text-white shadow-[0_-2px_8px_rgba(221,85,12,0.4)]"
-                    : "text-[#F5F0E8]/70 active:bg-white/10"
-                }`}
+                className={tabClass(active)}
               >
-                <span className="text-lg" aria-hidden>
-                  {active ? item.iconActive : item.icon}
-                </span>
-                <span className="font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-wide mt-0.5">
-                  {item.label}
-                </span>
+                {item.label}
               </Link>
             );
           })}
 
-          {/* More tab */}
           <button
             type="button"
             onClick={() => setSheetOpen((v) => !v)}
             aria-expanded={sheetOpen}
-            className={`flex flex-col items-center justify-center min-h-12 min-w-12 flex-1 py-1.5 transition-colors ${
-              sheetOpen || isMoreActive(pathname)
-                ? "bg-[#DD550C] text-white shadow-[0_-2px_8px_rgba(221,85,12,0.4)]"
-                : "text-[#F5F0E8]/70 active:bg-white/10"
-            }`}
+            className={tabClass(sheetOpen || isMoreActive(pathname))}
           >
-            <span className="text-lg" aria-hidden>
-              ⋯
-            </span>
-            <span className="font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-wide mt-0.5">
-              More
-            </span>
+            More
           </button>
         </div>
       </nav>
 
-      {/* Bottom sheet / drawer */}
       {sheetOpen && (
         <>
-          {/* Backdrop */}
           <div
-            className="fixed inset-0 z-[99] bg-black/60 md:hidden"
+            className="fixed inset-0 z-[99] bg-ink/50 md:hidden"
             onClick={closeSheet}
             aria-hidden
           />
-          {/* Sheet */}
           <div
             role="dialog"
             aria-label="More navigation"
             data-testid="mobile-more-sheet"
-            className="fixed bottom-0 left-0 right-0 z-[100] md:hidden rounded-t-2xl bg-[#2C1810] border-t-[3px] border-[#D4A847] shadow-[0_-8px_32px_rgba(0,0,0,0.6)] pb-[env(safe-area-inset-bottom)] animate-[slide-up_0.25s_ease-out]"
+            className="fixed bottom-0 left-0 right-0 z-[100] max-h-[75vh] overflow-y-auto bg-surface pb-[env(safe-area-inset-bottom)] md:hidden animate-[slide-up_0.2s_ease-out]"
           >
-            {/* Drag handle */}
-            <div className="flex justify-center py-3">
-              <div className="h-1 w-10 rounded-full bg-[#D4A847]/30" />
-            </div>
-            <div className="px-4 pb-4">
-              <h2 className="font-[family-name:var(--font-heading)] text-xs uppercase tracking-[0.2em] text-[#D4A847] mb-3">
+            <div className="flex items-center justify-between border-b-2 border-ink px-4 py-3">
+              <h2 className="font-[family-name:var(--wire-display)] text-[13px] font-extrabold uppercase tracking-[0.1em]">
                 More
               </h2>
-              <ul className="grid grid-cols-2 gap-2">
-                {MORE_ITEMS.map((item) => {
-                  const active = isActive(pathname, item.href);
-                  return (
-                    <li key={item.href}>
-                      <Link
-                        href={item.href}
-                        aria-current={active ? "page" : undefined}
-                        className={`flex items-center gap-3 min-h-12 px-3 py-2.5 rounded-lg transition-colors ${
-                          active
-                            ? "bg-[#DD550C]/15 text-[#FFD23F]"
-                            : "text-[#F5F0E8] hover:bg-white/8 active:bg-white/12"
-                        }`}
-                      >
-                        <span className="text-lg" aria-hidden>
-                          {item.icon}
-                        </span>
-                        <span className="font-[family-name:var(--font-body)] font-extrabold text-xs uppercase tracking-widest">
-                          {item.label}
-                        </span>
-                      </Link>
-                    </li>
-                  );
-                })}
-              </ul>
+              <button
+                type="button"
+                onClick={closeSheet}
+                className="min-h-[44px] px-2 font-[family-name:var(--wire-mono)] text-[11px] uppercase tracking-[0.1em] text-ink-muted"
+              >
+                Close
+              </button>
             </div>
-            {/* Extra padding to clear the tab bar */}
+            <ul>
+              {MORE_ITEMS.map((item) => {
+                const active = isActive(pathname, item.href);
+                return (
+                  <li key={item.href}>
+                    <Link
+                      href={item.href}
+                      aria-current={active ? "page" : undefined}
+                      className={`flex min-h-[48px] items-center border-b border-rule px-4 font-[family-name:var(--wire-display)] text-[15px] font-bold uppercase tracking-[0.03em] transition-colors ${
+                        active ? "text-result" : "text-ink-soft active:bg-paper"
+                      }`}
+                    >
+                      {item.label}
+                    </Link>
+                  </li>
+                );
+              })}
+            </ul>
             <div className="h-16" />
           </div>
         </>

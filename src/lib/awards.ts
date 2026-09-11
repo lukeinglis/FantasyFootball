@@ -19,9 +19,14 @@ export interface Champion {
   team: string;
 }
 
+/** Wire has no icon set, so each award carries a category tone instead of a
+ * glyph. The tone drives the rule colour on the card: gold for a record set,
+ * red for a result that happened on the field, purple for a punishment. */
+export type AwardTone = "record" | "result" | "punishment";
+
 export interface CoreAward {
   name: string;
-  emoji: string;
+  tone: AwardTone;
   winner: string;
   team: string;
   stat: string;
@@ -31,7 +36,7 @@ export interface CoreAward {
 
 export interface Superlative {
   name: string;
-  emoji: string;
+  tone: AwardTone;
   winner: string;
   stat: string;
   description: string;
@@ -50,7 +55,7 @@ export function getCoreAwards(): CoreAward[] {
   return [
     {
       name: "The Hammer",
-      emoji: "\u{1F528}",
+      tone: "record",
       winner: r.mostPointsWeek.holder,
       team: r.mostPointsWeek.team,
       stat: `${r.mostPointsWeek.value} pts (Week ${r.mostPointsWeek.week})`,
@@ -59,7 +64,7 @@ export function getCoreAwards(): CoreAward[] {
     },
     {
       name: "The Mercy Rule",
-      emoji: "\u{1F4A5}",
+      tone: "result",
       winner: r.biggestBlowout.winner,
       team: r.biggestBlowout.winnerTeam,
       stat: `${r.biggestBlowout.score} (${r.biggestBlowout.margin} pt margin)`,
@@ -68,7 +73,7 @@ export function getCoreAwards(): CoreAward[] {
     },
     {
       name: "The Cardiac Arrest",
-      emoji: "\u{1FAC0}",
+      tone: "result",
       winner: r.closestGame.winner,
       team: r.closestGame.winnerTeam,
       stat: `${r.closestGame.score} (${r.closestGame.margin} pt margin)`,
@@ -77,7 +82,7 @@ export function getCoreAwards(): CoreAward[] {
     },
     {
       name: "The Unstoppable",
-      emoji: "\u{1F525}",
+      tone: "record",
       winner: r.longestWinStreak.holder,
       team: r.longestWinStreak.team,
       stat: `${r.longestWinStreak.value} consecutive wins`,
@@ -86,7 +91,7 @@ export function getCoreAwards(): CoreAward[] {
     },
     {
       name: "The Iron Throne",
-      emoji: "\u{1F451}",
+      tone: "record",
       winner: r.bestRecord.holder,
       team: r.bestRecord.team,
       stat: r.bestRecord.value,
@@ -95,7 +100,7 @@ export function getCoreAwards(): CoreAward[] {
     },
     {
       name: "The Goose Egg",
-      emoji: "\u{1F95A}",
+      tone: "punishment",
       winner: r.fewestPointsWeek.holder,
       team: r.fewestPointsWeek.team,
       stat: `${r.fewestPointsWeek.value} pts (Week ${r.fewestPointsWeek.week})`,
@@ -234,21 +239,21 @@ export function computeSuperlatives(): Superlative[] {
   return [
     {
       name: "Horseshoe Award",
-      emoji: "\u{1F340}",
+      tone: "result",
       winner: luckiest.manager,
       stat: `${luckiest.luckyWins} wins below league median`,
       description: "Most wins when scoring below the weekly league median",
     },
     {
       name: "The Metronome",
-      emoji: "\u{23F1}\u{FE0F}",
+      tone: "record",
       winner: mostConsistent.manager,
       stat: `${mostConsistent.sd.toFixed(1)} pt std dev`,
       description: "Most consistent weekly scorer (lowest standard deviation)",
     },
     {
       name: "The Roller Coaster",
-      emoji: "\u{1F3A2}",
+      tone: "punishment",
       winner: mostVolatile.manager,
       stat: `${mostVolatile.sd.toFixed(1)} pt std dev`,
       description: "Most boom-or-bust weekly scorer (highest standard deviation)",

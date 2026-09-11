@@ -21,22 +21,21 @@ export default function GlobalError({
       <Card variant="chalkboard" className="max-w-lg w-full">
         <CardBody variant="chalkboard">
           <div className="text-center">
-            <p className="text-5xl" aria-hidden>🏈</p>
             <h1
-              className="mt-4 text-3xl sm:text-4xl font-bold text-[#F5F0E8] text-shadow-glow-chalk"
+              className="mt-4 text-3xl sm:text-4xl font-bold text-ink"
               style={{ fontFamily: "var(--font-display)" }}
             >
               Fumble!
             </h1>
-            <p className="mt-2 text-lg text-[rgba(245,240,232,0.85)]">
+            <p className="mt-2 text-lg text-ink-muted">
               Something went wrong.
             </p>
-            <p className="mx-auto mt-3 max-w-sm text-sm text-[rgba(245,240,232,0.6)]">
+            <p className="mx-auto mt-3 max-w-sm text-sm text-ink-faint">
               An unexpected error tripped us up. Try again — if it keeps
               happening, ping the commissioner.
             </p>
             {error.digest && (
-              <p className="mt-2 font-mono text-[11px] text-[#F5F0E8]/30">
+              <p className="mt-2 font-mono text-[11px] text-ink-faint">
                 ref: {error.digest}
               </p>
             )}
@@ -44,13 +43,13 @@ export default function GlobalError({
               <button
                 type="button"
                 onClick={() => reset()}
-                className="rounded-md bg-[#DD550C] px-4 py-2 text-sm font-semibold text-white hover:bg-orange-500 shadow-[0_2px_8px_rgba(221,85,12,0.4)]"
+                className="bg-result px-4 py-2 text-sm font-semibold text-white transition-colors hover:bg-ink"
               >
                 Try again
               </button>
               <Link
                 href="/"
-                className="rounded-md border border-[#8B5E3C] px-4 py-2 text-sm font-semibold text-[#F5F0E8]/70 hover:bg-white/5"
+                className="border border-[#DCE1E9] px-4 py-2 text-sm font-semibold text-ink-soft hover:bg-paper"
               >
                 Back to Home
               </Link>

@@ -1,304 +1,354 @@
 import Link from "next/link";
 import { Suspense } from "react";
-import Container from "@/components/Container";
 import StandingsPreview from "@/components/home/StandingsPreview";
 import ScoreboardPreview from "@/components/home/ScoreboardPreview";
-import ArticlesPreview from "@/components/home/ArticlesPreview";
 import SeasonAtAGlance from "@/components/home/SeasonAtAGlance";
-import SeasonCountdown from "@/components/SeasonCountdown";
-import BackyardHub from "@/components/home/BackyardHub";
-import MobileHub from "@/components/home/MobileHub";
 import PullToRefresh from "@/components/PullToRefresh";
-import { Card, CardBody, CardHeader } from "@/components/Card";
 import { fetchSettings } from "@/lib/server-data";
 import membersData from "@/data/members.json";
 import historyData from "@/data/history.json";
+import allTimeRecords from "@/data/all-time-records.json";
 import { PAYOUTS } from "@/lib/constants";
 
 export const dynamic = "force-dynamic";
 
-const members = membersData as { active: { name: string; teamName: string }[]; emeritus: { name: string; teamName: string }[] };
-const history = historyData as { seasons: { year: number; champion?: string; championTeam?: string; runnerUp?: string; runnerUpTeam?: string; third?: string; thirdTeam?: string }[] };
+const members = membersData as {
+  active: { name: string; teamName: string }[];
+  emeritus: { name: string; teamName: string }[];
+};
+const history = historyData as {
+  seasons: {
+    year: number;
+    champion?: string;
+    championTeam?: string;
+    runnerUp?: string;
+    runnerUpTeam?: string;
+    third?: string;
+    thirdTeam?: string;
+  }[];
+};
+const totalMatchups = (allTimeRecords as { totalMatchups: number }).totalMatchups;
 
+/**
+ * Every headline on this page is derived, never typed in. The league's defining
+ * fact is that eleven seasons have produced eleven different champions, and that
+ * only stays true if it is recomputed rather than asserted.
+ */
 function getChampionStats() {
   const titles: Record<string, number> = {};
   const top3: Record<string, number> = {};
   for (const s of history.seasons) {
-    if (s.champion) { titles[s.champion] = (titles[s.champion] || 0) + 1; top3[s.champion] = (top3[s.champion] || 0) + 1; }
-    if (s.runnerUp) { top3[s.runnerUp] = (top3[s.runnerUp] || 0) + 1; }
-    if (s.third) { top3[s.third] = (top3[s.third] || 0) + 1; }
+    if (s.champion) {
+      titles[s.champion] = (titles[s.champion] || 0) + 1;
+      top3[s.champion] = (top3[s.champion] || 0) + 1;
+    }
+    if (s.runnerUp) top3[s.runnerUp] = (top3[s.runnerUp] || 0) + 1;
+    if (s.third) top3[s.third] = (top3[s.third] || 0) + 1;
   }
   const titleList = Object.entries(titles).sort((a, b) => b[1] - a[1]);
   const top3List = Object.entries(top3).sort((a, b) => b[1] - a[1]);
-  const uniqueChamps = titleList.length;
-  return { titles, top3, titleList, top3List, uniqueChamps };
+  const mostTitles = titleList.length ? titleList[0][1] : 0;
+  return {
+    titles,
+    titleList,
+    top3List,
+    uniqueChamps: titleList.length,
+    everRepeated: mostTitles > 1,
+  };
+}
+
+function Kicker({ children }: { children: React.ReactNode }) {
+  return (
+    <p className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.16em] text-result">
+      {children}
+    </p>
+  );
+}
+
+function RailHeading({ children }: { children: React.ReactNode }) {
+  return (
+    <h2 className="mb-3 border-b-2 border-ink pb-1 font-[family-name:var(--wire-display)] text-[13px] font-extrabold uppercase tracking-[0.1em] text-ink">
+      {children}
+    </h2>
+  );
 }
 
 function PreviewSkeleton({ lines = 5 }: { lines?: number }) {
   return (
-    <Card>
-      <CardBody>
-        <div className="space-y-3">
-          {Array.from({ length: lines }).map((_, i) => (
-            <div key={i} className="h-10 animate-pulse rounded-md bg-white/10" />
-          ))}
+    <div className="border border-rule bg-surface p-4">
+      <div className="space-y-2">
+        {Array.from({ length: lines }).map((_, i) => (
+          <div key={i} className="h-9 animate-pulse bg-rule" />
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/** The four figures that describe the league without needing a live API. */
+function ByTheNumbers() {
+  const stats = getChampionStats();
+  const oldest = history.seasons[history.seasons.length - 1]?.year;
+  const newest = history.seasons[0]?.year;
+
+  const rows: [string, string, string][] = [
+    ["Seasons", String(history.seasons.length), `${oldest}–${newest}`],
+    [
+      "Champions",
+      String(stats.uniqueChamps),
+      stats.everRepeated ? "Repeat winners" : "All different",
+    ],
+    ["The pot", `$${PAYOUTS.totalPot.toLocaleString("en-US")}`, `$${PAYOUTS.buyIn} a head`],
+    [
+      "Managers",
+      String(members.active.length),
+      `${members.emeritus.length} departed`,
+    ],
+  ];
+
+  return (
+    <dl className="border-t border-rule">
+      {rows.map(([label, value, note]) => (
+        <div
+          key={label}
+          className="flex items-baseline justify-between gap-3 border-b border-rule py-2.5"
+        >
+          <dt className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.12em] text-ink-muted">
+            {label}
+          </dt>
+          <dd className="text-right">
+            <span className="font-[family-name:var(--wire-display)] text-[22px] font-extrabold leading-none text-ink">
+              {value}
+            </span>
+            <span className="ml-2 font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.1em] text-ink-faint">
+              {note}
+            </span>
+          </dd>
         </div>
-      </CardBody>
-    </Card>
+      ))}
+    </dl>
+  );
+}
+
+/** The pot, split the way the commissioner actually splits it. */
+function PotBreakdown() {
+  return (
+    <div className="border border-rule bg-surface p-4">
+      <p className="font-[family-name:var(--wire-display)] text-[30px] font-extrabold leading-none text-ink">
+        ${PAYOUTS.totalPot.toLocaleString("en-US")}
+      </p>
+      <p className="mt-1 font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.1em] text-ink-muted">
+        ${PAYOUTS.buyIn} × {PAYOUTS.teams} managers
+      </p>
+      <dl className="mt-3 border-t border-rule pt-3 text-[13px]">
+        <div className="flex justify-between border-b border-rule pb-2">
+          <dt className="text-ink-muted">
+            Weekly · {PAYOUTS.weeklyWeeks} × ${PAYOUTS.weeklyPerWeek}
+          </dt>
+          <dd className="font-mono text-ink">
+            ${PAYOUTS.weeklyPool.toLocaleString("en-US")}
+          </dd>
+        </div>
+        <div className="flex justify-between pt-2">
+          <dt className="text-ink-muted">Year end</dt>
+          <dd className="font-mono text-ink">
+            ${PAYOUTS.yearEndPool.toLocaleString("en-US")}
+          </dd>
+        </div>
+      </dl>
+      <Link
+        href="/payouts"
+        className="mt-3 inline-block font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.1em] text-result hover:underline"
+      >
+        Full payout structure
+      </Link>
+    </div>
+  );
+}
+
+/** Champions, newest first. The year is the anchor, so it leads each row. */
+function ChampionLedger({ limit = 6 }: { limit?: number }) {
+  return (
+    <div className="border-t border-rule">
+      {history.seasons.slice(0, limit).map((s) => (
+        <div
+          key={s.year}
+          className="flex items-baseline gap-3 border-b border-rule py-2.5"
+        >
+          <span className="w-10 flex-shrink-0 font-[family-name:var(--wire-mono)] text-[11px] tracking-[0.06em] text-ink-muted">
+            {s.year}
+          </span>
+          <div className="min-w-0 flex-1">
+            <p className="truncate font-[family-name:var(--wire-display)] text-[15px] font-bold uppercase tracking-[0.02em] text-ink">
+              {s.champion}
+            </p>
+            <p className="truncate text-[12px] text-ink-muted">
+              {s.championTeam}
+            </p>
+          </div>
+        </div>
+      ))}
+      <Link
+        href="/history"
+        className="mt-3 inline-block font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.1em] text-result hover:underline"
+      >
+        Every season since {history.seasons[history.seasons.length - 1]?.year}
+      </Link>
+    </div>
+  );
+}
+
+/** Most top-three finishes. Titles are filled squares, podiums hollow ones. */
+function NearlyMen() {
+  const stats = getChampionStats();
+  return (
+    <div className="border-t border-rule">
+      {stats.top3List.slice(0, 6).map(([name, count]) => {
+        const titleCount = stats.titles[name] || 0;
+        return (
+          <div
+            key={name}
+            className="flex items-center gap-3 border-b border-rule py-2.5"
+          >
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-[family-name:var(--wire-display)] text-[14px] font-bold uppercase tracking-[0.02em] text-ink">
+                {name}
+              </p>
+              <p className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.1em] text-ink-muted">
+                {titleCount} {titleCount === 1 ? "title" : "titles"} · {count}{" "}
+                top three
+              </p>
+            </div>
+            <div className="flex flex-shrink-0 gap-0.5">
+              {Array.from({ length: count }).map((_, j) => (
+                <div
+                  key={j}
+                  className={`h-2.5 w-2.5 ${
+                    j < titleCount
+                      ? "bg-result"
+                      : "border border-ink-faint bg-transparent"
+                  }`}
+                />
+              ))}
+            </div>
+          </div>
+        );
+      })}
+    </div>
   );
 }
 
 export default async function Home() {
   const settingsResult = await fetchSettings();
   const isOffseason = !settingsResult.ok;
-  const season = settingsResult.ok ? settingsResult.data.season : null;
   const stats = getChampionStats();
-  const defendingChamp = history.seasons[0];
-  const recentSeasons = history.seasons.slice(0, 5);
+  const defending = history.seasons[0];
 
   return (
     <PullToRefresh>
-      {/* Mobile hub card stack */}
-      <MobileHub isOffseason={isOffseason} defendingChamp={defendingChamp} />
-
-      {/* Desktop: The Backyard — interactive hub navigation */}
-      <div className="hidden md:block">
-        <BackyardHub />
-      </div>
-
-      {/* Defending Champion Banner (desktop only, mobile has it in MobileHub) */}
-      {defendingChamp && (
-        <Container className="hidden md:block">
-          <div className="relative overflow-hidden rounded-xl border-[3px] border-[#D4A847] bg-[linear-gradient(180deg,#2C1810,#1A0F08)] p-6 sm:p-8 shadow-[0_8px_32px_rgba(0,0,0,0.4)]">
-            <div className="pointer-events-none absolute top-0 left-0 right-0 h-[3px] bg-[linear-gradient(90deg,transparent,#D4A847_20%,#D4A847_80%,transparent)]" aria-hidden />
-            <div className="relative flex flex-col items-center gap-4 text-center sm:flex-row sm:text-left">
-              <div className="flex h-16 w-16 flex-shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-[#DD550C] to-[#a33d08] text-3xl shadow-lg shadow-[#DD550C]/30">
-                🏆
-              </div>
-              <div>
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#D4A847]">
-                  {defendingChamp.year} Defending Champion
-                </p>
-                <p className="mt-1 font-[family-name:var(--font-display)] text-2xl text-[#F5F0E8] sm:text-3xl text-shadow-wood">
-                  {defendingChamp.champion}
-                </p>
-                <p className="text-sm text-[#F5F0E8]/50">
-                  {defendingChamp.championTeam}
-                </p>
-              </div>
-              <div className="hidden sm:block sm:ml-auto">
-                <Link
-                  href="/history"
-                  className="font-[family-name:var(--font-heading)] rounded-lg border border-[#D4A847]/40 px-4 py-2 text-sm font-bold uppercase tracking-wide text-[#D4A847] transition-all hover:bg-[#D4A847]/10"
-                >
-                  Full History
-                </Link>
-              </div>
-            </div>
-          </div>
-        </Container>
-      )}
-
-      {/* Season summary */}
-      <Container className="pt-0">
-        <Suspense fallback={<PreviewSkeleton lines={2} />}>
-          <SeasonAtAGlance />
-        </Suspense>
-      </Container>
-
-      {/* League by the Numbers */}
-      <Container className="pt-0">
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          <Card variant="scoreboard">
-            <CardBody>
-              <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">Seasons Played</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">{history.seasons.length}</p>
-                <p className="mt-1 text-sm text-[#F5F0E8]/50">{history.seasons[history.seasons.length - 1]?.year} to {history.seasons[0]?.year}</p>
-              </div>
-            </CardBody>
-          </Card>
-          <Card variant="scoreboard">
-            <CardBody>
-              <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">Unique Champions</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">{stats.uniqueChamps}</p>
-                <p className="mt-1 text-sm text-[#F5F0E8]/50">No repeat winners</p>
-              </div>
-            </CardBody>
-          </Card>
-          <Card variant="scoreboard">
-            <CardBody>
-              <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">The Pot</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">${PAYOUTS.totalPot.toLocaleString()}</p>
-                <p className="mt-1 text-sm text-[#F5F0E8]/50">${PAYOUTS.buyIn} buy-in / {members.active.length} managers</p>
-              </div>
-            </CardBody>
-          </Card>
-          <Card variant="scoreboard">
-            <CardBody>
-              <div className="text-center">
-                <p className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#F5F0E8]/50">Active Managers</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-4xl font-bold text-[#FFD23F] text-shadow-glow-yellow">{members.active.length}</p>
-                <p className="mt-1 text-sm text-[#F5F0E8]/50">Plus {members.emeritus.length} emeritus</p>
-              </div>
-            </CardBody>
-          </Card>
-        </div>
-      </Container>
-
-      {/* Recent Champions + Dynasty Rankings side by side */}
-      <Container className="pt-0">
-        <div className="grid gap-6 lg:grid-cols-2">
-          {/* Recent Champions */}
-          <Card className="overflow-hidden" variant="scoreboard">
-            <CardHeader
-              title="Recent Champions"
-              action={<Link href="/history" className="text-xs font-medium text-[#D4A847] hover:underline">View all &rarr;</Link>}
-            />
-            <CardBody className="!p-0">
-              <div className="divide-y divide-[#D4A847]/10">
-                {recentSeasons.map((s, i) => (
-                  <div key={s.year} className="flex items-center gap-4 px-5 py-3 hover:bg-[rgba(212,168,71,0.08)] transition-colors">
-                    <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-[#FFD23F]">{s.year}</span>
-                    <div className="min-w-0 flex-1">
-                      <p className="truncate font-semibold text-[#F5F0E8]">
-                        {i === 0 && <span className="mr-1.5">🏆</span>}
-                        {s.champion}
-                      </p>
-                      <p className="truncate text-xs text-[#F5F0E8]/50">{s.championTeam}</p>
-                    </div>
-                    <div className="hidden sm:block text-right text-xs text-[#F5F0E8]/40">
-                      <p>2nd: {s.runnerUp}</p>
-                      <p>3rd: {s.third}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </CardBody>
-          </Card>
-
-          {/* Dynasty Rankings */}
-          <Card className="overflow-hidden" variant="scoreboard">
-            <CardHeader
-              title="Dynasty Rankings"
-              description="Most top-3 finishes all time"
-            />
-            <CardBody className="!p-0">
-              <div className="divide-y divide-[#D4A847]/10">
-                {stats.top3List.slice(0, 6).map(([name, count], i) => {
-                  const titleCount = stats.titles[name] || 0;
-                  return (
-                    <div key={name} className="flex items-center gap-4 px-5 py-3 hover:bg-[rgba(212,168,71,0.08)] transition-colors">
-                      <span className={`flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-sm font-bold ${
-                        i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-[#F5F0E8]/60"
-                      }`}>
-                        {i + 1}
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate font-semibold text-[#F5F0E8]">{name}</p>
-                        <p className="text-xs text-[#F5F0E8]/50">
-                          {titleCount > 0 ? `${titleCount} title${titleCount > 1 ? "s" : ""}` : "0 titles"}
-                          {" / "}
-                          {count} top-3 finish{count > 1 ? "es" : ""}
-                        </p>
-                      </div>
-                      <div className="flex gap-0.5">
-                        {Array.from({ length: count }).map((_, j) => (
-                          <div
-                            key={j}
-                            className={`h-2 w-2 rounded-full ${
-                              j < titleCount ? "bg-[#DD550C]" : "bg-[#DD550C]/30"
-                            }`}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardBody>
-          </Card>
-        </div>
-      </Container>
-
-      {/* The Roster strip */}
-      <Container className="pt-0">
-        <div className="text-center">
-          <h2 className="font-[family-name:var(--font-heading)] text-xs font-semibold uppercase tracking-[0.2em] text-[#D4A847]">
-            The Roster
-          </h2>
-          <div className="mt-4 flex flex-wrap justify-center gap-3">
-            {members.active.map((m) => {
-              const initials = m.name.split(/\s+/).map((s) => s.charAt(0).toUpperCase()).slice(0, 2).join("");
-              const titleCount = stats.titles[m.name] || 0;
-              return (
-                <Link key={m.name} href={`/managers/${encodeURIComponent(m.name.toLowerCase())}`} className="group flex flex-col items-center gap-1.5 transition-transform duration-300 hover:scale-110">
-                  <div className={`relative flex h-12 w-12 items-center justify-center rounded-full text-sm font-bold text-white shadow-lg transition-shadow group-hover:shadow-[#DD550C]/40 ${
-                    titleCount > 0
-                      ? "bg-gradient-to-br from-[#DD550C] to-[#a33d08] shadow-[#DD550C]/30"
-                      : "bg-gradient-to-br from-[#DD550C] to-[#a33d08] shadow-[#DD550C]/20"
-                  }`}>
-                    {initials}
-                    {titleCount > 0 && (
-                      <span className="absolute -top-1 -right-1 flex h-4 w-4 items-center justify-center rounded-full bg-[#D4A847] text-[8px] font-bold text-[#2C1810] ring-2 ring-[#2D8C3C]">
-                        {titleCount}
-                      </span>
-                    )}
-                  </div>
-                  <span className="text-[10px] text-[#F5F0E8]/60 group-hover:text-[#D4A847] transition-colors">
-                    {m.name}
-                  </span>
-                </Link>
-              );
-            })}
-          </div>
-        </div>
-      </Container>
-
-      {/* Two-column previews (in-season) or Season Awaits banner (offseason) */}
-      {isOffseason ? (
-        <Container className="pt-0">
-          <div className="relative overflow-hidden rounded-xl border-[3px] border-[#8B5E3C] bg-[#2A4A3A] px-8 py-16 text-center shadow-[0_4px_16px_rgba(0,0,0,0.3),inset_0_0_30px_rgba(0,0,0,0.2)]">
-            <div className="relative">
-              <p className="text-5xl" aria-hidden>🏈</p>
-              <h2 className="mt-4 font-[family-name:var(--font-display)] text-3xl tracking-wide text-[#F5F0E8] sm:text-4xl text-shadow-md">
-                Season Awaits
-              </h2>
-              <p className="mx-auto mt-3 max-w-lg text-[#F5F0E8]/70">
-                Study the record book. Review the rules. Start the trash talk early.
-                When the season opens, this site lights up with live data.
+      {/* Lead story. The strongest true fact in the data is that nobody has ever
+          won it twice, so that is the headline rather than a welcome message. */}
+      <section className="border-b-2 border-ink bg-surface">
+        <div className="mx-auto max-w-[1400px] px-4 py-6 lg:px-6 lg:py-9">
+          <div className="grid gap-6 lg:grid-cols-[1fr_320px] lg:gap-10">
+            <div className="min-w-0">
+              {/* The kicker dates the story rather than repeating it. It used
+                  to read "11 seasons" directly above a headline that also says
+                  "11 seasons", so it told the reader nothing new. */}
+              <Kicker>
+                {isOffseason ? "Between seasons" : "The league"} ·{" "}
+                {defending?.year ? `${defending.year} final` : "Est. 2015"}
+              </Kicker>
+              <h1 className="mt-2 font-[family-name:var(--wire-display)] text-[44px] font-extrabold uppercase leading-[0.92] tracking-[0.01em] text-ink sm:text-[60px] lg:text-[72px]">
+                {stats.everRepeated ? (
+                  <>Eleven seasons, and a dynasty at last</>
+                ) : (
+                  <>
+                    {history.seasons.length} seasons.
+                    <br />
+                    {stats.uniqueChamps} different champions.
+                  </>
+                )}
+              </h1>
+              <p className="mt-4 max-w-[64ch] font-[family-name:var(--wire-body)] text-[17px] leading-[1.55] text-ink-soft">
+                {stats.everRepeated
+                  ? "Someone has finally gone back to back."
+                  : `Nobody has ever won this thing twice. ${totalMatchups.toLocaleString("en-US")} matchups since ${history.seasons[history.seasons.length - 1]?.year} and the trophy has gone to a different manager every single year.`}
               </p>
-              <div className="mt-8 flex flex-wrap justify-center gap-3">
-                <Link href="/league?tab=rules" className="font-[family-name:var(--font-heading)] rounded-lg border border-[#D4A847]/40 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-[#D4A847] transition-all hover:bg-[#D4A847]/10">
-                  League Rules
-                </Link>
-                <Link href="/records" className="font-[family-name:var(--font-heading)] rounded-lg border border-[#F5F0E8]/15 px-5 py-2.5 text-sm font-bold uppercase tracking-wide text-[#F5F0E8] transition-all hover:bg-white/5">
-                  Record Book
-                </Link>
-              </div>
+
+              {defending?.champion && (
+                <div className="mt-6 border-t-2 border-ink pt-4">
+                  <p className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.14em] text-ink-muted">
+                    Defending champion · {defending.year}
+                  </p>
+                  <div className="mt-1 flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <span className="font-[family-name:var(--wire-display)] text-[30px] font-extrabold uppercase leading-none text-result">
+                      {defending.champion}
+                    </span>
+                    <span className="font-[family-name:var(--wire-body)] text-[15px] text-ink-muted">
+                      {defending.championTeam}
+                    </span>
+                  </div>
+                  <p className="mt-1 font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.1em] text-ink-faint">
+                    Beat {defending.runnerUp} · {defending.third} third
+                  </p>
+                </div>
+              )}
             </div>
+
+            <aside className="min-w-0">
+              <RailHeading>By the numbers</RailHeading>
+              <ByTheNumbers />
+            </aside>
           </div>
-        </Container>
-      ) : (
-        <Container className="pt-0">
-          <div className="grid gap-6 lg:grid-cols-2">
-            <Suspense fallback={<PreviewSkeleton />}>
-              <StandingsPreview />
+        </div>
+      </section>
+
+      {/* Body: live sections in the main column, standing data in the rail. */}
+      <div className="mx-auto max-w-[1400px] px-4 py-6 lg:px-6 lg:py-8">
+        <div className="grid gap-8 lg:grid-cols-[1fr_320px] lg:gap-10">
+          {/* The live sections carry their own headers, so they are not wrapped
+              in a rail heading: doing so printed the title twice, and left a
+              stranded rule when a section had no data to show. */}
+          <main className="min-w-0 space-y-8">
+            <Suspense fallback={<PreviewSkeleton lines={2} />}>
+              <SeasonAtAGlance />
             </Suspense>
+
             <Suspense fallback={<PreviewSkeleton />}>
               <ScoreboardPreview />
             </Suspense>
-          </div>
-        </Container>
-      )}
 
+            <Suspense fallback={<PreviewSkeleton />}>
+              <StandingsPreview />
+            </Suspense>
 
-      {/* Articles */}
-      <Container className="pt-0">
-        <ArticlesPreview />
-      </Container>
+            <section>
+              <RailHeading>Most top-three finishes</RailHeading>
+              <NearlyMen />
+            </section>
+          </main>
+
+          <aside className="min-w-0 space-y-8">
+            <section>
+              <RailHeading>Champions</RailHeading>
+              <ChampionLedger />
+            </section>
+
+            <section>
+              <RailHeading>The pot</RailHeading>
+              <PotBreakdown />
+            </section>
+
+            <section>
+              <RailHeading>The rule</RailHeading>
+              <p className="border-l-2 border-result pl-3 font-[family-name:var(--wire-body)] text-[15px] leading-[1.5] text-ink-soft">
+                Failure to set your lineup is your own fault.
+              </p>
+            </section>
+          </aside>
+        </div>
+      </div>
     </PullToRefresh>
   );
 }
