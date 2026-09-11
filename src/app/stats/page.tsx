@@ -3,7 +3,7 @@ import { fetchStandings, fetchSettings, fetchScoreboard } from "@/lib/server-dat
 import type { Scoreboard } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
-import { LAST_COMPLETED_SEASON } from "@/lib/season";
+import { CURRENT_SEASON, feedLabel } from "@/lib/season";
 import DataState from "@/components/DataState";
 import StatsTabs from "./StatsTabs";
 import StatsContent from "./StatsContent";
@@ -39,8 +39,11 @@ export default async function StatsPage() {
   if (!standingsResult.ok) {
     return (
       <>
+        {/* These stats are computed from the season in progress, so labelling
+            the page with the last completed season was wrong whether or not
+            the feed answered. With nothing to show there is no season to name. */}
         <PageHeader
-          eyebrow={`${LAST_COMPLETED_SEASON} season`}
+          eyebrow={feedLabel(false)}
           title="Stats & Rankings"
           subtitle="The numbers behind the madness. Superlatives, rankings, and bragging rights."
         />
@@ -56,7 +59,7 @@ export default async function StatsPage() {
   return (
     <>
       <PageHeader
-        eyebrow={`${LAST_COMPLETED_SEASON} season`}
+        eyebrow={`${CURRENT_SEASON} season`}
         title="Stats & Rankings"
         subtitle="The numbers behind the madness. Superlatives, rankings, and bragging rights."
       />
