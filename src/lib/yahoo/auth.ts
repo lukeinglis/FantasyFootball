@@ -32,17 +32,30 @@ function getRedirectUri(): string {
   );
 }
 
+// Yahoo used to derive fantasy access from a "Fantasy Sports" checkbox on the
+// developer app, so this request never named a scope. That checkbox no longer
+// exists on newly created apps, and a token minted without one gets 401
+// oauth_problem="additional_authorization_required" on every fantasy endpoint
+// while working fine for identity. Asking for fspt-r by name is the remaining
+// way to request read access to the user's fantasy teams and leagues.
+export const DEFAULT_SCOPE = "openid email profile fspt-r";
+
 /**
  * Build the Yahoo OAuth consent URL.
  * Redirect the user here to authorize the app.
+ *
+ * Pass a scope to override the default. Passing an empty string omits the
+ * parameter entirely, which reproduces the pre-fspt-r behaviour and is the
+ * escape hatch if Yahoo rejects the scope outright and blocks sign-in.
  */
-export function getAuthUrl(): string {
+export function getAuthUrl(scope: string = DEFAULT_SCOPE): string {
   const params = new URLSearchParams({
     client_id: getClientId(),
     redirect_uri: getRedirectUri(),
     response_type: "code",
     language: "en-us",
   });
+  if (scope) params.set("scope", scope);
   return `${YAHOO_AUTH_URL}?${params.toString()}`;
 }
 
