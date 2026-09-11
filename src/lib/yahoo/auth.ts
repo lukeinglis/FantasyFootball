@@ -101,8 +101,26 @@ export async function getValidToken(): Promise<string> {
     );
   }
 
+  // Describe what came out of the cache without printing any of it. A stored
+  // record can be present but malformed — no expiresAt makes the comparison
+  // below NaN, which is always false, so a token with no expiry would never
+  // refresh and every API call would go out with `Bearer undefined`.
+  logger.info(
+    {
+      module: "yahoo/auth",
+      hasAccessToken: typeof tokens.accessToken === "string" && tokens.accessToken.length > 0,
+      hasRefreshToken: typeof tokens.refreshToken === "string" && tokens.refreshToken.length > 0,
+      expiresAt: Number.isFinite(tokens.expiresAt)
+        ? new Date(tokens.expiresAt).toISOString()
+        : String(tokens.expiresAt),
+    },
+    "stored token loaded"
+  );
+
   const bufferMs = 5 * 60 * 1000;
-  if (Date.now() + bufferMs >= tokens.expiresAt) {
+  // `!(x < y)` rather than `x >= y` so a missing or unparseable expiry refreshes
+  // instead of silently passing a dead token through.
+  if (!(Date.now() + bufferMs < tokens.expiresAt)) {
     logger.info({ module: "yahoo/auth" }, "token expiring soon, refreshing");
     const refreshed = await refreshAccessToken(tokens.refreshToken);
     return refreshed.accessToken;
