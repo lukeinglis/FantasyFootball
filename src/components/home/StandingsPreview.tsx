@@ -8,11 +8,10 @@ export default async function StandingsPreview() {
   const result = await fetchStandings();
 
   // The old copy read "Live from Yahoo, refreshed every 15 minutes" no matter
-  // what came back, including when nothing did. Say which of the two we are
-  // actually showing.
-  const description = result.ok
-    ? "Live from Yahoo."
-    : "Live standings are unavailable right now.";
+  // what came back, including when nothing did. On the failure path the panel
+  // below already explains itself, so a second sentence saying the same thing
+  // just stutters. Say nothing and let it speak.
+  const description = result.ok ? "Live from Yahoo." : undefined;
 
   return (
     <Card>
