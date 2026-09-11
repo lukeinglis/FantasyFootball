@@ -18,7 +18,7 @@ export default async function ScoreboardPreview() {
         action={
           <Link
             href="/matchups"
-            className="text-xs font-medium text-[#DD550C] hover:underline"
+            className="text-xs font-medium text-result hover:underline"
           >
             View all →
           </Link>
@@ -34,7 +34,7 @@ export default async function ScoreboardPreview() {
             <ApiError resource="matchups" detail={result.message} />
           )
         ) : result.data.matchups.length === 0 ? (
-          <p className="text-sm text-gray-400">
+          <p className="text-sm text-ink-muted">
             No matchups posted yet. Check back closer to kickoff.
           </p>
         ) : (
@@ -44,21 +44,21 @@ export default async function ScoreboardPreview() {
               return (
                 <li
                   key={m.matchupId}
-                  className="rounded-lg bg-[#2C1810]/60 px-3 py-2"
+                  className="bg-surface px-3 py-2"
                 >
                   <div className="flex items-center justify-between gap-2 text-sm">
-                    <span className="truncate font-medium text-white">
+                    <span className="truncate font-medium text-ink">
                       {a.teamName}
                     </span>
-                    <span className="font-mono text-[#DD550C]">
+                    <span className="font-mono text-result">
                       {formatPoints(a.points, 1)}
                     </span>
                   </div>
                   <div className="mt-1 flex items-center justify-between gap-2 text-sm">
-                    <span className="truncate font-medium text-white">
+                    <span className="truncate font-medium text-ink">
                       {b.teamName}
                     </span>
-                    <span className="font-mono text-[#DD550C]">
+                    <span className="font-mono text-result">
                       {formatPoints(b.points, 1)}
                     </span>
                   </div>

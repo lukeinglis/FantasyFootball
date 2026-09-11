@@ -24,7 +24,6 @@ export default function ArticlesPage() {
       <Container>
         {articles.length === 0 ? (
           <EmptyState
-            icon={<span>📝</span>}
             title="No articles yet"
             description="The first article is being workshopped on a group chat near you. Check back soon."
           />
@@ -36,19 +35,19 @@ export default function ArticlesPage() {
                   href={`/articles/${a.slug}`}
                   className="block"
                 >
-                  <Card variant="scoreboard" className="transition-all hover:border-[#DD550C]/60">
+                  <Card variant="scoreboard" className="transition-all hover:border-result/60">
                     <CardBody>
-                      <p className="font-[family-name:var(--font-heading)] text-[11px] font-semibold uppercase tracking-widest text-[#D4A847]">
+                      <p className="font-[family-name:var(--font-heading)] text-[11px] font-semibold uppercase tracking-widest text-record">
                         {formatArticleDate(a.date)}
                         {a.author && ` · ${a.author}`}
                       </p>
-                      <h2 className="mt-1 text-xl font-bold text-[#F5F0E8]">
+                      <h2 className="mt-1 text-xl font-bold text-ink">
                         {a.title}
                       </h2>
                       {a.excerpt && (
-                        <p className="mt-2 text-sm text-[#F5F0E8]/70">{a.excerpt}</p>
+                        <p className="mt-2 text-sm text-ink-soft">{a.excerpt}</p>
                       )}
-                      <p className="mt-3 inline-flex items-center text-xs font-medium text-[#DD550C]">
+                      <p className="mt-3 inline-flex items-center text-xs font-medium text-result">
                         Read article →
                       </p>
                     </CardBody>

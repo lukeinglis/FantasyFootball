@@ -1,10 +1,87 @@
 import Container from "@/components/Container";
-import { Card, CardBody } from "@/components/Card";
+import SectionHeading from "@/components/SectionHeading";
 import {
   getChampions,
   getCoreAwards,
   computeSuperlatives,
+  type AwardTone,
 } from "@/lib/awards";
+
+/**
+ * Wire uses colour, not icons, to say what kind of thing an award is. Each
+ * card is topped by a 3px rule in its category colour and labelled in mono,
+ * so the page can be scanned by category without a single glyph.
+ */
+const TONE_RULE: Record<AwardTone, string> = {
+  record: "bg-record",
+  result: "bg-result",
+  punishment: "bg-punishment",
+};
+
+const TONE_TEXT: Record<AwardTone, string> = {
+  record: "text-record",
+  result: "text-result",
+  punishment: "text-punishment",
+};
+
+const TONE_LABEL: Record<AwardTone, string> = {
+  record: "Record",
+  result: "Result",
+  punishment: "Punishment",
+};
+
+function AwardCard({
+  tone,
+  name,
+  winner,
+  team,
+  stat,
+  footnote,
+  description,
+}: {
+  tone: AwardTone;
+  name: string;
+  winner: string;
+  team?: string;
+  stat: string;
+  footnote?: string;
+  description?: string;
+}) {
+  return (
+    <article className="border border-rule bg-surface">
+      <div className={`h-[3px] ${TONE_RULE[tone]}`} />
+      <div className="px-4 py-4">
+        <div className="flex items-baseline justify-between gap-3">
+          <h3 className="font-[family-name:var(--wire-display)] text-[15px] font-extrabold uppercase tracking-[0.03em] text-ink">
+            {name}
+          </h3>
+          <span
+            className={`flex-shrink-0 font-[family-name:var(--wire-mono)] text-[9px] uppercase tracking-[0.14em] ${TONE_TEXT[tone]}`}
+          >
+            {TONE_LABEL[tone]}
+          </span>
+        </div>
+        <p className="mt-3 text-[19px] font-semibold leading-tight text-ink">
+          {winner}
+        </p>
+        {team && <p className="text-[12px] text-ink-muted">{team}</p>}
+        <p className="mt-2 font-[family-name:var(--wire-mono)] text-[13px] tabular-nums text-ink">
+          {stat}
+        </p>
+        {footnote && (
+          <p className="mt-0.5 font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.12em] text-ink-faint">
+            {footnote}
+          </p>
+        )}
+        {description && (
+          <p className="mt-2 border-t border-rule pt-2 text-[12px] leading-[1.45] text-ink-soft">
+            {description}
+          </p>
+        )}
+      </div>
+    </article>
+  );
+}
 
 export default function AwardsContent() {
   const champions = getChampions();
@@ -14,104 +91,74 @@ export default function AwardsContent() {
   return (
     <Container>
       <section aria-labelledby="champions-heading" className="mb-12">
-        <h2
+        <SectionHeading
           id="champions-heading"
-          className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-[#FFD700] mb-6"
-        >
-          <span aria-hidden className="mr-2">{"\u{1F3C6}"}</span>
-          Championship Shelf
-        </h2>
-        <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
-          {champions.map((c) => (
-            <Card key={c.year} variant="chalkboard" className="text-center">
-              <CardBody className="py-5">
-                <p className="text-3xl" aria-hidden>{"\u{1F3C6}"}</p>
-                <p className="mt-2 font-[family-name:var(--font-heading)] text-2xl font-bold text-[#FFD700]">
+          title="Championship Shelf"
+          note={`${champions.length} seasons · every title so far`}
+        />
+        {/* A shelf is a run of years, so it is set as a run of narrow columns
+            rather than a card grid: the eye reads left to right by date. */}
+        <ol className="grid grid-cols-2 border-s border-t border-rule sm:grid-cols-3 lg:grid-cols-6">
+          {champions
+            .slice()
+            .sort((a, b) => b.year - a.year)
+            .map((c) => (
+              <li
+                key={c.year}
+                className="border-b border-e border-rule bg-surface px-3 py-4"
+              >
+                <p className="font-[family-name:var(--wire-mono)] text-[11px] tabular-nums tracking-[0.1em] text-record">
                   {c.year}
                 </p>
-                <p className="mt-1 text-sm font-semibold text-white">
+                <p className="mt-1.5 font-[family-name:var(--wire-display)] text-[16px] font-extrabold uppercase leading-tight text-ink">
                   {c.name}
                 </p>
-                <p className="mt-0.5 text-xs text-gray-400 leading-tight">
+                <p className="mt-0.5 text-[11px] leading-tight text-ink-muted">
                   {c.team}
                 </p>
-              </CardBody>
-            </Card>
-          ))}
-        </div>
+              </li>
+            ))}
+        </ol>
       </section>
 
       <section aria-labelledby="core-awards-heading" className="mb-12">
-        <h2
+        <SectionHeading
           id="core-awards-heading"
-          className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-[#FFD700] mb-6"
-        >
-          <span aria-hidden className="mr-2">{"\u{1F3C5}"}</span>
-          Core Awards
-        </h2>
+          title="Core Awards"
+          note="The single best and worst performances on record"
+        />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {coreAwards.map((award) => (
-            <Card key={award.name} variant="chalkboard">
-              <CardBody>
-                <div className="flex items-start gap-3">
-                  <span className="text-3xl flex-shrink-0" aria-hidden>
-                    {award.emoji}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="font-[family-name:var(--font-heading)] text-sm font-bold uppercase tracking-wide text-[#FFD700]">
-                      {award.name}
-                    </p>
-                    <p className="mt-1 text-lg font-semibold text-white">
-                      {award.winner}
-                    </p>
-                    <p className="text-xs text-gray-400">{award.team}</p>
-                    <p className="mt-2 text-sm font-medium text-[#DD550C]">
-                      {award.stat}
-                    </p>
-                    <p className="mt-0.5 text-xs text-gray-500">
-                      {award.season} season
-                    </p>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
+            <AwardCard
+              key={award.name}
+              tone={award.tone}
+              name={award.name}
+              winner={award.winner}
+              team={award.team}
+              stat={award.stat}
+              footnote={`${award.season} season`}
+              description={award.description}
+            />
           ))}
         </div>
       </section>
 
       <section aria-labelledby="superlatives-heading">
-        <h2
+        <SectionHeading
           id="superlatives-heading"
-          className="font-[family-name:var(--font-heading)] text-2xl font-bold uppercase tracking-wide text-[#FFD700] mb-6"
-        >
-          <span aria-hidden className="mr-2">{"⭐"}</span>
-          Superlatives
-        </h2>
+          title="Superlatives"
+          note="Computed across every box score since 2015"
+        />
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {superlatives.map((s) => (
-            <Card key={s.name} variant="chalkboard">
-              <CardBody>
-                <div className="flex items-start gap-3">
-                  <span className="text-3xl flex-shrink-0" aria-hidden>
-                    {s.emoji}
-                  </span>
-                  <div className="min-w-0">
-                    <p className="font-[family-name:var(--font-heading)] text-sm font-bold uppercase tracking-wide text-[#FFD700]">
-                      {s.name}
-                    </p>
-                    <p className="mt-1 text-lg font-semibold text-white">
-                      {s.winner}
-                    </p>
-                    <p className="mt-2 text-sm font-medium text-[#DD550C]">
-                      {s.stat}
-                    </p>
-                    <p className="mt-1 text-xs text-gray-500">
-                      {s.description}
-                    </p>
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
+            <AwardCard
+              key={s.name}
+              tone={s.tone}
+              name={s.name}
+              winner={s.winner}
+              stat={s.stat}
+              description={s.description}
+            />
           ))}
         </div>
       </section>

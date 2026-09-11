@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { displayFont, monoFont } from "@/lib/canvas-type";
 
 // ============================================================
 // Field Goal Frenzy: A canvas-based field goal kicking mini game
@@ -10,11 +11,11 @@ import { useCallback, useEffect, useRef, useState } from "react";
 // --- Colors ---
 const FIELD_GREEN = "#2d5a27";
 const FIELD_GREEN_ALT = "#2a5224";
-const ORANGE = "#DD550C";
-const NAVY = "#2C1810";
-const GOALPOST_YELLOW = "#FFD700";
-const SKY_TOP = "#1A0F08";
-const SKY_BOTTOM = "#1a3a5c";
+const ORANGE = "#D7263D";
+const NAVY = "#FFFFFF";
+const GOALPOST_YELLOW = "#B7791F";
+const SKY_TOP = "#FFFFFF";
+const SKY_BOTTOM = "#131A2B";
 
 // --- Canvas dimensions ---
 const CANVAS_W = 500;
@@ -514,7 +515,7 @@ export default function FieldGoalGame() {
         const cx = baseX + col * 2 * dirX + row * dirX * 0.5;
         const cy = HORIZON_Y + row * 15 + col * 3 + 10;
         if (cy > CANVAS_H - 10) continue;
-        const colors = ["#DD550C", "#2C1810", "#fff", "#aaa", "#DD550C"];
+        const colors = ["#D7263D", "#FFFFFF", "#fff", "#aaa", "#D7263D"];
         ctx.fillStyle = colors[i % colors.length];
         ctx.globalAlpha = 0.4;
         ctx.fillRect(cx, cy, 2, 3);
@@ -748,7 +749,7 @@ export default function FieldGoalGame() {
         ctx.translate(VANISHING_X, CANVAS_H / 2 - 20);
         ctx.scale(scale, scale);
 
-        ctx.font = "bold 48px sans-serif";
+        ctx.font = displayFont("bold", 48);
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
@@ -758,14 +759,14 @@ export default function FieldGoalGame() {
 
         ctx.fillStyle = resultGoodRef.current
           ? GOALPOST_YELLOW
-          : "#ff4444";
+          : "#D7263D";
         ctx.globalAlpha = alpha;
         ctx.fillText(resultTextRef.current, 0, 0);
 
         // Points earned
         if (resultGoodRef.current) {
           const pts = getPointsForDistance(distanceRef.current);
-          ctx.font = "bold 24px sans-serif";
+          ctx.font = displayFont("bold", 24);
           ctx.fillStyle = "white";
           ctx.fillText(`+${pts} pts`, 0, 40);
         }
@@ -828,7 +829,7 @@ export default function FieldGoalGame() {
         }
 
         // Label
-        ctx.font = "bold 10px sans-serif";
+        ctx.font = monoFont("bold", 10);
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
@@ -874,7 +875,7 @@ export default function FieldGoalGame() {
         drawRoundRect(ctx, windX - 10, windY - 5, 75, 35, 6);
         ctx.fill();
 
-        ctx.font = "bold 10px sans-serif";
+        ctx.font = monoFont("bold", 10);
         ctx.fillStyle = "rgba(255,255,255,0.6)";
         ctx.textAlign = "center";
         ctx.textBaseline = "top";
@@ -882,7 +883,7 @@ export default function FieldGoalGame() {
 
         const wind = windRef.current;
         if (Math.abs(wind) < 0.1) {
-          ctx.font = "bold 12px sans-serif";
+          ctx.font = monoFont("bold", 12);
           ctx.fillStyle = "white";
           ctx.fillText("CALM", windX + 27, windY + 14);
         } else {
@@ -908,7 +909,7 @@ export default function FieldGoalGame() {
           ctx.stroke();
 
           // MPH text
-          ctx.font = "bold 9px sans-serif";
+          ctx.font = monoFont("bold", 9);
           ctx.fillStyle = "rgba(255,255,255,0.7)";
           ctx.fillText(`${Math.abs(wind).toFixed(0)} mph`, arrowCx, windY + 14);
         }
@@ -921,7 +922,7 @@ export default function FieldGoalGame() {
         drawRoundRect(ctx, CANVAS_W / 2 - 65, 8, 130, 32, 6);
         ctx.fill();
 
-        ctx.font = "bold 18px sans-serif";
+        ctx.font = monoFont("bold", 18);
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -932,12 +933,12 @@ export default function FieldGoalGame() {
         drawRoundRect(ctx, 10, 8, 80, 32, 6);
         ctx.fill();
 
-        ctx.font = "bold 10px sans-serif";
+        ctx.font = monoFont("bold", 10);
         ctx.fillStyle = "rgba(255,255,255,0.6)";
         ctx.textAlign = "left";
         ctx.fillText("SCORE", 18, 17);
 
-        ctx.font = "bold 16px sans-serif";
+        ctx.font = monoFont("bold", 16);
         ctx.fillStyle = ORANGE;
         ctx.fillText(String(scoreRef.current), 18, 32);
 
@@ -980,7 +981,7 @@ export default function FieldGoalGame() {
 
         // Best score
         if (bestScoreRef.current > 0) {
-          ctx.font = "bold 9px sans-serif";
+          ctx.font = monoFont("bold", 9);
           ctx.fillStyle = "rgba(255,255,255,0.35)";
           ctx.textAlign = "right";
           ctx.fillText(`BEST: ${bestScoreRef.current}`, CANVAS_W - 15, CANVAS_H - 10);
@@ -990,7 +991,7 @@ export default function FieldGoalGame() {
         if (phase === "power") {
           const blink = Math.sin(frameCountRef.current * 0.08) > 0;
           if (blink) {
-            ctx.font = "bold 14px sans-serif";
+            ctx.font = monoFont("bold", 14);
             ctx.fillStyle = "rgba(255,255,255,0.8)";
             ctx.textAlign = "center";
             ctx.fillText("HOLD for power. RELEASE to lock.", CANVAS_W / 2, CANVAS_H - 15);
@@ -998,7 +999,7 @@ export default function FieldGoalGame() {
         } else if (phase === "aim") {
           const blink = Math.sin(frameCountRef.current * 0.08) > 0;
           if (blink) {
-            ctx.font = "bold 14px sans-serif";
+            ctx.font = monoFont("bold", 14);
             ctx.fillStyle = "rgba(255,255,255,0.8)";
             ctx.textAlign = "center";
             ctx.fillText("TAP to set aim!", CANVAS_W / 2, CANVAS_H - 15);
@@ -1011,14 +1012,14 @@ export default function FieldGoalGame() {
         ctx.fillStyle = "rgba(12, 35, 64, 0.88)";
         ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
-        ctx.font = "bold 38px sans-serif";
+        ctx.font = displayFont("bold", 38);
         ctx.fillStyle = ORANGE;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText("FIELD GOAL", CANVAS_W / 2, CANVAS_H / 2 - 95);
         ctx.fillText("FRENZY", CANVAS_W / 2, CANVAS_H / 2 - 55);
 
-        ctx.font = "16px sans-serif";
+        ctx.font = monoFont("normal", 16);
         ctx.fillStyle = "rgba(255,255,255,0.8)";
         ctx.fillText("Kick field goals. Go the distance.", CANVAS_W / 2, CANVAS_H / 2 - 15);
 
@@ -1057,12 +1058,12 @@ export default function FieldGoalGame() {
 
         const blink = Math.sin(Date.now() * 0.004) > 0;
         if (blink) {
-          ctx.font = "bold 16px sans-serif";
+          ctx.font = monoFont("bold", 16);
           ctx.fillStyle = ORANGE;
           ctx.fillText("TAP or PRESS SPACE", CANVAS_W / 2, CANVAS_H / 2 + 100);
         }
 
-        ctx.font = "12px sans-serif";
+        ctx.font = monoFont("normal", 12);
         ctx.fillStyle = "rgba(255,255,255,0.5)";
         ctx.fillText("3 misses and you are out", CANVAS_W / 2, CANVAS_H / 2 + 125);
       }
@@ -1072,17 +1073,17 @@ export default function FieldGoalGame() {
         ctx.fillStyle = "rgba(12, 35, 64, 0.88)";
         ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
-        ctx.font = "bold 36px sans-serif";
+        ctx.font = displayFont("bold", 36);
         ctx.fillStyle = "#ff4444";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText("GAME OVER", CANVAS_W / 2, CANVAS_H / 2 - 80);
 
-        ctx.font = "bold 48px sans-serif";
+        ctx.font = displayFont("bold", 48);
         ctx.fillStyle = ORANGE;
         ctx.fillText(`${scoreRef.current} PTS`, CANVAS_W / 2, CANVAS_H / 2 - 30);
 
-        ctx.font = "16px sans-serif";
+        ctx.font = monoFont("normal", 16);
         ctx.fillStyle = "rgba(255,255,255,0.7)";
         const made = kicksRef.current;
         const total = kicksRef.current + missesRef.current;
@@ -1101,7 +1102,7 @@ export default function FieldGoalGame() {
         }
 
         if (bestScoreRef.current > 0) {
-          ctx.font = "14px sans-serif";
+          ctx.font = monoFont("normal", 14);
           ctx.fillStyle = "rgba(255,255,255,0.5)";
           ctx.fillText(
             `Best: ${bestScoreRef.current} pts`,
@@ -1112,7 +1113,7 @@ export default function FieldGoalGame() {
 
         const blink = Math.sin(Date.now() * 0.004) > 0;
         if (blink) {
-          ctx.font = "bold 16px sans-serif";
+          ctx.font = monoFont("bold", 16);
           ctx.fillStyle = ORANGE;
           ctx.fillText("TAP or PRESS SPACE", CANVAS_W / 2, CANVAS_H / 2 + 95);
         }
@@ -1134,51 +1135,51 @@ export default function FieldGoalGame() {
           ref={canvasRef}
           width={CANVAS_W}
           height={CANVAS_H}
-          className="rounded-xl border-2 border-white/10 shadow-2xl shadow-black/50 cursor-pointer touch-none"
+          className="border-2 border-rule cursor-pointer touch-none"
           style={{ imageRendering: "auto" }}
         />
       </div>
 
       {/* Leaderboard */}
       <div className="w-full lg:w-72 flex-shrink-0">
-        <div className="rounded-xl border border-[#D4A847]/20 bg-[#2C1810] overflow-hidden">
-          <div className="border-b border-white/10 px-4 py-3">
-            <h3 className="font-[family-name:var(--font-heading)] text-sm font-semibold uppercase tracking-wide text-[#DD550C]">
+        <div className="border border-record/20 bg-surface overflow-hidden">
+          <div className="border-b border-rule px-4 py-3">
+            <h3 className="font-[family-name:var(--font-heading)] text-sm font-semibold uppercase tracking-wide text-result">
               Leaderboard
             </h3>
           </div>
           {leaderboard.length === 0 ? (
-            <div className="px-4 py-6 text-center text-sm text-gray-400">
+            <div className="px-4 py-6 text-center text-sm text-ink-muted">
               No scores yet. Be the first!
             </div>
           ) : (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-rule">
               {leaderboard.map((entry, i) => (
                 <div
                   key={`${entry.name}-${entry.score}-${i}`}
                   className={`flex items-center gap-3 px-4 py-2.5 ${
-                    scoreRank === i + 1 && scoreSaved
-                      ? "bg-[#DD550C]/10"
-                      : "hover:bg-white/5"
+ scoreRank === i + 1 && scoreSaved
+                      ? "bg-result/10"
+                      : "hover:bg-paper"
                   } transition-colors`}
                 >
                   <span
-                    className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                      i === 0
-                        ? "bg-[#DD550C] text-white"
+                    className={`flex h-6 w-6 flex-shrink-0 items-center justify-center text-[10px] font-bold ${
+ i === 0
+                        ? "bg-result text-white"
                         : i < 3
-                        ? "bg-[#DD550C]/50 text-white"
-                        : "bg-white/10 text-gray-400"
+                        ? "bg-result/50 text-ink"
+                        : "bg-paper text-ink-muted"
                     }`}
                   >
                     {i + 1}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-white">
+                    <p className="truncate text-sm font-medium text-ink">
                       {entry.name}
                     </p>
                   </div>
-                  <span className="font-[family-name:var(--font-heading)] text-sm font-bold text-[#DD550C]">
+                  <span className="font-[family-name:var(--font-heading)] text-sm font-bold text-result">
                     {entry.score.toLocaleString()}
                   </span>
                 </div>
@@ -1186,19 +1187,19 @@ export default function FieldGoalGame() {
             </div>
           )}
           {gamePhase === "gameover" && !isSignedIn && (
-            <div className="border-t border-white/10 px-4 py-3">
+            <div className="border-t border-rule px-4 py-3">
               <a
                 href="/api/auth/yahoo"
-                className="block text-center text-xs font-semibold text-[#DD550C] hover:underline"
+                className="block text-center text-xs font-semibold text-result hover:underline"
               >
                 Sign in to save your score
               </a>
             </div>
           )}
           {gamePhase === "gameover" && scoreSaved && scoreRank && (
-            <div className="border-t border-white/10 px-4 py-3 text-center">
-              <p className="text-xs text-gray-400">
-                You placed <span className="font-bold text-[#DD550C]">#{scoreRank}</span>!
+            <div className="border-t border-rule px-4 py-3 text-center">
+              <p className="text-xs text-ink-muted">
+                You placed <span className="font-bold text-result">#{scoreRank}</span>!
               </p>
             </div>
           )}
@@ -1303,7 +1304,7 @@ function drawKicker(
 
   // Number
   ctx.fillStyle = "rgba(255,255,255,0.7)";
-  ctx.font = "bold 8px sans-serif";
+  ctx.font = monoFont("bold", 8);
   ctx.textAlign = "center";
   ctx.textBaseline = "middle";
   ctx.fillText("3", 0, -2);

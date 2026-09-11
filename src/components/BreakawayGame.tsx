@@ -1,6 +1,7 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import { bodyFont, displayFont, monoFont } from "@/lib/canvas-type";
 
 // ============================================================
 // Breakaway: A Subway-Surfer-style football mini game
@@ -14,12 +15,12 @@ const FIELD_GREEN_ALT = "#2a5224";
 const YARD_LINE_COLOR = "rgba(255,255,255,0.45)";
 const YARD_NUM_COLOR = "rgba(255,255,255,0.22)";
 const HASH_COLOR = "rgba(255,255,255,0.2)";
-const PLAYER_COLOR = "#DD550C";
-const PLAYER_GLOW = "rgba(221,85,12,0.5)";
-const TACKLER_COLOR = "#2C1810";
-const TACKLER_OUTLINE = "#1a3a5c";
-const POWERUP_COLOR = "#FFD700";
-const ENDZONE_COLOR = "#DD550C";
+const PLAYER_COLOR = "#D7263D";
+const PLAYER_GLOW = "rgba(215,38,61,0.5)";
+const TACKLER_COLOR = "#FFFFFF";
+const TACKLER_OUTLINE = "#131A2B";
+const POWERUP_COLOR = "#B7791F";
+const ENDZONE_COLOR = "#D7263D";
 const SIDELINE_COLOR = "rgba(255,255,255,0.35)";
 
 const CANVAS_W = 400;
@@ -550,7 +551,7 @@ export default function BreakawayGame() {
 
         if (fieldYard > 0 && fieldYard % 10 === 0) {
           ctx.save();
-          ctx.font = "bold 18px sans-serif";
+          ctx.font = monoFont("bold", 18);
           ctx.fillStyle = YARD_NUM_COLOR;
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
@@ -585,7 +586,7 @@ export default function BreakawayGame() {
           ctx.fillRect(SIDELINE_W, endzoneY - 40, FIELD_W, 40);
           ctx.globalAlpha = 1;
 
-          ctx.font = "bold 24px sans-serif";
+          ctx.font = displayFont("bold", 24);
           ctx.fillStyle = "rgba(255,255,255,0.6)";
           ctx.textAlign = "center";
           ctx.textBaseline = "middle";
@@ -754,7 +755,7 @@ export default function BreakawayGame() {
 
         // Jersey number on back
         ctx.fillStyle = "rgba(255,255,255,0.75)";
-        ctx.font = `bold ${Math.round(9 * s)}px sans-serif`;
+        ctx.font = monoFont("bold", Math.round(9 * s));
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText(number, 0, 4 * s);
@@ -771,7 +772,7 @@ export default function BreakawayGame() {
           : laneX(t.lane);
         const num = String(t.jersey);
         const tacklerScale = t.wide ? 1.15 : 1.0;
-        drawFootballer(tcx, t.y, TACKLER_COLOR, "#1a3a5c", num, tacklerScale, true);
+        drawFootballer(tcx, t.y, TACKLER_COLOR, "#131A2B", num, tacklerScale, true);
       }
 
       // Player
@@ -801,10 +802,10 @@ export default function BreakawayGame() {
       // First down flash
       if (firstDownFlashRef.current > 0) {
         const flashAlpha = firstDownFlashRef.current / 60;
-        ctx.fillStyle = `rgba(221, 85, 12, ${flashAlpha * 0.15})`;
+        ctx.fillStyle = `rgba(215,38,61, ${flashAlpha * 0.15})`;
         ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
-        ctx.font = "bold 36px sans-serif";
+        ctx.font = displayFont("bold", 36);
         ctx.fillStyle = `rgba(255, 255, 255, ${flashAlpha})`;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -819,7 +820,7 @@ export default function BreakawayGame() {
         ctx.lineWidth = 1;
         ctx.strokeRect(CANVAS_W / 2 - 50, 8, 100, 30);
 
-        ctx.font = "bold 16px sans-serif";
+        ctx.font = monoFont("bold", 16);
         ctx.fillStyle = "white";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -841,13 +842,15 @@ export default function BreakawayGame() {
         ctx.fillStyle = "rgba(12, 35, 64, 0.85)";
         ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
-        ctx.font = "bold 42px sans-serif";
+        ctx.font = displayFont("bold", 42);
         ctx.fillStyle = PLAYER_COLOR;
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText("BREAKAWAY", CANVAS_W / 2, CANVAS_H / 2 - 80);
 
-        ctx.font = "18px sans-serif";
+        // A sentence, so it takes the body face. Mono at this size ran the
+        // line out to both edges of a 390px canvas.
+        ctx.font = bodyFont("normal", 17);
         ctx.fillStyle = "white";
         ctx.fillText("Dodge tacklers. Run for glory.", CANVAS_W / 2, CANVAS_H / 2 - 35);
 
@@ -872,12 +875,12 @@ export default function BreakawayGame() {
         // Play prompt
         const blink = Math.sin(Date.now() * 0.004) > 0;
         if (blink) {
-          ctx.font = "bold 16px sans-serif";
+          ctx.font = monoFont("bold", 16);
           ctx.fillStyle = PLAYER_COLOR;
           ctx.fillText("TAP or PRESS SPACE", CANVAS_W / 2, CANVAS_H / 2 + 80);
         }
 
-        ctx.font = "12px sans-serif";
+        ctx.font = monoFont("normal", 12);
         ctx.fillStyle = "rgba(255,255,255,0.5)";
         ctx.fillText("Arrow keys / Swipe to move", CANVAS_W / 2, CANVAS_H / 2 + 110);
       }
@@ -887,17 +890,17 @@ export default function BreakawayGame() {
         ctx.fillStyle = "rgba(12, 35, 64, 0.88)";
         ctx.fillRect(0, 0, CANVAS_W, CANVAS_H);
 
-        ctx.font = "bold 36px sans-serif";
+        ctx.font = displayFont("bold", 36);
         ctx.fillStyle = "#ff4444";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
         ctx.fillText("FUMBLE!", CANVAS_W / 2, CANVAS_H / 2 - 70);
 
-        ctx.font = "bold 48px sans-serif";
+        ctx.font = displayFont("bold", 48);
         ctx.fillStyle = PLAYER_COLOR;
         ctx.fillText(`${Math.floor(yardsRef.current)} YDS`, CANVAS_W / 2, CANVAS_H / 2 - 20);
 
-        ctx.font = "16px sans-serif";
+        ctx.font = monoFont("normal", 16);
         ctx.fillStyle = "rgba(255,255,255,0.7)";
         const firstDowns = Math.floor(yardsRef.current / 100);
         ctx.fillText(
@@ -910,7 +913,7 @@ export default function BreakawayGame() {
 
         const blink = Math.sin(Date.now() * 0.004) > 0;
         if (blink) {
-          ctx.font = "bold 16px sans-serif";
+          ctx.font = monoFont("bold", 16);
           ctx.fillStyle = PLAYER_COLOR;
           ctx.fillText("TAP or PRESS SPACE", CANVAS_W / 2, CANVAS_H / 2 + 70);
         }
@@ -926,59 +929,62 @@ export default function BreakawayGame() {
 
   // --- Render ---
 
+  // The canvas column used to take all the leftover width, which parked a
+  // 400px game against a 288px leaderboard with a dead zone between them.
+  // Centring the pair keeps them reading as one unit.
   return (
-    <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-8">
+    <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:justify-center lg:gap-8">
       {/* Game canvas */}
-      <div ref={containerRef} className="flex-1 flex justify-center">
+      <div ref={containerRef} className="flex justify-center">
         <canvas
           ref={canvasRef}
           width={CANVAS_W}
           height={CANVAS_H}
-          className="rounded-xl border-2 border-white/10 shadow-2xl shadow-black/50 cursor-pointer touch-none"
+          className="border-2 border-rule cursor-pointer touch-none"
           style={{ imageRendering: "auto" }}
         />
       </div>
 
       {/* Leaderboard */}
       <div className="w-full lg:w-72 flex-shrink-0">
-        <div className="rounded-xl border border-[#D4A847]/20 bg-[#2C1810] overflow-hidden">
-          <div className="border-b border-white/10 px-4 py-3">
-            <h3 className="font-[family-name:var(--font-heading)] text-sm font-semibold uppercase tracking-wide text-[#DD550C]">
+        <div className="border border-record/20 bg-surface overflow-hidden">
+          <div className="border-b border-rule px-4 py-3">
+            <h3 className="font-[family-name:var(--font-heading)] text-sm font-semibold uppercase tracking-wide text-result">
               Leaderboard
             </h3>
           </div>
           {leaderboard.length === 0 ? (
-            <div className="px-4 py-6 text-center text-sm text-gray-400">
+            <div className="px-4 py-6 text-center text-sm text-ink-muted">
               No scores yet. Be the first!
             </div>
           ) : (
-            <div className="divide-y divide-white/5">
+            <div className="divide-y divide-rule">
               {leaderboard.map((entry, i) => (
                 <div
                   key={`${entry.name}-${entry.yards}-${i}`}
                   className={`flex items-center gap-3 px-4 py-2.5 ${
-                    scoreRank === i + 1 && scoreSaved
-                      ? "bg-[#DD550C]/10"
-                      : "hover:bg-white/5"
+ scoreRank === i + 1 && scoreSaved
+                      ? "bg-result/10"
+                      : "hover:bg-paper"
                   } transition-colors`}
                 >
                   <span
-                    className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full text-[10px] font-bold ${
-                      i === 0
-                        ? "bg-[#DD550C] text-white"
+                    className={`flex h-6 w-6 flex-shrink-0 items-center justify-center text-[10px] font-bold ${
+ i === 0
+                        ? "bg-result text-white"
                         : i < 3
-                        ? "bg-[#DD550C]/50 text-white"
-                        : "bg-white/10 text-gray-400"
+                        ? "bg-result/50 text-ink"
+                        : "bg-paper text-ink-muted"
                     }`}
                   >
                     {i + 1}
                   </span>
                   <div className="min-w-0 flex-1">
-                    <p className="truncate text-sm font-medium text-white">
+                    <p className="truncate text-sm font-medium text-ink">
                       {entry.name}
                     </p>
                   </div>
-                  <span className="font-[family-name:var(--font-heading)] text-sm font-bold text-[#DD550C]">
+                  <span className="font-[family-name:var(--font-heading)] text-sm font-bold text-result">
                     {entry.yards.toLocaleString()}
                   </span>
                 </div>
@@ -986,19 +992,19 @@ export default function BreakawayGame() {
             </div>
           )}
           {gameState === "gameover" && !isSignedIn && (
-            <div className="border-t border-white/10 px-4 py-3">
+            <div className="border-t border-rule px-4 py-3">
               <a
                 href="/api/auth/yahoo"
-                className="block text-center text-xs font-semibold text-[#DD550C] hover:underline"
+                className="block text-center text-xs font-semibold text-result hover:underline"
               >
                 Sign in to save your score
               </a>
             </div>
           )}
           {gameState === "gameover" && scoreSaved && scoreRank && (
-            <div className="border-t border-white/10 px-4 py-3 text-center">
-              <p className="text-xs text-gray-400">
-                You placed <span className="font-bold text-[#DD550C]">#{scoreRank}</span>!
+            <div className="border-t border-rule px-4 py-3 text-center">
+              <p className="text-xs text-ink-muted">
+                You placed <span className="font-bold text-result">#{scoreRank}</span>!
               </p>
             </div>
           )}

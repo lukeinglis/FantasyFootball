@@ -31,7 +31,6 @@ export default function StatsContent({ teams, scoreboards }: StatsContentProps) 
   if (!hasData) {
     return (
       <EmptyState
-        icon={<span>📊</span>}
         title="No stats yet"
         description="Stats will populate once the season gets rolling and games are played."
       />
@@ -159,37 +158,32 @@ function MatchupSuperlatives({ scoreboards }: { scoreboards: Scoreboard[] }) {
 
   const stats = [
     highestScore && {
-      icon: "💥",
       label: "Highest Score",
       primary: `${formatPoints(highestScore.points, 1)} pts`,
       secondary: `${highestScore.teamName}, Week ${highestScore.week}`,
     },
     lowestScore && {
-      icon: "😬",
       label: "Lowest Score",
       primary: `${formatPoints(lowestScore.points, 1)} pts`,
       secondary: `${lowestScore.teamName}, Week ${lowestScore.week}`,
     },
     biggestBlowout && {
-      icon: "🔨",
       label: "Biggest Blowout",
       primary: `${formatPoints(biggestBlowout.margin, 1)} pt margin`,
       secondary: `${biggestBlowout.winnerName} over ${biggestBlowout.loserName}, Wk ${biggestBlowout.week}`,
     },
     closestGame && {
-      icon: "😰",
       label: "Closest Game",
       primary: `${formatPoints(closestGame.margin, 2)} pt margin`,
       secondary: `${closestGame.winnerName} vs ${closestGame.loserName}, Wk ${closestGame.week}`,
     },
     biggestUpset && {
-      icon: "🤯",
       label: "Biggest Upset",
       primary: `${formatPoints(biggestUpset.loserPoints, 1)} pts lost to ${formatPoints(biggestUpset.winnerPoints, 1)}`,
       secondary: `${biggestUpset.loserName} upset by ${biggestUpset.winnerName}, Wk ${biggestUpset.week}`,
     },
   ].filter(
-    (s): s is { icon: string; label: string; primary: string; secondary: string } => Boolean(s)
+    (s): s is { label: string; primary: string; secondary: string } => Boolean(s)
   );
 
   return (
@@ -203,20 +197,19 @@ function MatchupSuperlatives({ scoreboards }: { scoreboards: Scoreboard[] }) {
           {stats.map((s) => (
             <div
               key={s.label}
-              className="rounded-lg bg-white/5 border border-[#D4A847]/10 p-4"
+              className="bg-paper border border-record/10 p-4"
             >
               <div className="flex items-center gap-2">
                 <span className="text-xl" aria-hidden>
-                  {s.icon}
                 </span>
-                <p className="text-xs font-semibold uppercase tracking-widest text-[#DD550C]/80">
+                <p className="text-xs font-semibold uppercase tracking-widest text-result/80">
                   {s.label}
                 </p>
               </div>
-              <p className="mt-2 text-lg font-bold text-[#F5F0E8]">
+              <p className="mt-2 text-lg font-bold text-ink">
                 {s.primary}
               </p>
-              <p className="mt-0.5 text-xs text-[#F5F0E8]/50">
+              <p className="mt-0.5 text-xs text-ink-muted">
                 {s.secondary}
               </p>
             </div>
@@ -276,50 +269,50 @@ function ScoringLeaders({ scoreboards }: { scoreboards: Scoreboard[] }) {
         <div className="overflow-x-auto">
           <table className="w-full text-left text-sm">
             <thead>
-              <tr className="border-b-2 border-[#D4A847]/30">
-                <th className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">#</th>
-                <th className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Team</th>
-                <th className="px-3 py-3 text-right font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Avg/Game</th>
-                <th className="px-3 py-3 text-right hidden sm:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">High</th>
-                <th className="px-3 py-3 text-right hidden sm:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Low</th>
-                <th className="px-3 py-3 text-right hidden md:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Range</th>
-                <th className="px-3 py-3 text-right hidden md:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-[#D4A847]">Games</th>
+              <tr className="border-b-2 border-record/30">
+                <th className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-record">#</th>
+                <th className="px-3 py-3 font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-record">Team</th>
+                <th className="px-3 py-3 text-right font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-record">Avg/Game</th>
+                <th className="px-3 py-3 text-right hidden sm:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-record">High</th>
+                <th className="px-3 py-3 text-right hidden sm:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-record">Low</th>
+                <th className="px-3 py-3 text-right hidden md:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-record">Range</th>
+                <th className="px-3 py-3 text-right hidden md:table-cell font-[family-name:var(--font-heading)] text-xs uppercase tracking-widest text-record">Games</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-rule">
               {byAvg.map((t, i) => (
                 <tr
                   key={t.name}
-                  className="hover:bg-[rgba(212,168,71,0.08)] transition-colors"
+                  className="hover:bg-paper transition-colors"
                 >
                   <td className="px-3 py-3">
                     <span
-                      className={`inline-flex h-6 w-6 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${
-                        i < 3
-                          ? "bg-[#DD550C] text-white"
-                          : "bg-white/10 text-[#F5F0E8]/60"
+                      className={`inline-flex h-6 w-6 items-center justify-center font-[family-name:var(--font-heading)] text-xs font-bold ${
+ i < 3
+                          ? "bg-result text-white"
+                          : "bg-paper text-ink-muted"
                       }`}
                     >
                       {i + 1}
                     </span>
                   </td>
                   <td className="px-3 py-3">
-                    <p className="font-medium text-[#F5F0E8]">{t.name}</p>
-                    <p className="text-xs text-[#F5F0E8]/50">{t.manager}</p>
+                    <p className="font-medium text-ink">{t.name}</p>
+                    <p className="text-xs text-ink-muted">{t.manager}</p>
                   </td>
-                  <td className="px-3 py-3 text-right font-[family-name:var(--font-heading)] text-[#DD550C]">
+                  <td className="px-3 py-3 text-right font-[family-name:var(--font-heading)] text-result">
                     {formatPoints(t.avg, 1)}
                   </td>
-                  <td className="px-3 py-3 text-right font-mono text-emerald-300 hidden sm:table-cell">
+                  <td className="px-3 py-3 text-right font-mono tabular-nums text-ink hidden sm:table-cell">
                     {formatPoints(t.highWeek, 1)}
                   </td>
-                  <td className="px-3 py-3 text-right font-mono text-red-300 hidden sm:table-cell">
+                  <td className="px-3 py-3 text-right font-mono tabular-nums text-ink-soft hidden sm:table-cell">
                     {formatPoints(t.lowWeek, 1)}
                   </td>
-                  <td className="px-3 py-3 text-right font-mono text-[#F5F0E8]/50 hidden md:table-cell">
+                  <td className="px-3 py-3 text-right font-mono text-ink-muted hidden md:table-cell">
                     {formatPoints(t.consistency, 1)}
                   </td>
-                  <td className="px-3 py-3 text-right text-[#F5F0E8]/50 hidden md:table-cell">
+                  <td className="px-3 py-3 text-right text-ink-muted hidden md:table-cell">
                     {t.games}
                   </td>
                 </tr>
@@ -344,28 +337,28 @@ function RankList({
   }>;
 }) {
   return (
-    <ol className="divide-y divide-[#D4A847]/10">
+    <ol className="divide-y divide-record/10">
       {items.map((item) => (
         <li
           key={`${item.rank}-${item.name}`}
-          className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-[rgba(212,168,71,0.08)] transition-colors"
+          className="flex items-center justify-between gap-3 px-5 py-3 hover:bg-paper transition-colors"
         >
           <div className="flex items-center gap-3 min-w-0">
             <span
-              className={`flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${
-                item.highlight
-                  ? "bg-[#DD550C] text-white"
-                  : "bg-white/10 text-[#F5F0E8]/60"
+              className={`flex h-6 w-6 flex-shrink-0 items-center justify-center font-[family-name:var(--font-heading)] text-xs font-bold ${
+ item.highlight
+                  ? "bg-result text-white"
+                  : "bg-paper text-ink-muted"
               }`}
             >
               {item.rank}
             </span>
             <div className="min-w-0">
-              <p className="truncate font-medium text-[#F5F0E8]">{item.name}</p>
-              <p className="truncate text-xs text-[#F5F0E8]/50">{item.detail}</p>
+              <p className="truncate font-medium text-ink">{item.name}</p>
+              <p className="truncate text-xs text-ink-muted">{item.detail}</p>
             </div>
           </div>
-          <span className="flex-shrink-0 font-[family-name:var(--font-heading)] text-sm text-[#DD550C]">
+          <span className="flex-shrink-0 font-[family-name:var(--font-heading)] text-sm text-result">
             {item.value}
           </span>
         </li>

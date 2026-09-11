@@ -26,11 +26,28 @@ export const CACHE_TTL = {
   TEAMS: 30 * 60, // 30 minutes
 } as const;
 
-// Payout structure
+/**
+ * Payout structure, confirmed by the commissioner.
+ *
+ * $250 a head across 12 managers makes a $3,000 pot. $100 goes out each week
+ * for 14 weeks ($1,400), leaving $1,600 for the end of the year.
+ *
+ * How that $1,600 splits across first, second and third is not recorded
+ * anywhere in the export, so it is deliberately null rather than guessed;
+ * callers should say the split is unrecorded instead of printing a number.
+ *
+ * This is the single source of truth for money. `src/data/payouts.json`
+ * mirrors these figures but is only read for the weekly payout ledger.
+ */
 export const PAYOUTS = {
-  buyIn: 150,
-  totalPot: 1350,
-  first: 800,
-  second: 340,
-  third: 200,
+  buyIn: 250,
+  teams: 12,
+  totalPot: 3000,
+  weeklyPerWeek: 100,
+  weeklyWeeks: 14,
+  weeklyPool: 1400,
+  yearEndPool: 1600,
+  first: null,
+  second: null,
+  third: null,
 } as const;

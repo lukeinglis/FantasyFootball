@@ -2,33 +2,18 @@ import Link from "next/link";
 import { computeLeagueAnalytics, getManagerSlug } from "@/lib/managers";
 import Container from "@/components/Container";
 import { Card, CardBody, CardHeader } from "@/components/Card";
-
-const POS_COLORS: Record<string, string> = {
-  QB: "bg-rose-500/20 text-rose-300 border-rose-500/30",
-  RB: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
-  WR: "bg-sky-500/20 text-sky-300 border-sky-500/30",
-  TE: "bg-amber-500/20 text-amber-300 border-amber-500/30",
-  K: "bg-violet-500/20 text-violet-300 border-violet-500/30",
-  DEF: "bg-slate-500/20 text-slate-300 border-slate-500/30",
-};
-
-const POS_BG_SOLID: Record<string, string> = {
-  QB: "bg-rose-500",
-  RB: "bg-emerald-500",
-  WR: "bg-sky-500",
-  TE: "bg-amber-500",
-  K: "bg-violet-500",
-  DEF: "bg-slate-500",
-};
+import { POS_COLORS, POS_FILL } from "@/lib/records";
 
 const CORE_POS_ORDER = ["QB", "RB", "WR", "TE", "K", "DEF"];
 const SKILL_POSITIONS = ["QB", "RB", "WR", "TE"];
 
 function QuickStat({ label, value }: { label: string; value: string }) {
   return (
-    <div className="rounded-xl border-3 border-[#D4A847] bg-gradient-to-b from-[#2C1810] to-[#1A0F08] p-4 text-center shadow-lg">
-      <p className="font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">{label}</p>
-      <p className="mt-1 font-[family-name:var(--font-heading)] text-2xl font-bold text-[#F5F0E8]">{value}</p>
+    // Four counts of the same kind. A gold 3px ring on each made them look
+    // like four separate awards rather than one row of totals.
+    <div className="border border-rule bg-surface p-4 text-center">
+      <p className="font-[family-name:var(--wire-mono)] text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-muted">{label}</p>
+      <p className="mt-1 font-[family-name:var(--wire-display)] text-2xl font-extrabold tabular-nums text-ink">{value}</p>
     </div>
   );
 }
@@ -72,13 +57,13 @@ export default function DraftInsightsContent() {
           <CardBody className="!p-0 overflow-x-auto">
             <table className="w-full text-center text-xs">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400">
+                <tr className="border-b border-rule">
+                  <th className="sticky left-0 bg-surface px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-ink-muted">
                     Year
                   </th>
                   {SKILL_POSITIONS.map((pos) => (
                     <th key={pos} className="px-3 py-2">
-                      <span className={`inline-block rounded-full border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>
+                      <span className={`inline-block border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>
                         {pos}
                       </span>
                     </th>
@@ -87,8 +72,8 @@ export default function DraftInsightsContent() {
               </thead>
               <tbody>
                 {analytics.positionByYear.map((pby) => (
-                  <tr key={pby.year} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                    <td className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] font-mono text-sm font-bold text-[#DD550C]">
+                  <tr key={pby.year} className="border-b border-rule hover:bg-paper transition-colors">
+                    <td className="sticky left-0 bg-surface px-3 py-2 text-left font-[family-name:var(--wire-mono)] text-sm font-bold tabular-nums text-ink">
                       {pby.year}
                     </td>
                     {SKILL_POSITIONS.map((pos) => {
@@ -96,13 +81,13 @@ export default function DraftInsightsContent() {
                       return (
                         <td key={pos} className="px-3 py-2">
                           <div className="flex flex-col items-center gap-1">
-                            <div className="w-12 h-3 rounded-full bg-white/10 overflow-hidden">
+                            <div className="w-12 h-3 bg-paper overflow-hidden">
                               <div
-                                className={`h-full rounded-full ${POS_BG_SOLID[pos]}`}
+                                className={`h-full ${POS_FILL[pos]}`}
                                 style={{ width: `${pct}%` }}
                               />
                             </div>
-                            <span className={`font-mono text-[10px] ${pct > 0 ? "text-gray-300" : "text-gray-600"}`}>
+                            <span className={`font-mono text-[10px] ${pct > 0 ? "text-ink-soft" : "text-ink-muted"}`}>
                               {pct}%
                             </span>
                           </div>
@@ -131,12 +116,17 @@ export default function DraftInsightsContent() {
                   return (
                     <div key={archetype}>
                       <div className="flex items-center justify-between mb-1">
-                        <span className="text-sm font-semibold text-white">{archetype}</span>
-                        <span className="font-mono text-xs text-gray-400">{count} managers ({pct}%)</span>
+                        <span className="text-sm font-semibold text-ink">{archetype}</span>
+                        <span className="font-[family-name:var(--wire-mono)] text-xs tabular-nums text-ink-muted">
+                          {count} {count === 1 ? "manager" : "managers"} ({pct}%)
+                        </span>
                       </div>
-                      <div className="h-2.5 w-full overflow-hidden rounded-full bg-white/10">
+                      {/* The bar's length already carries the share. Painting
+                          every one of them red added a second encoding that
+                          said nothing the number had not already said. */}
+                      <div className="h-2.5 w-full overflow-hidden bg-paper">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-[#DD550C] to-[#ff8a3d]"
+                          className="h-full bg-ink-soft"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
@@ -150,17 +140,17 @@ export default function DraftInsightsContent() {
                   <Link
                     key={a.name}
                     href={`/managers/${a.slug}`}
-                    className="flex items-center gap-3 rounded-lg px-3 py-2 hover:bg-white/5 transition-colors"
+                    className="flex items-center gap-3 px-3 py-2 hover:bg-paper transition-colors"
                   >
-                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-[#DD550C]/10 border border-[#DD550C]/30 font-[family-name:var(--font-heading)] text-xs font-bold text-[#DD550C]">
+                    <span className="flex h-8 w-8 flex-shrink-0 items-center justify-center border border-ink bg-paper font-[family-name:var(--wire-display)] text-xs font-extrabold uppercase text-ink">
                       {a.name.charAt(0)}
                     </span>
                     <div className="flex-1 min-w-0">
-                      <p className="text-sm font-semibold text-white truncate">{a.name}</p>
-                      <p className="text-[10px] text-gray-400">{a.archetype}</p>
+                      <p className="text-sm font-semibold text-ink truncate">{a.name}</p>
+                      <p className="text-[10px] text-ink-muted">{a.archetype}</p>
                     </div>
                     {a.draftDNA.length > 0 && (
-                      <span className={`rounded-full border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[a.draftDNA[0].position]}`}>
+                      <span className={`border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[a.draftDNA[0].position]}`}>
                         {a.draftDNA[0].position} R{a.draftDNA[0].avgFirstRound}
                       </span>
                     )}
@@ -176,34 +166,33 @@ export default function DraftInsightsContent() {
               description="Round 1 position choices of title winners"
             />
             <CardBody>
-              <div className="mb-6 rounded-xl bg-[#2C1810] border border-white/10 p-4">
-                <p className="text-[10px] uppercase tracking-[0.2em] text-gray-400 mb-3">Champion Round 1 Picks</p>
+              <div className="mb-6 bg-surface border border-rule p-4">
+                <p className="text-[10px] uppercase tracking-[0.2em] text-ink-muted mb-3">Champion Round 1 Picks</p>
                 <div className="flex flex-wrap gap-3">
                   {Object.entries(champR1Counts)
                     .sort((a, b) => b[1] - a[1])
                     .map(([pos, count]) => (
-                      <div key={pos} className="flex items-center gap-2 rounded-lg bg-white/5 border border-white/10 px-3 py-2">
-                        <span className={`rounded-full border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>{pos}</span>
-                        <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-white">{count}</span>
-                        <span className="text-[10px] text-gray-400">titles</span>
+                      <div key={pos} className="flex items-center gap-2 bg-paper border border-rule px-3 py-2">
+                        <span className={`border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>{pos}</span>
+                        <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-ink">{count}</span>
+                        <span className="text-[10px] text-ink-muted">titles</span>
                       </div>
                     ))}
                 </div>
               </div>
 
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-rule">
                 {analytics.championProfiles.map((cp) => (
-                  <div key={cp.year} className="flex items-center gap-3 py-2.5 hover:bg-white/5 transition-colors px-1 rounded">
-                    <span className="font-[family-name:var(--font-heading)] font-mono text-sm font-bold text-[#DD550C] w-10">{cp.year}</span>
-                    <span className="text-xl">{"\u{1F3C6}"}</span>
+                  <div key={cp.year} className="flex items-center gap-3 py-2.5 hover:bg-paper transition-colors px-1 ">
+                    <span className="font-[family-name:var(--wire-mono)] text-sm font-bold tabular-nums text-ink w-10">{cp.year}</span>
                     <Link
                       href={`/managers/${getManagerSlug(cp.champion)}`}
-                      className="text-sm font-semibold text-white hover:text-[#DD550C] transition-colors flex-1"
+                      className="text-sm font-semibold text-ink hover:text-result transition-colors flex-1"
                     >
                       {cp.champion}
                     </Link>
                     {cp.round1Position !== "N/A" && (
-                      <span className={`rounded-full border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[cp.round1Position]}`}>
+                      <span className={`border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[cp.round1Position]}`}>
                         R1: {cp.round1Position}
                       </span>
                     )}
@@ -227,21 +216,21 @@ export default function DraftInsightsContent() {
                 const pct = Math.round((team.totalPicks / maxTeamPicks) * 100);
                 return (
                   <div key={team.team} className="flex items-center gap-3">
-                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center rounded-full font-[family-name:var(--font-heading)] text-xs font-bold ${
-                      i < 3 ? "bg-[#DD550C] text-white" : "bg-white/10 text-gray-300"
+                    <span className={`flex h-7 w-7 flex-shrink-0 items-center justify-center font-[family-name:var(--font-heading)] text-xs font-bold ${
+ i < 3 ? "bg-result text-white" : "bg-paper text-ink-soft"
                     }`}>
                       {i + 1}
                     </span>
-                    <span className="w-12 text-sm font-bold text-white">{team.team}</span>
+                    <span className="w-12 text-sm font-bold text-ink">{team.team}</span>
                     <div className="flex-1">
-                      <div className="h-3 w-full overflow-hidden rounded-full bg-white/10">
+                      <div className="h-3 w-full overflow-hidden bg-paper">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-[#DD550C] to-[#ff8a3d] transition-all"
+                          className="h-full bg-result transition-all"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
                     </div>
-                    <span className="font-mono text-xs text-gray-400 w-16 text-right">{team.totalPicks} picks</span>
+                    <span className="font-mono text-xs text-ink-muted w-16 text-right">{team.totalPicks} picks</span>
                   </div>
                 );
               })}
@@ -266,14 +255,14 @@ export default function DraftInsightsContent() {
                   return (
                     <div key={ps.position}>
                       <div className="flex items-center gap-3 mb-2">
-                        <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${POS_COLORS[ps.position]}`}>
+                        <span className={`border px-2 py-0.5 text-[10px] font-bold ${POS_COLORS[ps.position]}`}>
                           {ps.position}
                         </span>
-                        <span className="text-xs text-gray-400">
-                          First pick avg: <span className="text-white font-bold">R{ps.avgFirstRound}</span>
+                        <span className="text-xs text-ink-muted">
+                          First pick avg: <span className="text-ink font-bold">R{ps.avgFirstRound}</span>
                         </span>
-                        <span className="text-xs text-gray-400">
-                          Last pick avg: <span className="text-white font-bold">R{ps.avgLastRound}</span>
+                        <span className="text-xs text-ink-muted">
+                          Last pick avg: <span className="text-ink font-bold">R{ps.avgLastRound}</span>
                         </span>
                       </div>
 
@@ -286,7 +275,7 @@ export default function DraftInsightsContent() {
                             <div key={round} className="flex-1 flex flex-col items-center justify-end" title={`R${round}: ${count} picks`}>
                               {count > 0 && (
                                 <div
-                                  className={`w-full rounded-t ${POS_BG_SOLID[ps.position]} opacity-70 hover:opacity-100 transition-opacity`}
+                                  className={`w-full ${POS_FILL[ps.position]} opacity-70 hover:opacity-100 transition-opacity`}
                                   style={{ height: `${height}px` }}
                                 />
                               )}
@@ -296,7 +285,7 @@ export default function DraftInsightsContent() {
                       </div>
                       <div className="flex gap-0.5 mt-0.5">
                         {Array.from({ length: 16 }, (_, i) => i + 1).map((round) => (
-                          <span key={round} className="flex-1 text-center text-[8px] text-gray-600">
+                          <span key={round} className="flex-1 text-center text-[8px] text-ink-muted">
                             {round}
                           </span>
                         ))}
@@ -309,20 +298,20 @@ export default function DraftInsightsContent() {
                 {analytics.positionScarcity
                   .filter((ps) => ps.position === "K" || ps.position === "DEF")
                   .map((ps) => (
-                    <div key={ps.position} className="rounded-xl bg-white/5 border border-white/10 p-3">
+                    <div key={ps.position} className="bg-paper border border-rule p-3">
                       <div className="flex items-center gap-2 mb-1">
-                        <span className={`rounded-full border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[ps.position]}`}>
+                        <span className={`border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[ps.position]}`}>
                           {ps.position}
                         </span>
                       </div>
                       <div className="grid grid-cols-2 gap-2 text-[10px]">
                         <div>
-                          <span className="text-gray-400">Avg first:</span>
-                          <span className="ml-1 text-white font-bold">R{ps.avgFirstRound}</span>
+                          <span className="text-ink-muted">Avg first:</span>
+                          <span className="ml-1 text-ink font-bold">R{ps.avgFirstRound}</span>
                         </div>
                         <div>
-                          <span className="text-gray-400">Avg last:</span>
-                          <span className="ml-1 text-white font-bold">R{ps.avgLastRound}</span>
+                          <span className="text-ink-muted">Avg last:</span>
+                          <span className="ml-1 text-ink font-bold">R{ps.avgLastRound}</span>
                         </div>
                       </div>
                     </div>
@@ -342,13 +331,13 @@ export default function DraftInsightsContent() {
           <CardBody className="!p-0 overflow-x-auto">
             <table className="w-full text-center text-xs">
               <thead>
-                <tr className="border-b border-white/10">
-                  <th className="sticky left-0 bg-[#2C1810] px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-gray-400 min-w-[100px]">
+                <tr className="border-b border-rule">
+                  <th className="sticky left-0 bg-surface px-3 py-2 text-left font-[family-name:var(--font-heading)] text-[10px] uppercase tracking-[0.15em] text-ink-muted min-w-[100px]">
                     Manager
                   </th>
                   {CORE_POS_ORDER.map((pos) => (
                     <th key={pos} className="px-2 py-2">
-                      <span className={`inline-block rounded-full border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>
+                      <span className={`inline-block border px-2 py-0.5 text-[9px] font-bold ${POS_COLORS[pos]}`}>
                         {pos}
                       </span>
                     </th>
@@ -363,25 +352,25 @@ export default function DraftInsightsContent() {
                     return aFirst - bFirst;
                   })
                   .map((mgr) => (
-                    <tr key={mgr.name} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                      <td className="sticky left-0 bg-[#2C1810] px-3 py-1.5 text-left">
+                    <tr key={mgr.name} className="border-b border-rule hover:bg-paper transition-colors">
+                      <td className="sticky left-0 bg-surface px-3 py-1.5 text-left">
                         <Link
                           href={`/managers/${mgr.slug}`}
-                          className="text-sm font-semibold text-white hover:text-[#DD550C] transition-colors"
+                          className="text-sm font-semibold text-ink hover:text-result transition-colors"
                         >
                           {mgr.name}
                         </Link>
                       </td>
                       {CORE_POS_ORDER.map((pos) => {
                         const dna = mgr.draftDNA.find((d) => d.position === pos);
-                        if (!dna) return <td key={pos} className="px-2 py-1.5 text-gray-700">&middot;</td>;
+                        if (!dna) return <td key={pos} className="px-2 py-1.5 text-ink">&middot;</td>;
                         const roundClass =
-                          dna.avgFirstRound <= 3 ? "bg-[#DD550C]/20 text-[#DD550C] font-bold" :
-                          dna.avgFirstRound <= 8 ? "bg-sky-600/20 text-sky-300" :
-                          "text-gray-500";
+                          dna.avgFirstRound <= 3 ? "bg-ink font-bold text-white" :
+                          dna.avgFirstRound <= 8 ? "bg-rule text-ink" :
+                          "text-ink-muted";
                         return (
                           <td key={pos} className="px-2 py-1.5">
-                            <span className={`inline-block rounded-md px-2 py-0.5 font-mono text-[11px] ${roundClass}`}>
+                            <span className={`inline-block px-2 py-0.5 font-mono text-[11px] ${roundClass}`}>
                               {dna.avgFirstRound}
                             </span>
                           </td>

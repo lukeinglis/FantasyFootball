@@ -17,7 +17,7 @@ export default function DraftLoading() {
               {Array.from({ length: 8 }).map((_, i) => (
                 <div
                   key={i}
-                  className="h-12 animate-pulse rounded-md bg-white/10"
+                  className="h-12 animate-pulse bg-paper"
                 />
               ))}
             </div>

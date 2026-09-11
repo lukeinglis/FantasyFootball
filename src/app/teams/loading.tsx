@@ -15,10 +15,10 @@ export default function Loading() {
           {Array.from({ length: 12 }).map((_, i) => (
             <li
               key={i}
-              className="rounded-xl border-[3px] border-[#A0784C] bg-[linear-gradient(145deg,#FFFBF0,#F0E8D8)] p-5"
+              className="border-[3px] border-[#DCE1E9] bg-[linear-gradient(145deg,#FFFFFF,#FFFFFF)] p-5"
             >
               <div className="flex items-start gap-3">
-                <Skeleton className="h-12 w-12 rounded-md" />
+                <Skeleton className="h-12 w-12 " />
                 <div className="flex-1 space-y-2">
                   <Skeleton className="h-4 w-3/4" />
                   <Skeleton className="h-3 w-1/2" />

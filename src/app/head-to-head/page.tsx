@@ -69,7 +69,10 @@ export default function HeadToHeadPage() {
       <PageHeader
         eyebrow="Rivalries"
         title="Head-to-Head"
-        subtitle={`${managers.length} managers. ${totalGames} matchups. Every rivalry, every record.`}
+        /* This count is lower than the 1,042 quoted elsewhere on the site
+           because consolation games are excluded here. Saying so up front
+           stops the two figures reading as a bug. */
+        subtitle={`${managers.length} managers and ${totalGames.toLocaleString()} matchups, consolation games excluded. Every rivalry, every record.`}
       />
 
       {/* Stats Banner */}
@@ -77,17 +80,13 @@ export default function HeadToHeadPage() {
         <div className="grid gap-3 grid-cols-2 sm:grid-cols-4">
           <StatCard label="Total Matchups" value={totalGames.toLocaleString()} />
           <StatCard label="Managers" value={String(managers.length)} />
-          <StatCard
-            label="Rivalries"
-            value={String(rivalries.length)}
-            highlight
-          />
+          <StatCard label="Rivalries" value={String(rivalries.length)} />
           <StatCard
             label="Longest Rivalry"
             value={
               topRivalries[0]
-                ? `${topRivalries[0].totalGames}g`
-                : "0g"
+                ? `${topRivalries[0].totalGames} games`
+                : "None yet"
             }
           />
         </div>
@@ -103,9 +102,9 @@ export default function HeadToHeadPage() {
           <CardBody className="!p-0">
             <div className="overflow-x-auto">
               <table className="w-full text-xs">
-                <thead className="bg-[#2C1810] text-[10px] uppercase tracking-wider text-gray-400">
+                <thead className="bg-surface text-[10px] uppercase tracking-wider text-ink-muted">
                   <tr>
-                    <th className="sticky left-0 z-10 bg-[#2C1810] px-3 py-2 text-left min-w-[100px]">
+                    <th className="sticky left-0 z-10 bg-surface px-3 py-2 text-left min-w-[100px]">
                       Manager
                     </th>
                     {managers.map((m) => (
@@ -120,16 +119,16 @@ export default function HeadToHeadPage() {
                     ))}
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-white/5">
+                <tbody className="divide-y divide-rule">
                   {managers.map((rowMgr) => (
                     <tr
                       key={rowMgr}
-                      className="hover:bg-white/5 transition-colors"
+                      className="hover:bg-paper transition-colors"
                     >
-                      <td className="sticky left-0 z-10 bg-[#1A0F08] px-3 py-2 font-semibold text-white border-r border-white/5">
+                      <td className="sticky left-0 z-10 bg-surface px-3 py-2 font-semibold text-ink border-r border-rule">
                         <Link
                           href={`/managers/${getManagerSlug(rowMgr)}`}
-                          className="hover:text-[#DD550C] transition-colors"
+                          className="hover:text-result transition-colors"
                         >
                           {rowMgr}
                         </Link>
@@ -139,9 +138,9 @@ export default function HeadToHeadPage() {
                           return (
                             <td
                               key={colMgr}
-                              className="px-2 py-2 text-center bg-white/5"
+                              className="px-2 py-2 text-center bg-paper"
                             >
-                              <span className="text-gray-600">&mdash;</span>
+                              <span className="text-ink-muted">&mdash;</span>
                             </td>
                           );
                         }
@@ -154,7 +153,7 @@ export default function HeadToHeadPage() {
                           return (
                             <td
                               key={colMgr}
-                              className="px-2 py-2 text-center text-gray-600"
+                              className="px-2 py-2 text-center text-ink-muted"
                             >
                               &ndash;
                             </td>
@@ -170,11 +169,11 @@ export default function HeadToHeadPage() {
                           <td
                             key={colMgr}
                             className={`px-2 py-2 text-center font-mono ${
-                              isWinning
-                                ? "text-[#D4A847] font-bold"
+ isWinning
+                                ? "text-record font-bold"
                                 : isLosing
-                                  ? "text-red-400"
-                                  : "text-[#F5F0E8]/60"
+                                  ? "text-result"
+                                  : "text-ink-muted"
                             }`}
                           >
                             {wins}-{losses}
@@ -200,34 +199,36 @@ export default function HeadToHeadPage() {
               description="The matchups that keep coming back"
             />
             <CardBody className="!p-0">
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-rule">
                 {topRivalries.map((r) => {
                   const { wins, losses } = getCellRecord(r, r.manager1);
                   return (
                     <div
                       key={`${r.manager1}-${r.manager2}`}
-                      className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors"
+                      className="flex items-center gap-3 px-5 py-2.5 hover:bg-paper transition-colors"
                     >
-                      <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-[#DD550C] w-8 text-center">
+                      {/* A games-played count, already ranked by its position in
+                          the list. Red made every row look like a result. */}
+                      <span className="w-8 text-center font-[family-name:var(--wire-display)] text-lg font-bold tabular-nums text-ink">
                         {r.totalGames}
                       </span>
                       <div className="flex-1 min-w-0">
-                        <p className="text-white">
+                        <p className="text-ink">
                           <Link
                             href={`/managers/${getManagerSlug(r.manager1)}`}
-                            className="font-semibold hover:text-[#DD550C]"
+                            className="font-semibold hover:text-result"
                           >
                             {r.manager1}
                           </Link>
-                          <span className="text-gray-400"> vs </span>
+                          <span className="text-ink-muted"> vs </span>
                           <Link
                             href={`/managers/${getManagerSlug(r.manager2)}`}
-                            className="font-semibold hover:text-[#DD550C]"
+                            className="font-semibold hover:text-result"
                           >
                             {r.manager2}
                           </Link>
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-ink-muted">
                           {wins}-{losses} (from {r.manager1}&apos;s side)
                           {r.currentStreak &&
                             r.currentStreak.count >= 2 &&
@@ -248,7 +249,7 @@ export default function HeadToHeadPage() {
               description="Dominance in head-to-head (min. 3 games)"
             />
             <CardBody className="!p-0">
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-rule">
                 {mostLopsided.map((r) => {
                   const { wins, losses } = getCellRecord(r, r.manager1);
                   const dominant =
@@ -264,31 +265,34 @@ export default function HeadToHeadPage() {
                   return (
                     <div
                       key={`${r.manager1}-${r.manager2}`}
-                      className="px-5 py-2.5 hover:bg-white/5 transition-colors"
+                      className="px-5 py-2.5 hover:bg-paper transition-colors"
                     >
                       <div className="flex items-center justify-between mb-1">
-                        <p className="text-white text-sm">
+                        <p className="text-ink text-sm">
                           <Link
                             href={`/managers/${getManagerSlug(dominant)}`}
-                            className="font-semibold hover:text-[#DD550C]"
+                            className="font-semibold hover:text-result"
                           >
                             {dominant}
                           </Link>
-                          <span className="text-gray-400"> over </span>
+                          <span className="text-ink-muted"> over </span>
                           <Link
                             href={`/managers/${getManagerSlug(dominated)}`}
-                            className="font-semibold hover:text-[#DD550C]"
+                            className="font-semibold hover:text-result"
                           >
                             {dominated}
                           </Link>
                         </p>
-                        <span className="font-mono text-sm text-emerald-400">
+                        <span className="font-mono text-sm tabular-nums text-ink">
                           {domW}-{domL}
                         </span>
                       </div>
-                      <div className="h-1.5 w-full overflow-hidden rounded-full bg-white/10">
+                      {/* Win share, already given as a record two lines up and
+                          as bar length here. A red bar on all nine rows was a
+                          third encoding of the same fact. */}
+                      <div className="h-1.5 w-full overflow-hidden bg-paper">
                         <div
-                          className="h-full rounded-full bg-gradient-to-r from-[#DD550C] to-[#ff8a3d]"
+                          className="h-full bg-ink-soft"
                           style={{ width: `${pct}%` }}
                         />
                       </div>
@@ -311,7 +315,7 @@ export default function HeadToHeadPage() {
               description="Largest margins in head-to-head matchups"
             />
             <CardBody className="!p-0">
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-rule">
                 {[...rivalries]
                   .filter((r) => r.regularSeason.biggestBlowout || r.playoffs.biggestBlowout)
                   .map((r) => {
@@ -330,24 +334,24 @@ export default function HeadToHeadPage() {
                   .map(({ rivalry, game }) => (
                     <div
                       key={`${rivalry.manager1}-${rivalry.manager2}-blowout`}
-                      className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors"
+                      className="flex items-center gap-3 px-5 py-2.5 hover:bg-paper transition-colors"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm">
+                        <p className="text-ink text-sm">
                           <span className="font-semibold">
                             {rivalry.manager1}
                           </span>
-                          <span className="text-gray-400"> vs </span>
+                          <span className="text-ink-muted"> vs </span>
                           <span className="font-semibold">
                             {rivalry.manager2}
                           </span>
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-ink-muted">
                           {game.winnerPoints}-{game.loserPoints} · Week{" "}
                           {game.week}, {game.year}
                         </p>
                       </div>
-                      <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-[#DD550C]">
+                      <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-result">
                         +{game.margin}
                       </span>
                     </div>
@@ -363,7 +367,7 @@ export default function HeadToHeadPage() {
               description="The nail-biters between rivals"
             />
             <CardBody className="!p-0">
-              <div className="divide-y divide-white/5">
+              <div className="divide-y divide-rule">
                 {[...rivalries]
                   .filter((r) => r.regularSeason.closestGame || r.playoffs.closestGame)
                   .map((r) => {
@@ -382,24 +386,24 @@ export default function HeadToHeadPage() {
                   .map(({ rivalry, game }) => (
                     <div
                       key={`${rivalry.manager1}-${rivalry.manager2}-close`}
-                      className="flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors"
+                      className="flex items-center gap-3 px-5 py-2.5 hover:bg-paper transition-colors"
                     >
                       <div className="flex-1 min-w-0">
-                        <p className="text-white text-sm">
+                        <p className="text-ink text-sm">
                           <span className="font-semibold">
                             {rivalry.manager1}
                           </span>
-                          <span className="text-gray-400"> vs </span>
+                          <span className="text-ink-muted"> vs </span>
                           <span className="font-semibold">
                             {rivalry.manager2}
                           </span>
                         </p>
-                        <p className="text-xs text-gray-400">
+                        <p className="text-xs text-ink-muted">
                           {game.winnerPoints}-{game.loserPoints} · Week{" "}
                           {game.week}, {game.year}
                         </p>
                       </div>
-                      <span className="font-[family-name:var(--font-heading)] text-lg font-bold text-sky-400">
+                      <span className="font-[family-name:var(--wire-display)] text-lg font-bold tabular-nums text-ink">
                         +{game.margin}
                       </span>
                     </div>
@@ -413,25 +417,17 @@ export default function HeadToHeadPage() {
   );
 }
 
-function StatCard({
-  label,
-  value,
-  highlight,
-}: {
-  label: string;
-  value: string;
-  highlight?: boolean;
-}) {
+// Four counts of the same kind. "Rivalries" carried a `highlight` that set it
+// in gold, which claimed 66 mattered more than the 1,042 beside it.
+function StatCard({ label, value }: { label: string; value: string }) {
   return (
     <Card variant="scoreboard">
       <CardBody>
         <div className="text-center">
-          <p className="font-[family-name:var(--font-heading)] text-[10px] font-semibold uppercase tracking-[0.2em] text-[rgba(245,240,232,0.5)]">
+          <p className="font-[family-name:var(--wire-mono)] text-[10px] font-semibold uppercase tracking-[0.2em] text-ink-muted">
             {label}
           </p>
-          <p
-            className={`mt-1 font-[family-name:var(--font-heading)] text-3xl font-bold ${highlight ? "text-[#D4A847]" : "text-[#F5F0E8]"}`}
-          >
+          <p className="mt-1 font-[family-name:var(--wire-display)] text-3xl font-extrabold tabular-nums text-ink">
             {value}
           </p>
         </div>

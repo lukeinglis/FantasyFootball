@@ -5,21 +5,13 @@ import NotConnected, { ApiError } from "@/components/NotConnected";
 import OffseasonState from "@/components/OffseasonState";
 import { Card } from "@/components/Card";
 import EmptyState from "@/components/EmptyState";
-
-const POSITION_COLORS: Record<string, string> = {
-  QB: "bg-rose-500/20 text-rose-200 border-rose-500/30",
-  RB: "bg-emerald-500/20 text-emerald-200 border-emerald-500/30",
-  WR: "bg-sky-500/20 text-sky-200 border-sky-200/30",
-  TE: "bg-amber-500/20 text-amber-200 border-amber-500/30",
-  K: "bg-violet-500/20 text-violet-200 border-violet-500/30",
-  DEF: "bg-slate-500/20 text-slate-200 border-slate-500/30",
-};
+import { POS_COLORS } from "@/lib/records";
 
 function positionBadge(position: string): string {
   const trimmed = position.trim().toUpperCase();
   return (
-    POSITION_COLORS[trimmed] ||
-    "bg-white/10 text-gray-200 border-white/20"
+    POS_COLORS[trimmed] ||
+    "bg-paper text-ink-soft border-rule"
   );
 }
 
@@ -119,7 +111,6 @@ export default async function DraftBoardContent() {
     return (
       <Container>
         <EmptyState
-          icon={<span>📋</span>}
           title="Draft hasn't happened yet"
           description="Once the draft is complete, every pick will appear here in glorious detail."
         />
@@ -134,9 +125,9 @@ export default async function DraftBoardContent() {
       <Card className="overflow-hidden">
         <div className="overflow-x-auto">
           <table className="w-full text-left text-xs">
-            <thead className="bg-[#2C1810] text-[10px] uppercase tracking-wider text-[#D4A847] font-[family-name:var(--font-heading)]">
+            <thead className="bg-surface text-[10px] uppercase tracking-wider text-record font-[family-name:var(--font-heading)]">
               <tr>
-                <th className="sticky left-0 z-10 bg-[#2C1810] px-2 py-2">
+                <th className="sticky left-0 z-10 bg-surface px-2 py-2">
                   Rd
                 </th>
                 {teamOrder.map((t) => (
@@ -144,20 +135,20 @@ export default async function DraftBoardContent() {
                     key={t.teamKey}
                     className="px-2 py-2 min-w-[120px] text-left"
                   >
-                    <p className="truncate font-semibold text-white">
+                    <p className="truncate font-semibold text-ink">
                       {t.teamName}
                     </p>
-                    <p className="truncate text-[10px] font-normal text-gray-500">
+                    <p className="truncate text-[10px] font-normal text-ink-muted">
                       {t.managerName}
                     </p>
                   </th>
                 ))}
               </tr>
             </thead>
-            <tbody className="divide-y divide-white/5">
+            <tbody className="divide-y divide-rule">
               {rows.map((row) => (
-                <tr key={row.round} className="bg-[#1A0F08]/60">
-                  <td className="sticky left-0 z-10 bg-[#2C1810] px-2 py-2 font-mono text-[#DD550C]">
+                <tr key={row.round} className="bg-surface">
+                  <td className="sticky left-0 z-10 bg-surface px-2 py-2 font-mono text-result">
                     R{row.round}
                   </td>
                   {row.cells.map((cell, idx) => {
@@ -170,26 +161,26 @@ export default async function DraftBoardContent() {
                         {p ? (
                           <div>
                             <div className="flex items-center gap-1">
-                              <span className="font-mono text-[10px] text-gray-500">
+                              <span className="font-mono text-[10px] text-ink-muted">
                                 #{p.pick}
                               </span>
                               <span
-                                className={`rounded-full border px-1.5 py-0 text-[9px] font-bold ${positionBadge(
-                                  p.position,
+                                className={`border px-1.5 py-0 text-[9px] font-bold ${positionBadge(
+ p.position,
                                 )}`}
                               >
                                 {p.position}
                               </span>
                             </div>
-                            <p className="mt-1 font-medium text-white leading-tight">
+                            <p className="mt-1 font-medium text-ink leading-tight">
                               {p.playerName}
                             </p>
-                            <p className="text-[10px] text-gray-500">
+                            <p className="text-[10px] text-ink-muted">
                               {p.nflTeam}
                             </p>
                           </div>
                         ) : (
-                          <span className="text-gray-600">&mdash;</span>
+                          <span className="text-ink-muted">&mdash;</span>
                         )}
                       </td>
                     );

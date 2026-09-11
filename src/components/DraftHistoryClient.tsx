@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Card, CardHeader } from "@/components/Card";
+import { POS_COLORS } from "@/lib/positions";
 
 interface DraftPick {
   pick: number;
@@ -22,15 +23,6 @@ interface SeasonDraft {
   picks: DraftPick[];
   teams: { teamKey: string; teamName: string; managerName: string }[];
 }
-
-const POSITION_COLORS: Record<string, string> = {
-  QB: "bg-rose-500/20 text-rose-200 border-rose-500/30",
-  RB: "bg-emerald-500/20 text-emerald-200 border-emerald-500/30",
-  WR: "bg-sky-500/20 text-sky-200 border-sky-200/30",
-  TE: "bg-amber-500/20 text-amber-200 border-amber-500/30",
-  K: "bg-violet-500/20 text-violet-200 border-violet-500/30",
-  DEF: "bg-slate-500/20 text-slate-200 border-slate-500/30",
-};
 
 interface Props {
   years: number[];
@@ -91,7 +83,7 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
           description={`${draft.picks.length} picks, ${totalRounds} rounds, ${teamOrder.length} teams${keeperCount > 0 ? ` · ${keeperCount} keepers` : ""}`}
         />
 
-        <div className="border-b border-white/10 px-5 py-3">
+        <div className="border-b border-rule px-5 py-3">
           <div className="flex flex-wrap items-center gap-3">
             {/* Year tabs */}
             <div className="flex flex-wrap gap-1.5">
@@ -99,10 +91,10 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
                 <button
                   key={year}
                   onClick={() => setSelectedYear(year)}
-                  className={`rounded-lg px-3 py-1.5 text-sm font-[family-name:var(--font-heading)] font-bold uppercase transition-all ${
-                    year === selectedYear
-                      ? "bg-[#DD550C] text-white shadow-md shadow-[#DD550C]/20"
-                      : "bg-white/5 text-gray-400 hover:bg-white/10 hover:text-white"
+                  className={`px-3 py-1.5 text-sm font-[family-name:var(--font-heading)] font-bold uppercase transition-all ${
+ year === selectedYear
+                      ? "bg-result text-white"
+                      : "bg-paper text-ink-muted hover:bg-paper hover:text-ink"
                   }`}
                 >
                   {year}
@@ -116,26 +108,26 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
                 <button
                   key={pos}
                   onClick={() => setFilterPos(pos)}
-                  className={`rounded px-2 py-1 text-[10px] font-bold uppercase transition-all ${
-                    pos === filterPos
-                      ? "bg-[#DD550C]/20 text-[#DD550C] border border-[#DD550C]/40"
-                      : "bg-white/5 text-gray-500 hover:text-gray-300 border border-transparent"
+                  className={`px-2 py-1 text-[10px] font-bold uppercase transition-all ${
+ pos === filterPos
+                      ? "bg-result/20 text-result border border-result/40"
+                      : "bg-paper text-ink-muted hover:text-ink-soft border border-transparent"
                   }`}
                 >
                   {pos}
                 </button>
               ))}
-              <span className="mx-1 text-white/20">|</span>
+              <span className="mx-1 text-ink-muted">|</span>
               {(["ALL", "KEEPERS", "FRESH"] as const).map((f) => (
                 <button
                   key={f}
                   onClick={() => setFilterKeepers(f)}
-                  className={`rounded px-2 py-1 text-[10px] font-bold uppercase transition-all ${
-                    f === filterKeepers
+                  className={`px-2 py-1 text-[10px] font-bold uppercase transition-all ${
+ f === filterKeepers
                       ? f === "KEEPERS"
-                        ? "bg-amber-500/20 text-amber-300 border border-amber-500/40"
-                        : "bg-[#DD550C]/20 text-[#DD550C] border border-[#DD550C]/40"
-                      : "bg-white/5 text-gray-500 hover:text-gray-300 border border-transparent"
+                        ? "bg-record/15 text-record border border-record/40"
+                        : "bg-result/20 text-result border border-result/40"
+                      : "bg-paper text-ink-muted hover:text-ink-soft border border-transparent"
                   }`}
                 >
                   {f === "ALL" ? "All" : f === "KEEPERS" ? `K (${keeperCount})` : `New (${freshCount})`}
@@ -150,7 +142,7 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
               placeholder="Search players, managers, or teams..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full rounded-lg border border-white/10 bg-[#2C1810] px-4 py-2 text-sm text-white placeholder-gray-500 focus:border-[#DD550C]/40 focus:outline-none"
+              className="w-full border border-rule bg-surface px-4 py-2 text-sm text-ink placeholder-ink-faint focus:border-ink focus:outline-none"
             />
           </div>
         </div>
@@ -159,39 +151,39 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
         {!isFiltering ? (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#2C1810] text-[10px] uppercase tracking-wider text-gray-400">
+              <thead className="bg-surface text-[10px] uppercase tracking-wider text-ink-muted">
                 <tr>
-                  <th className="sticky left-0 z-10 bg-[#2C1810] px-2 py-2">Rd</th>
+                  <th className="sticky left-0 z-10 bg-surface px-2 py-2">Rd</th>
                   {teamOrder.map((t) => (
                     <th key={t.teamKey} className="px-2 py-2 min-w-[110px] text-left">
-                      <p className="truncate font-semibold text-white">{t.managerName}</p>
+                      <p className="truncate font-semibold text-ink">{t.managerName}</p>
                     </th>
                   ))}
                 </tr>
               </thead>
-              <tbody className="divide-y divide-white/5">
+              <tbody className="divide-y divide-rule">
                 {Array.from({ length: totalRounds }, (_, r) => r + 1).map((round) => (
-                  <tr key={round} className="bg-[#2C1810]/40 hover:bg-[#2C1810]">
-                    <td className="sticky left-0 z-10 bg-[#2C1810] px-2 py-2 font-mono text-[#DD550C] font-bold">
+                  <tr key={round} className="bg-surface hover:bg-surface">
+                    <td className="sticky left-0 z-10 bg-surface px-2 py-2 font-mono text-result font-bold">
                       R{round}
                     </td>
                     {teamOrder.map((t) => {
                       const p = pickByCell.get(`${round}:${t.teamKey}`);
-                      if (!p) return <td key={t.teamKey} className="px-2 py-2 text-gray-600">-</td>;
-                      const posClass = POSITION_COLORS[p.position] || "bg-white/10 text-gray-200 border-white/20";
+                      if (!p) return <td key={t.teamKey} className="px-2 py-2 text-ink-muted">-</td>;
+                      const posClass = POS_COLORS[p.position] || "bg-paper text-ink-soft border-rule";
                       return (
-                        <td key={t.teamKey} className={`px-2 py-2 align-top ${p.isKeeper ? "bg-amber-500/5 border-l-2 border-l-amber-500/40" : ""}`}>
+                        <td key={t.teamKey} className={`px-2 py-2 align-top ${p.isKeeper ? "bg-record/5 border-l-2 border-l-record/40" : ""}`}>
                           <div className="flex items-center gap-1">
-                            <span className="font-mono text-[10px] text-gray-500">#{p.pick}</span>
-                            <span className={`rounded-full border px-1.5 py-0 text-[9px] font-bold ${posClass}`}>
+                            <span className="font-mono text-[10px] text-ink-muted">#{p.pick}</span>
+                            <span className={`border px-1.5 py-0 text-[9px] font-bold ${posClass}`}>
                               {p.position}
                             </span>
                             {p.isKeeper && (
-                              <span className="rounded bg-amber-500/20 px-1 py-0 text-[8px] font-bold text-amber-300">K</span>
+                              <span className="bg-record/15 px-1 py-0 text-[8px] font-bold text-record">K</span>
                             )}
                           </div>
-                          <p className="mt-0.5 font-medium text-white leading-tight text-[11px]">{p.playerName}</p>
-                          <p className="text-[10px] text-gray-500">{p.nflTeam}</p>
+                          <p className="mt-0.5 font-medium text-ink leading-tight text-[11px]">{p.playerName}</p>
+                          <p className="text-[10px] text-ink-muted">{p.nflTeam}</p>
                         </td>
                       );
                     })}
@@ -202,28 +194,28 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
           </div>
         ) : (
           /* Filtered/Search Results */
-          <div className="max-h-[600px] overflow-y-auto divide-y divide-white/5">
+          <div className="max-h-[600px] overflow-y-auto divide-y divide-rule">
             {filteredPicks.length === 0 ? (
-              <div className="px-5 py-8 text-center text-sm text-gray-400">
+              <div className="px-5 py-8 text-center text-sm text-ink-muted">
                 No picks match your filters.
               </div>
             ) : (
               filteredPicks.map((p) => {
-                const posClass = POSITION_COLORS[p.position] || "bg-white/10 text-gray-200 border-white/20";
+                const posClass = POS_COLORS[p.position] || "bg-paper text-ink-soft border-rule";
                 return (
-                  <div key={`${p.pick}-${p.playerKey}`} className={`flex items-center gap-3 px-5 py-2.5 hover:bg-white/5 transition-colors ${p.isKeeper ? "border-l-2 border-l-amber-500/40" : ""}`}>
-                    <span className="font-mono text-xs text-gray-500 w-8 text-right">#{p.pick}</span>
-                    <span className={`rounded-full border px-2 py-0.5 text-[10px] font-bold ${posClass}`}>
+                  <div key={`${p.pick}-${p.playerKey}`} className={`flex items-center gap-3 px-5 py-2.5 hover:bg-paper transition-colors ${p.isKeeper ? "border-l-2 border-l-amber-500/40" : ""}`}>
+                    <span className="font-mono text-xs text-ink-muted w-8 text-right">#{p.pick}</span>
+                    <span className={`border px-2 py-0.5 text-[10px] font-bold ${posClass}`}>
                       {p.position}
                     </span>
                     {p.isKeeper && (
-                      <span className="rounded bg-amber-500/20 px-1.5 py-0.5 text-[9px] font-bold text-amber-300">KEEPER</span>
+                      <span className="bg-record/15 px-1.5 py-0.5 text-[9px] font-bold text-record">KEEPER</span>
                     )}
                     <div className="min-w-0 flex-1">
-                      <p className="truncate font-semibold text-white">{p.playerName}</p>
-                      <p className="text-xs text-gray-400">{p.nflTeam} · R{p.round}</p>
+                      <p className="truncate font-semibold text-ink">{p.playerName}</p>
+                      <p className="text-xs text-ink-muted">{p.nflTeam} · R{p.round}</p>
                     </div>
-                    <div className="text-right text-xs text-gray-400">
+                    <div className="text-right text-xs text-ink-muted">
                       <p>{p.managerName}</p>
                     </div>
                   </div>
@@ -235,9 +227,9 @@ export default function DraftHistoryClient({ years, drafts }: Props) {
 
         {/* Legend */}
         {keeperCount > 0 && !isFiltering && (
-          <div className="border-t border-white/10 bg-[#2C1810]/60 px-4 py-2 flex items-center gap-4 text-[10px] text-gray-500">
+          <div className="border-t border-rule bg-surface px-4 py-2 flex items-center gap-4 text-[10px] text-ink-muted">
             <span className="flex items-center gap-1.5">
-              <span className="rounded bg-amber-500/20 px-1 py-0 text-[8px] font-bold text-amber-300">K</span>
+              <span className="bg-record/15 px-1 py-0 text-[8px] font-bold text-record">K</span>
               Keeper from previous season ({keeperCount} total)
             </span>
           </div>

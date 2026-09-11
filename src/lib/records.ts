@@ -2,6 +2,10 @@ import { loadAllDrafts, normalizeManagerName } from "@/lib/managers";
 import historyData from "@/data/history.json";
 import logger from "@/lib/logger";
 
+// The position palette moved to its own module so client components can import
+// it without pulling this file's filesystem reads into the browser bundle.
+export { POS_COLORS, POS_TEXT, POS_FILL } from "@/lib/positions";
+
 export interface SeasonRecord {
   year: number;
   champion?: string;
@@ -11,15 +15,6 @@ export interface SeasonRecord {
   third?: string;
   thirdTeam?: string;
 }
-
-export const POS_COLORS: Record<string, string> = {
-  QB: "bg-rose-500/20 text-rose-300 border-rose-500/30",
-  RB: "bg-emerald-500/20 text-emerald-300 border-emerald-500/30",
-  WR: "bg-sky-500/20 text-sky-300 border-sky-500/30",
-  TE: "bg-amber-500/20 text-amber-300 border-amber-500/30",
-  K: "bg-violet-500/20 text-violet-300 border-violet-500/30",
-  DEF: "bg-slate-500/20 text-slate-300 border-slate-500/30",
-};
 
 export function computeRecords() {
   logger.info("computing league records");

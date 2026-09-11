@@ -79,12 +79,12 @@ export default async function SeasonAtAGlance() {
         <dl className="grid grid-cols-2 gap-4 sm:grid-cols-4">
           {stats.map((s) => (
             <div key={s.label}>
-              <dt className="text-xs uppercase tracking-wide text-gray-400">
+              <dt className="text-xs uppercase tracking-wide text-ink-muted">
                 {s.label}
               </dt>
-              <dd className="mt-1 text-xl font-bold text-white">{s.value}</dd>
+              <dd className="mt-1 text-xl font-bold text-ink">{s.value}</dd>
               {s.hint && (
-                <dd className="mt-0.5 text-[11px] text-gray-500">{s.hint}</dd>
+                <dd className="mt-0.5 text-[11px] text-ink-muted">{s.hint}</dd>
               )}
             </div>
           ))}

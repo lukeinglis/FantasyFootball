@@ -10,7 +10,6 @@ interface NotConnectedProps {
 export default function NotConnected({ resource, detail }: NotConnectedProps) {
   return (
     <EmptyState
-      icon={<span>📡</span>}
       title="Yahoo API not connected"
       description={
         `Live ${resource} are unavailable until the league commissioner connects ` +
@@ -30,7 +29,6 @@ export function ApiError({
 }) {
   return (
     <EmptyState
-      icon={<span>⚠️</span>}
       title={`Couldn't load ${resource}`}
       description={
         `We hit a snag fetching the latest ${resource} from Yahoo. ` +

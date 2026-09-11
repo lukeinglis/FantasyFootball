@@ -40,7 +40,7 @@ export default function WeekSelector({
         id="week-select"
         value={current}
         onChange={(e) => navigateTo(Number(e.target.value))}
-        className="rounded-md border border-[#D4A847]/20 bg-[#2C1810] px-3 py-1.5 text-sm font-medium text-white focus:border-[#D4A847]"
+        className="border border-rule bg-surface px-3 py-1.5 text-sm font-medium text-ink focus:border-ink focus:outline-none"
       >
         {weeks.map((w) => (
           <option key={w} value={w}>
@@ -53,7 +53,7 @@ export default function WeekSelector({
           type="button"
           onClick={() => navigateTo(Math.max(start, current - 1))}
           disabled={current <= start}
-          className="rounded-md border border-[#D4A847]/20 bg-[#2C1810] min-h-[44px] min-w-[44px] px-2 py-1.5 text-xs text-gray-200 hover:bg-[#5C3A1E] disabled:cursor-not-allowed disabled:opacity-40"
+          className="border border-record/20 bg-surface min-h-[44px] min-w-[44px] px-2 py-1.5 text-xs text-ink-soft hover:bg-[#5C3A1E] disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Previous week"
         >
           ‹ Prev
@@ -62,7 +62,7 @@ export default function WeekSelector({
           type="button"
           onClick={() => navigateTo(Math.min(end, current + 1))}
           disabled={current >= end}
-          className="rounded-md border border-[#D4A847]/20 bg-[#2C1810] min-h-[44px] min-w-[44px] px-2 py-1.5 text-xs text-gray-200 hover:bg-[#5C3A1E] disabled:cursor-not-allowed disabled:opacity-40"
+          className="border border-record/20 bg-surface min-h-[44px] min-w-[44px] px-2 py-1.5 text-xs text-ink-soft hover:bg-[#5C3A1E] disabled:cursor-not-allowed disabled:opacity-40"
           aria-label="Next week"
         >
           Next ›
