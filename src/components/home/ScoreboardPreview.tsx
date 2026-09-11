@@ -1,8 +1,7 @@
 import Link from "next/link";
 import { fetchScoreboard } from "@/lib/server-data";
 import { Card, CardBody, CardHeader } from "@/components/Card";
-import NotConnected, { ApiError } from "@/components/NotConnected";
-import OffseasonState from "@/components/OffseasonState";
+import DataState from "@/components/DataState";
 import { formatPoints } from "@/lib/format";
 
 export default async function ScoreboardPreview() {
@@ -26,13 +25,7 @@ export default async function ScoreboardPreview() {
       />
       <CardBody>
         {!result.ok ? (
-          result.notConfigured ? (
-            <NotConnected resource="matchups" />
-          ) : result.offseason ? (
-            <OffseasonState resource="matchups" />
-          ) : (
-            <ApiError resource="matchups" detail={result.message} />
-          )
+          <DataState result={result} resource="matchups" />
         ) : result.data.matchups.length === 0 ? (
           <p className="text-sm text-ink-muted">
             No matchups posted yet. Check back closer to kickoff.

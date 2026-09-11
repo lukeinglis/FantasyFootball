@@ -3,8 +3,7 @@ import { fetchTransactions } from "@/lib/server-data";
 
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
-import NotConnected, { ApiError } from "@/components/NotConnected";
-import OffseasonState from "@/components/OffseasonState";
+import DataState from "@/components/DataState";
 import TransactionList from "@/components/transactions/TransactionList";
 
 export const metadata: Metadata = {
@@ -26,13 +25,7 @@ export default async function TransactionsPage() {
       />
       <Container>
         {!result.ok ? (
-          result.notConfigured ? (
-            <NotConnected resource="transactions" />
-          ) : result.offseason ? (
-            <OffseasonState resource="transactions" />
-          ) : (
-            <ApiError resource="transactions" detail={result.message} />
-          )
+          <DataState result={result} resource="transactions" />
         ) : (
           <TransactionList transactions={result.data} />
         )}

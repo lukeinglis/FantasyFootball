@@ -4,8 +4,7 @@ import { fetchTeams } from "@/lib/server-data";
 
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
-import NotConnected, { ApiError } from "@/components/NotConnected";
-import OffseasonState from "@/components/OffseasonState";
+import DataState from "@/components/DataState";
 import { Card } from "@/components/Card";
 import { formatPoints, formatRecord } from "@/lib/format";
 
@@ -32,13 +31,7 @@ export default async function TeamsPage() {
       />
       <Container>
         {!result.ok ? (
-          result.notConfigured ? (
-            <NotConnected resource="teams" />
-          ) : result.offseason ? (
-            <OffseasonState resource="teams" />
-          ) : (
-            <ApiError resource="teams" detail={result.message} />
-          )
+          <DataState result={result} resource="teams" />
         ) : result.data.length === 0 ? (
           <Card variant="scoreboard">
             <div className="px-5 py-8 text-center text-sm text-ink-muted">

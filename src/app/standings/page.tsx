@@ -3,12 +3,11 @@ import { fetchStandings, fetchSettings } from "@/lib/server-data";
 
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
-import NotConnected, { ApiError } from "@/components/NotConnected";
-import OffseasonState from "@/components/OffseasonState";
+import DataState from "@/components/DataState";
 import { Card } from "@/components/Card";
 import PullToRefresh from "@/components/PullToRefresh";
 import { formatPercent, formatPoints, formatRecord } from "@/lib/format";
-import { LAST_COMPLETED_SEASON, feedLabel } from "@/lib/season";
+import { CURRENT_SEASON, feedLabel } from "@/lib/season";
 
 export const metadata: Metadata = {
   title: "Standings",
@@ -30,23 +29,22 @@ export default async function StandingsPage() {
     ? settingsResult.data.numPlayoffTeams
     : DEFAULT_PLAYOFF_CUTOFF;
 
+  // The pennant read "2025 season" whatever happened. These standings are the
+  // season in progress, not the last completed one, and when the feed is down
+  // there is no season on the page to label at all.
+  const pennant = result.ok ? `${CURRENT_SEASON} season` : undefined;
+
   return (
     <PullToRefresh>
       <PageHeader
         eyebrow={feedLabel(result.ok)}
-        pennant={`${LAST_COMPLETED_SEASON} season`}
+        pennant={pennant}
         title="Standings"
         subtitle="Top 6 qualify for playoffs. Everyone else gets to think about their life choices."
       />
       <Container>
         {!result.ok ? (
-          result.notConfigured ? (
-            <NotConnected resource="standings" />
-          ) : result.offseason ? (
-            <OffseasonState resource="standings" />
-          ) : (
-            <ApiError resource="standings" detail={result.message} />
-          )
+          <DataState result={result} resource="standings" />
         ) : result.data.teams.length === 0 ? (
           <Card>
             <div className="px-5 py-8 text-center text-sm text-ink-muted">

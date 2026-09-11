@@ -22,26 +22,56 @@ import type {
 } from "./yahoo/types";
 import logger from "./logger";
 
-function isConfigError(err: unknown): boolean {
-  const msg = err instanceof Error ? err.message : String(err);
-  const lower = msg.toLowerCase();
+function lower(err: unknown): string {
+  return (err instanceof Error ? err.message : String(err)).toLowerCase();
+}
+
+/**
+ * Yahoo accepted the request, identified the app, and refused it.
+ *
+ * Yahoo's own wording for this is "This application is not authorized to
+ * perform this action", which it returns with a 403 even for reading your own
+ * profile. Newly provisioned apps get a 401 `additional_authorization_required`
+ * for the same underlying reason.
+ */
+function isAccessDeniedError(err: unknown): boolean {
+  const msg = lower(err);
   return (
-    lower.includes("yahoo_client_id") ||
-    lower.includes("yahoo_client_secret") ||
-    lower.includes("no yahoo tokens") ||
-    lower.includes("not configured")
+    msg.includes("not authorized to perform this action") ||
+    msg.includes("additional_authorization_required") ||
+    msg.includes("invalid_scope") ||
+    msg.includes("token_rejected") ||
+    msg.includes(": 403") ||
+    msg.includes("(403)")
   );
 }
 
-function isOffseasonError(err: unknown): boolean {
-  const msg = err instanceof Error ? err.message : String(err);
-  const lower = msg.toLowerCase();
+function isConfigError(err: unknown): boolean {
+  if (isAccessDeniedError(err)) return false;
+  const msg = lower(err);
   return (
-    lower.includes("(400)") ||
-    lower.includes("temporary problem") ||
-    lower.includes("failed to resolve nfl game key") ||
-    lower.includes("invalid league") ||
-    lower.includes("invalid game")
+    msg.includes("yahoo_client_id") ||
+    msg.includes("yahoo_client_secret") ||
+    msg.includes("no yahoo tokens") ||
+    msg.includes("not configured")
+  );
+}
+
+/**
+ * Only ever true when Yahoo has not refused us. Failing to resolve the game key
+ * looks like "no season yet" on its own, but the same failure carrying a 403 is
+ * a lockout, and rendering that as a kickoff countdown told readers the season
+ * had not started while it was in week two.
+ */
+function isOffseasonError(err: unknown): boolean {
+  if (isAccessDeniedError(err)) return false;
+  const msg = lower(err);
+  return (
+    msg.includes("(400)") ||
+    msg.includes("temporary problem") ||
+    msg.includes("failed to resolve nfl game key") ||
+    msg.includes("invalid league") ||
+    msg.includes("invalid game")
   );
 }
 
@@ -59,6 +89,7 @@ async function safeFetch<T>(fn: () => Promise<T>, resource: string): Promise<Fet
       status: 0,
       message,
       notConfigured: isConfigError(err),
+      accessDenied: isAccessDeniedError(err),
       offseason: isOffseasonError(err),
     };
   }

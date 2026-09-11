@@ -9,7 +9,7 @@ export default function Loading() {
       <PageHeader
         eyebrow="Matchups"
         title="This Week's Matchups"
-        subtitle="Live scores, projections, and head-to-head matchups straight from Yahoo."
+        subtitle="Head-to-head matchups, week by week."
       />
       <Container>
         <div className="grid gap-4 sm:grid-cols-2">

@@ -3,8 +3,7 @@ import { fetchScoreboard, fetchSettings } from "@/lib/server-data";
 import type { Matchup } from "@/lib/yahoo/types";
 import PageHeader from "@/components/PageHeader";
 import Container from "@/components/Container";
-import NotConnected, { ApiError } from "@/components/NotConnected";
-import OffseasonState from "@/components/OffseasonState";
+import DataState from "@/components/DataState";
 import { Card, CardBody } from "@/components/Card";
 import EmptyState from "@/components/EmptyState";
 import WeekSelector from "@/components/WeekSelector";
@@ -81,7 +80,7 @@ export default async function MatchupsPage({
         title={
           result.ok ? `Week ${result.data.week}` : "This Week's Matchups"
         }
-        subtitle="Live scores, projections, and head-to-head matchups straight from Yahoo."
+        subtitle="Head-to-head matchups, week by week."
       >
         {result.ok && (
           <WeekSelector
@@ -93,13 +92,7 @@ export default async function MatchupsPage({
       </PageHeader>
       <Container>
         {!result.ok ? (
-          result.notConfigured ? (
-            <NotConnected resource="matchups" />
-          ) : result.offseason ? (
-            <OffseasonState resource="matchups" />
-          ) : (
-            <ApiError resource="matchups" detail={result.message} />
-          )
+          <DataState result={result} resource="matchups" />
         ) : result.data.matchups.length === 0 ? (
           <EmptyState
             title="No matchups this week"

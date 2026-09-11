@@ -240,7 +240,10 @@ function NearlyMen() {
 
 export default async function Home() {
   const settingsResult = await fetchSettings();
-  const isOffseason = !settingsResult.ok;
+  // Any failed settings call used to print "Between seasons", so a Yahoo outage
+  // in week two told the front page it was February. Only say it when the
+  // classifier actually found an offseason.
+  const isOffseason = !settingsResult.ok && settingsResult.offseason;
   const stats = getChampionStats();
   const defending = history.seasons[0];
 
