@@ -4,6 +4,7 @@ import {
   buildAgreement,
   buildBoard,
   buildContrarians,
+  buildIdenticalGroups,
   buildScoreboard,
   buildSpreads,
   type PickemData,
@@ -130,6 +131,67 @@ describe("buildContrarians", () => {
     const contrarians = buildContrarians(data, buildBoard(data));
 
     expect(contrarians.every((c) => c.against === 0)).toBe(true);
+  });
+});
+
+describe("buildIdenticalGroups", () => {
+  it("gathers three matching cards into one group, not three pairs", () => {
+    const groups = buildIdenticalGroups(
+      fixture([
+        { name: "Ann", picks: [["Reds", 100], ["Greens", 200]] },
+        { name: "Bob", picks: [["Reds", 111], ["Greens", 222]] },
+        { name: "Cal", picks: [["Reds", 133], ["Greens", 244]] },
+        { name: "Dee", picks: [["Blues", 100], ["Golds", 200]] },
+      ]),
+    );
+
+    expect(groups).toEqual([["Ann", "Bob", "Cal"]]);
+  });
+
+  it("keeps separate blocs apart and sorts the biggest first", () => {
+    const groups = buildIdenticalGroups(
+      fixture([
+        { name: "Ann", picks: [["Reds", 100], ["Greens", 200]] },
+        { name: "Bob", picks: [["Blues", 100], ["Golds", 200]] },
+        { name: "Cal", picks: [["Reds", 100], ["Greens", 200]] },
+        { name: "Dee", picks: [["Blues", 100], ["Golds", 200]] },
+      ]),
+    );
+
+    expect(groups).toHaveLength(2);
+    expect(groups).toContainEqual(["Ann", "Cal"]);
+    expect(groups).toContainEqual(["Bob", "Dee"]);
+  });
+
+  it("groups on picks alone, ignoring predicted scores", () => {
+    const groups = buildIdenticalGroups(
+      fixture([
+        { name: "Ann", picks: [["Reds", 100], ["Greens", 200]] },
+        { name: "Bob", picks: [["Reds", 999], ["Greens", 1]] },
+      ]),
+    );
+
+    expect(groups).toEqual([["Ann", "Bob"]]);
+  });
+
+  it("returns nothing when nobody matches", () => {
+    const groups = buildIdenticalGroups(
+      fixture([
+        { name: "Ann", picks: [["Reds", 100], ["Greens", 200]] },
+        { name: "Bob", picks: [["Reds", 100], ["Golds", 200]] },
+      ]),
+    );
+
+    expect(groups).toEqual([]);
+  });
+
+  it("does not call empty cards identical when there are no games", () => {
+    const data = fixture([
+      { name: "Ann", picks: [] },
+      { name: "Bob", picks: [] },
+    ]);
+
+    expect(buildIdenticalGroups({ ...data, games: [] })).toEqual([]);
   });
 });
 

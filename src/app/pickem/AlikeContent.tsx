@@ -2,12 +2,16 @@ import Container from "@/components/Container";
 import { Card } from "@/components/Card";
 import EmptyState from "@/components/EmptyState";
 import pickemData from "@/data/pickem.json";
-import { buildAgreement, type PickemData } from "@/lib/pickem";
+import {
+  buildAgreement,
+  buildIdenticalGroups,
+  type PickemData,
+} from "@/lib/pickem";
 
 const data = pickemData as PickemData;
 const { names, rows, gameCount, pairs } = buildAgreement(data);
 
-const identical = pairs.filter((p) => p.agreed === gameCount);
+const identical = buildIdenticalGroups(data);
 const furthest =
   pairs.length > 0
     ? pairs.filter((p) => p.agreed === pairs[pairs.length - 1].agreed)
@@ -25,6 +29,36 @@ function cellTone(agreed: number): string {
   if (ratio >= 0.6) return "bg-result/15 text-ink";
   if (ratio >= 0.4) return "bg-paper text-ink-soft";
   return "bg-surface text-ink-faint";
+}
+
+/**
+ * Identical cards are listed as whole blocs, so three managers who picked
+ * the same way read as one group of three rather than three separate pairs.
+ */
+function GroupList({ label, groups }: { label: string; groups: string[][] }) {
+  if (groups.length === 0) return null;
+  return (
+    <div className="border border-rule bg-surface px-4 py-3">
+      <p className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.14em] text-result">
+        {label}
+      </p>
+      <ul className="mt-1.5 space-y-1">
+        {groups.map((group) => (
+          <li
+            key={group.join("-")}
+            className="font-[family-name:var(--wire-body)] text-[15px] text-ink"
+          >
+            {group.join(", ")}
+            <span className="ml-2 font-[family-name:var(--wire-mono)] text-[12px] text-ink-muted">
+              {group.length === 2
+                ? "both the same"
+                : `all ${group.length} the same`}
+            </span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
 }
 
 function PairList({ label, list }: { label: string; list: typeof pairs }) {
@@ -66,7 +100,7 @@ export default function AlikeContent() {
   return (
     <Container>
       <div className="mb-6 grid gap-4 md:grid-cols-2">
-        <PairList label="Identical cards" list={identical} />
+        <GroupList label="Identical cards" groups={identical} />
         <PairList label="Furthest apart" list={furthest} />
       </div>
 

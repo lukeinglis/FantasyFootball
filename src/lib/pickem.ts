@@ -133,6 +133,34 @@ export function buildAgreement(data: PickemData): AgreementMatrix {
   return { names, rows, gameCount, pairs };
 }
 
+/**
+ * Managers whose cards are identical, grouped rather than listed pair by
+ * pair. Picking the same way is transitive, so three managers with the same
+ * card are one bloc of three, not three separate pairs.
+ *
+ * Only the picked teams count, not the predicted scores, which is the same
+ * thing `agreed === gameCount` means in the pair list.
+ */
+export function buildIdenticalGroups(data: PickemData): string[][] {
+  // With no games every card is trivially "identical"; that is noise.
+  if (data.games.length === 0) return [];
+
+  const byCard = new Map<string, string[]>();
+  for (const entry of data.entries) {
+    const key = data.games
+      .map((_game, i) => entry.picks[i]?.team ?? "")
+      .join("\u0000");
+    const group = byCard.get(key);
+    if (group) group.push(entry.name);
+    else byCard.set(key, [entry.name]);
+  }
+
+  return [...byCard.values()]
+    .filter((group) => group.length > 1)
+    .map((group) => [...group].sort((a, b) => a.localeCompare(b)))
+    .sort((a, b) => b.length - a.length || a[0].localeCompare(b[0]));
+}
+
 export interface GameSpread {
   game: PickemGame;
   min: number;
