@@ -1,0 +1,500 @@
+{
+  "season": 2026,
+  "week": 8,
+  "note": "Game order matches the Airtable form, which is not the order Yahoo lists matchups in. Keep it as-is so the labels on this page match the labels people filled in.",
+  "resultsNote": "Fill in each game as it goes final: winner is the exact team name from games above, total is the real combined score. Leave null until then. The scoreboard tab scores whatever is filled in.",
+  "roster": [
+    "Austin",
+    "Cody",
+    "Damaso",
+    "Greg",
+    "Luke",
+    "Patrick",
+    "Phil",
+    "Rob",
+    "Ross",
+    "Trey",
+    "Tyler",
+    "Zach"
+  ],
+  "games": [
+    {
+      "id": 1,
+      "teams": [
+        {
+          "seed": 2,
+          "name": "The Glorious Return",
+          "record": "5-2-0"
+        },
+        {
+          "seed": 9,
+          "name": "Bend Over And Floss",
+          "record": "3-4-0"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "teams": [
+        {
+          "seed": 10,
+          "name": "A Guy about a Horse",
+          "record": "2-5-0"
+        },
+        {
+          "seed": 11,
+          "name": "Its Da Robbery",
+          "record": "1-6-0"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "teams": [
+        {
+          "seed": 4,
+          "name": "BeauxnerSnatchers",
+          "record": "4-3-0"
+        },
+        {
+          "seed": 5,
+          "name": "King Cakes",
+          "record": "4-3-0"
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "teams": [
+        {
+          "seed": 1,
+          "name": "Rob's thumb print",
+          "record": "6-1-0"
+        },
+        {
+          "seed": 3,
+          "name": "The Implication",
+          "record": "5-2-0"
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "teams": [
+        {
+          "seed": 7,
+          "name": "Phleshlight Accessories",
+          "record": "4-3-0"
+        },
+        {
+          "seed": 6,
+          "name": "Bieg Ballers",
+          "record": "4-3-0"
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "teams": [
+        {
+          "seed": 8,
+          "name": "REO Teabagging",
+          "record": "3-4-0"
+        },
+        {
+          "seed": 12,
+          "name": "Cammy Cam Juice",
+          "record": "1-6-0"
+        }
+      ]
+    }
+  ],
+  "results": [
+    {
+      "winner": null,
+      "total": null
+    },
+    {
+      "winner": null,
+      "total": null
+    },
+    {
+      "winner": null,
+      "total": null
+    },
+    {
+      "winner": null,
+      "total": null
+    },
+    {
+      "winner": null,
+      "total": null
+    },
+    {
+      "winner": null,
+      "total": null
+    }
+  ],
+  "entries": [
+    {
+      "name": "Austin",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 362
+        },
+        {
+          "team": "A Guy about a Horse",
+          "total": 346
+        },
+        {
+          "team": "King Cakes",
+          "total": 358
+        },
+        {
+          "team": "The Implication",
+          "total": 339
+        },
+        {
+          "team": "Phleshlight Accessories",
+          "total": 341
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 330
+        }
+      ],
+      "total": 2076
+    },
+    {
+      "name": "Cody",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 357
+        },
+        {
+          "team": "Its Da Robbery",
+          "total": 256
+        },
+        {
+          "team": "King Cakes",
+          "total": 369
+        },
+        {
+          "team": "Rob's thumb print",
+          "total": 450
+        },
+        {
+          "team": "Bieg Ballers",
+          "total": 324
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 289
+        }
+      ],
+      "total": 2045
+    },
+    {
+      "name": "Damaso",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 270
+        },
+        {
+          "team": "A Guy about a Horse",
+          "total": 260
+        },
+        {
+          "team": "BeauxnerSnatchers",
+          "total": 300
+        },
+        {
+          "team": "The Implication",
+          "total": 285
+        },
+        {
+          "team": "Phleshlight Accessories",
+          "total": 280
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 290
+        }
+      ],
+      "total": 1685
+    },
+    {
+      "name": "Greg",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 350
+        },
+        {
+          "team": "A Guy about a Horse",
+          "total": 350
+        },
+        {
+          "team": "BeauxnerSnatchers",
+          "total": 350
+        },
+        {
+          "team": "Rob's thumb print",
+          "total": 350
+        },
+        {
+          "team": "Phleshlight Accessories",
+          "total": 350
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 350
+        }
+      ],
+      "total": 2100
+    },
+    {
+      "name": "Luke",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 400
+        },
+        {
+          "team": "A Guy about a Horse",
+          "total": 350
+        },
+        {
+          "team": "King Cakes",
+          "total": 350
+        },
+        {
+          "team": "The Implication",
+          "total": 375
+        },
+        {
+          "team": "Phleshlight Accessories",
+          "total": 375
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 400
+        }
+      ],
+      "total": 2250
+    },
+    {
+      "name": "Patrick",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 330
+        },
+        {
+          "team": "A Guy about a Horse",
+          "total": 300
+        },
+        {
+          "team": "King Cakes",
+          "total": 400
+        },
+        {
+          "team": "Rob's thumb print",
+          "total": 400
+        },
+        {
+          "team": "Phleshlight Accessories",
+          "total": 315
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 300
+        }
+      ],
+      "total": 2045
+    },
+    {
+      "name": "Phil",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 350
+        },
+        {
+          "team": "A Guy about a Horse",
+          "total": 300
+        },
+        {
+          "team": "King Cakes",
+          "total": 415
+        },
+        {
+          "team": "Rob's thumb print",
+          "total": 400
+        },
+        {
+          "team": "Phleshlight Accessories",
+          "total": 400
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 420
+        }
+      ],
+      "total": 2285
+    },
+    {
+      "name": "Rob",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 368
+        },
+        {
+          "team": "A Guy about a Horse",
+          "total": 320
+        },
+        {
+          "team": "King Cakes",
+          "total": 410
+        },
+        {
+          "team": "The Implication",
+          "total": 420
+        },
+        {
+          "team": "Phleshlight Accessories",
+          "total": 399
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 250
+        }
+      ],
+      "total": 2167
+    },
+    {
+      "name": "Ross",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 377
+        },
+        {
+          "team": "A Guy about a Horse",
+          "total": 325
+        },
+        {
+          "team": "King Cakes",
+          "total": 399
+        },
+        {
+          "team": "Rob's thumb print",
+          "total": 405
+        },
+        {
+          "team": "Phleshlight Accessories",
+          "total": 341
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 350
+        }
+      ],
+      "total": 2197
+    },
+    {
+      "name": "Trey",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 380
+        },
+        {
+          "team": "A Guy about a Horse",
+          "total": 375
+        },
+        {
+          "team": "BeauxnerSnatchers",
+          "total": 350
+        },
+        {
+          "team": "Rob's thumb print",
+          "total": 400
+        },
+        {
+          "team": "Phleshlight Accessories",
+          "total": 365
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 360
+        }
+      ],
+      "total": 2230
+    },
+    {
+      "name": "Tyler",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 390
+        },
+        {
+          "team": "A Guy about a Horse",
+          "total": 400
+        },
+        {
+          "team": "BeauxnerSnatchers",
+          "total": 420
+        },
+        {
+          "team": "Rob's thumb print",
+          "total": 375
+        },
+        {
+          "team": "Phleshlight Accessories",
+          "total": 400
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 390
+        }
+      ],
+      "total": 2375
+    },
+    {
+      "name": "Zach",
+      "picks": [
+        {
+          "team": "The Glorious Return",
+          "total": 302
+        },
+        {
+          "team": "A Guy about a Horse",
+          "total": 325
+        },
+        {
+          "team": "BeauxnerSnatchers",
+          "total": 319
+        },
+        {
+          "team": "Rob's thumb print",
+          "total": 378
+        },
+        {
+          "team": "Bieg Ballers",
+          "total": 356
+        },
+        {
+          "team": "REO Teabagging",
+          "total": 365
+        }
+      ],
+      "total": 2045
+    }
+  ]
+}

@@ -17,11 +17,12 @@ interface NavItem {
 const TAB_ITEMS: NavItem[] = [
   { href: "/", label: "Home" },
   { href: "/matchups", label: "Matchups" },
+  { href: "/pickem", label: "Pick'em" },
   { href: "/standings", label: "Table" },
-  { href: "/records", label: "Records" },
 ];
 
 const MORE_ITEMS: NavItem[] = [
+  { href: "/records", label: "Records" },
   { href: "/teams", label: "Teams" },
   { href: "/draft", label: "Draft" },
   { href: "/stats", label: "Stats & Rankings" },

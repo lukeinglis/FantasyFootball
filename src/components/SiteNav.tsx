@@ -18,6 +18,7 @@ const PRIMARY_ITEMS: NavItem[] = [
   { href: "/", label: "Home" },
   { href: "/standings", label: "Standings" },
   { href: "/matchups", label: "Matchups" },
+  { href: "/pickem", label: "Pick'em" },
   { href: "/teams", label: "Teams" },
   { href: "/draft", label: "Draft" },
   { href: "/records", label: "Records" },
