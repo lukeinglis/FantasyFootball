@@ -451,6 +451,98 @@ export function buildScoreboard(data: PickemData): Scoreboard {
   };
 }
 
+export interface Scenario {
+  /** Winner of each pivotal game, index-aligned with `pivotal`. */
+  outcome: string[];
+  /** Who would finish on the most games right, sharing it if tied. */
+  winners: string[];
+  topCorrect: number;
+}
+
+export interface Outlook {
+  /**
+   * Unsettled games the room disagreed on. These are the only ones that can
+   * still change the order.
+   */
+  pivotal: PickemGame[];
+  /**
+   * Unsettled games every card picked the same way. They still move scores,
+   * but they move every card by the same amount, so they cannot change who
+   * ends up on top. Worth naming rather than padding the table with.
+   */
+  unanimous: PickemGame[];
+  /** Every way the pivotal games can fall, and who would lead in each. */
+  scenarios: Scenario[];
+  /** Managers who cannot finish on top whatever happens.  */
+  eliminated: string[];
+  alive: string[];
+}
+
+/**
+ * What is still up for grabs. Elimination is decided by enumeration rather
+ * than arithmetic on best-case totals, because who ends up on top depends on
+ * how the remaining games interact: the same result that lifts one card
+ * lifts the cards that picked alongside it.
+ *
+ * Finishing level still counts as alive, since the tiebreaker has not been
+ * applied at that point and could fall either way.
+ */
+export function buildOutlook(data: PickemData): Outlook {
+  const { games, entries } = data;
+  const { scores } = buildScores(data);
+  const settled = scores.map((s) => s.winner);
+
+  // Games already in the bag, counted once rather than inside every branch.
+  const base = entries.map(
+    (entry) =>
+      settled.filter((w, i) => w !== null && entry.picks[i]?.team === w).length,
+  );
+
+  const open = games.map((_, i) => i).filter((i) => settled[i] === null);
+  const divides = (i: number) =>
+    new Set(entries.map((e) => e.picks[i]?.team).filter(Boolean)).size > 1;
+  const pivotalIndexes = open.filter(divides);
+  const unanimousIndexes = open.filter((i) => !divides(i));
+
+  // Every combination of the pivotal games. Two outcomes per game and at most
+  // six games means this tops out at 64 branches.
+  let outcomes: string[][] = [[]];
+  for (const i of pivotalIndexes) {
+    outcomes = outcomes.flatMap((sofar) =>
+      games[i].teams.map((team) => [...sofar, team.name]),
+    );
+  }
+
+  const scenarios: Scenario[] = outcomes.map((outcome) => {
+    const totals = entries.map(
+      (entry, e) =>
+        base[e] +
+        pivotalIndexes.filter((gi, k) => entry.picks[gi]?.team === outcome[k])
+          .length,
+    );
+    const topCorrect = totals.length > 0 ? Math.max(...totals) : 0;
+
+    return {
+      outcome,
+      topCorrect,
+      winners: entries
+        .filter((_entry, e) => totals[e] === topCorrect)
+        .map((entry) => entry.name)
+        .sort((a, b) => a.localeCompare(b)),
+    };
+  });
+
+  const canWin = new Set(scenarios.flatMap((s) => s.winners));
+
+  return {
+    pivotal: pivotalIndexes.map((i) => games[i]),
+    unanimous: unanimousIndexes.map((i) => games[i]),
+    scenarios,
+    eliminated: entries.filter((e) => !canWin.has(e.name)).map((e) => e.name),
+    alive: entries.filter((e) => canWin.has(e.name)).map((e) => e.name),
+  };
+}
+
 /** Position of a value on the shared axis, as a 0-100 percentage. */
 export function axisPosition(
   value: number,

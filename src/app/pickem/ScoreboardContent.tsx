@@ -2,11 +2,21 @@ import Container from "@/components/Container";
 import { Card } from "@/components/Card";
 import EmptyState from "@/components/EmptyState";
 import pickemData from "@/data/pickem.json";
-import { buildScoreboard, type PickemData } from "@/lib/pickem";
+import { buildOutlook, buildScoreboard, type PickemData } from "@/lib/pickem";
 
 const data = pickemData as PickemData;
 const { rows, decided, gameCount, actualTotal, complete, problems } =
   buildScoreboard(data);
+
+const outlook = buildOutlook(data);
+const out = new Set(outlook.eliminated);
+
+/**
+ * Every branch is worth showing while there are a handful of games left, but
+ * the count doubles per game, so a full week would be sixty-four rows of
+ * noise. Past a point the table stops being a table.
+ */
+const SHOW_MATRIX_UP_TO = 4;
 
 const leaders = rows.filter((r) => r.rank === 1);
 
@@ -33,6 +43,123 @@ function Mark({ value }: { value: boolean | null }) {
     <span className="text-ink-faint" title="Wrong">
       &#10007;
     </span>
+  );
+}
+
+/**
+ * Every way the open games can fall, and who finishes on top in each. Games
+ * the whole room picked the same way are left out of the grid and named
+ * underneath instead: they move every card together, so they can change the
+ * scores without changing the order.
+ */
+function Outlook() {
+  if (outlook.pivotal.length === 0) return null;
+
+  const tooMany = outlook.pivotal.length > SHOW_MATRIX_UP_TO;
+
+  return (
+    <Card className="mt-6 overflow-hidden" variant="scoreboard">
+      <div className="border-b border-ink px-4 py-3">
+        <h2 className="font-[family-name:var(--wire-display)] text-[15px] font-extrabold uppercase tracking-[0.08em] text-ink">
+          What is still open
+        </h2>
+        <p className="mt-0.5 font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.1em] text-ink-muted">
+          {outlook.pivotal.length === 1
+            ? "The one game that can still change the order"
+            : `The ${outlook.pivotal.length} games that can still change the order`}
+        </p>
+      </div>
+
+      {tooMany ? (
+        <div className="px-4 py-3">
+          <p className="font-[family-name:var(--wire-body)] text-[15px] text-ink-soft">
+            Too many games left to lay out every combination. Check back once a
+            few have gone.
+          </p>
+        </div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="w-full min-w-[520px] text-left text-sm">
+            <caption className="sr-only">
+              Who would finish on top for each combination of the remaining
+              results
+            </caption>
+            <thead>
+              <tr className="border-b-2 border-ink">
+                {outlook.pivotal.map((game) => (
+                  <th
+                    key={game.id}
+                    scope="col"
+                    className="px-3 py-3 font-[family-name:var(--wire-display)] text-[11px] uppercase tracking-[0.1em] text-ink"
+                  >
+                    Game {game.id} goes
+                  </th>
+                ))}
+                <th
+                  scope="col"
+                  className="px-3 py-3 font-[family-name:var(--wire-display)] text-[11px] uppercase tracking-[0.1em] text-ink"
+                >
+                  Then on top
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              {outlook.scenarios.map((scenario) => (
+                <tr
+                  key={scenario.outcome.join("|")}
+                  className="border-b border-rule"
+                >
+                  {scenario.outcome.map((team, i) => (
+                    <td
+                      key={outlook.pivotal[i].id}
+                      className="px-3 py-2.5 font-[family-name:var(--wire-display)] text-[13px] font-bold uppercase tracking-[0.02em] text-ink-muted"
+                    >
+                      {team}
+                    </td>
+                  ))}
+                  <td className="px-3 py-2.5 font-[family-name:var(--wire-body)] text-[15px] text-ink">
+                    {scenario.winners.join(", ")}
+                    <span className="ml-2 font-[family-name:var(--wire-mono)] text-[12px] text-ink-faint">
+                      {scenario.winners.length > 1
+                        ? `level on ${scenario.topCorrect}, tiebreaker decides`
+                        : `${scenario.topCorrect} right`}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      <div className="space-y-1.5 border-t border-rule px-4 py-3">
+        <p className="font-[family-name:var(--wire-body)] text-[13px] leading-[1.5] text-ink-soft">
+          <span className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.12em] text-result">
+            Still alive
+          </span>{" "}
+          {outlook.alive.join(", ")}
+        </p>
+        {outlook.eliminated.length > 0 && (
+          <p className="font-[family-name:var(--wire-body)] text-[13px] leading-[1.5] text-ink-soft">
+            <span className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.12em] text-ink-faint">
+              Cannot win
+            </span>{" "}
+            {outlook.eliminated.join(", ")}
+          </p>
+        )}
+        {outlook.unanimous.length > 0 && (
+          <p className="font-[family-name:var(--wire-body)] text-[13px] leading-[1.5] text-ink-muted">
+            {outlook.unanimous
+              .map((g) => `Game ${g.id}`)
+              .join(" and ")}{" "}
+            {outlook.unanimous.length === 1 ? "is" : "are"} not in the grid:
+            every card picked the same way, so{" "}
+            {outlook.unanimous.length === 1 ? "it moves" : "they move"} everyone
+            together and cannot change who wins.
+          </p>
+        )}
+      </div>
+    </Card>
   );
 }
 
@@ -132,9 +259,19 @@ export default function ScoreboardContent() {
                   </td>
                   <th
                     scope="row"
-                    className="px-3 py-2.5 text-left font-[family-name:var(--wire-display)] text-[14px] font-bold uppercase tracking-[0.02em] text-ink"
+                    className={`px-3 py-2.5 text-left font-[family-name:var(--wire-display)] text-[14px] font-bold uppercase tracking-[0.02em] ${
+                      out.has(row.name) ? "text-ink-faint" : "text-ink"
+                    }`}
                   >
                     {row.name}
+                    {out.has(row.name) && (
+                      <span
+                        title="Cannot finish on top however the rest of the week goes"
+                        className="ml-2 font-[family-name:var(--wire-mono)] text-[10px] font-normal uppercase tracking-[0.12em] text-ink-faint"
+                      >
+                        Out
+                      </span>
+                    )}
                   </th>
                   {row.marks.map((mark, i) => (
                     <td
@@ -169,6 +306,8 @@ export default function ScoreboardContent() {
           </p>
         </div>
       </Card>
+
+      <Outlook />
     </Container>
   );
 }

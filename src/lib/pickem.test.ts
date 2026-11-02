@@ -5,6 +5,7 @@ import {
   buildBoard,
   buildContrarians,
   buildIdenticalGroups,
+  buildOutlook,
   buildScoreboard,
   buildScores,
   buildSpreads,
@@ -455,6 +456,103 @@ describe("buildScores", () => {
 
     expect(problems).toHaveLength(1);
     expect(problems[0]).toContain("Game 1");
+  });
+});
+
+describe("buildOutlook", () => {
+  it("leaves out a game the whole room picked the same way", () => {
+    // Everyone took Reds in game 1, so it cannot reorder anybody; only
+    // game 2 can.
+    const outlook = buildOutlook(
+      fixture([
+        { name: "Ann", picks: [["Reds", 100], ["Greens", 200]] },
+        { name: "Bob", picks: [["Reds", 100], ["Golds", 200]] },
+      ]),
+    );
+
+    expect(outlook.pivotal.map((g) => g.id)).toEqual([2]);
+    expect(outlook.unanimous.map((g) => g.id)).toEqual([1]);
+    expect(outlook.scenarios).toHaveLength(2);
+    expect(outlook.eliminated).toEqual([]);
+  });
+
+  it("eliminates a card that another card beats on every branch", () => {
+    // Bob has the same game 2 pick as Ann but is a game behind her, so the
+    // only result that helps him helps her by the same amount. Cal is level
+    // with Ann and needs the other result, so between them they cover both
+    // branches and Bob is left with none.
+    const data = fixture([
+      { name: "Ann", picks: [["Reds", 100], ["Greens", 200]] },
+      { name: "Bob", picks: [["Blues", 100], ["Greens", 200]] },
+      { name: "Cal", picks: [["Reds", 100], ["Golds", 200]] },
+    ]);
+    const outlook = buildOutlook({
+      ...data,
+      // Game 1 is in the bag for Reds; game 2 is still open.
+      results: [
+        { scores: [120, 60], projected: [120, 60] },
+        { scores: [90, 95], projected: [140, 150] },
+      ],
+    });
+
+    expect(outlook.pivotal.map((g) => g.id)).toEqual([2]);
+    expect(outlook.eliminated).toEqual(["Bob"]);
+    expect(outlook.alive).toEqual(["Ann", "Cal"]);
+  });
+
+  it("names who would be on top under each way the games can fall", () => {
+    const outlook = buildOutlook(
+      fixture([
+        { name: "Ann", picks: [["Reds", 100], ["Greens", 200]] },
+        { name: "Bob", picks: [["Blues", 100], ["Golds", 200]] },
+      ]),
+    );
+
+    const byOutcome = Object.fromEntries(
+      outlook.scenarios.map((s) => [s.outcome.join("+"), s.winners]),
+    );
+    expect(byOutcome["Reds+Greens"]).toEqual(["Ann"]);
+    expect(byOutcome["Blues+Golds"]).toEqual(["Bob"]);
+    // One apiece leaves them level, which the tiebreaker would settle.
+    expect(byOutcome["Reds+Golds"]).toEqual(["Ann", "Bob"]);
+  });
+
+  it("counts a card that can only draw level as still alive", () => {
+    const data = fixture([
+      { name: "Ann", picks: [["Reds", 100], ["Greens", 200]] },
+      { name: "Bob", picks: [["Blues", 100], ["Golds", 200]] },
+    ]);
+    const outlook = buildOutlook({
+      ...data,
+      // Ann has game 1, so the best game 2 can do for Bob is pull him level.
+      // Level is not out: the tiebreaker has not been applied yet.
+      results: [
+        { scores: [120, 60], projected: [120, 60] },
+        { scores: [90, 95], projected: [140, 150] },
+      ],
+    });
+
+    expect(outlook.eliminated).toEqual([]);
+    expect(outlook.alive).toEqual(["Ann", "Bob"]);
+  });
+
+  it("has nothing left to enumerate once every game is settled", () => {
+    const data = fixture([
+      { name: "Ann", picks: [["Reds", 100], ["Greens", 200]] },
+      { name: "Bob", picks: [["Blues", 100], ["Golds", 200]] },
+    ]);
+    const outlook = buildOutlook({
+      ...data,
+      results: [
+        { scores: [120, 60], projected: [120, 60] },
+        { scores: [90, 95], projected: [90, 95] },
+      ],
+    });
+
+    expect(outlook.pivotal).toEqual([]);
+    expect(outlook.scenarios).toHaveLength(1);
+    // Ann took game 1, Bob took game 2, so they finish level on games won.
+    expect(outlook.scenarios[0].winners).toEqual(["Ann", "Bob"]);
   });
 });
 
