@@ -41,8 +41,8 @@ export default function ScoreboardContent() {
     return (
       <Container>
         <EmptyState
-          title="Nothing final yet"
-          description="Picks get marked right or wrong here as each game goes final. Scores so far are on The Board."
+          title="Nothing settled yet"
+          description="Picks get marked right or wrong here as soon as a game is beyond doubt. Scores so far are on The Board."
         />
       </Container>
     );
@@ -165,7 +165,7 @@ export default function ScoreboardContent() {
           <p className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.12em] text-ink-muted">
             {complete
               ? `Final \u00B7 ties broken by whoever came closest to ${actualTotal?.toFixed(2)}`
-              : `${decided} of ${gameCount} games final \u00B7 the tiebreaker only counts once every game is in`}
+              : `${decided} of ${gameCount} games settled \u00B7 the tiebreaker only counts once every score is final`}
           </p>
         </div>
       </Card>

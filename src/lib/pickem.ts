@@ -32,14 +32,16 @@ export interface PickemEntry {
  * One game's score. `scores` is index-aligned with the game's own `teams`,
  * which is why results carry no team names: there is nothing to misspell.
  *
- * Scores can be filled in while a game is still being played; `final` is what
- * says the number will not move again. Only final games are ever scored, so a
- * Sunday-afternoon update shows the state of play without declaring anyone
- * right or wrong yet.
+ * `projected` is Yahoo's projected finish for each team. Yahoo collapses it
+ * onto the live score once a team has nobody left to play, which is the only
+ * reliable signal for whether a number can still move, so it is what tells
+ * this page when a game is over. `final` is a manual override for when
+ * projections are unavailable.
  */
 export interface PickemResult {
   scores: number[] | null;
-  final: boolean;
+  projected?: number[] | null;
+  final?: boolean;
 }
 
 export interface PickemData {
@@ -51,19 +53,30 @@ export interface PickemData {
   results?: PickemResult[];
 }
 
-/** A game's live or final score, with the winner derived rather than typed. */
+/**
+ * A game's live score, with both "who won" and "what the score was" derived
+ * rather than typed. The two are deliberately separate: a game can have a
+ * settled winner while its score is still climbing.
+ */
 export interface GameScore {
   /** Index-aligned with the game's teams; null when no score is in yet. */
   scores: number[] | null;
-  /** Who is ahead. Null when the game is level or has no score yet. */
+  /** Who is ahead right now. Null when level or when no score is in yet. */
   leader: string | null;
-  /** Combined score of both teams; null when no score is in yet. */
+  /** Combined score so far; null when no score is in yet. */
   total: number | null;
+  /** True when neither score can move again, so the total can be trusted. */
   final: boolean;
+  /**
+   * The winner, once the result can no longer change. This happens as soon as
+   * the trailing team runs out of players, which is usually before the game
+   * is final: the leader can still pile on, but nobody can catch them.
+   */
+  winner: string | null;
 }
 
 /**
- * Reads the score slot for each game. A result whose `scores` do not line up
+ * Reads the score slot for each game. A result whose numbers do not line up
  * with the matchup is reported rather than guessed at, and treated as no score
  * at all, so one bad row cannot mark the whole league wrong.
  */
@@ -81,6 +94,7 @@ export function buildScores(data: PickemData): {
       leader: null,
       total: null,
       final: false,
+      winner: null,
     };
     if (result === undefined) return blank;
 
@@ -99,18 +113,41 @@ export function buildScores(data: PickemData): {
       return blank;
     }
 
+    const projected = result.projected ?? null;
+    if (
+      projected !== null &&
+      (projected.length !== raw.length || projected.some((n) => !isFinite(n)))
+    ) {
+      problems.push(
+        `Game ${game.id} needs ${game.teams.length} numeric projections, one per team`,
+      );
+      return blank;
+    }
+
+    // A team whose projection has caught up to its score has nobody left to
+    // play, so its number is fixed for the rest of the week.
+    const done = raw.map((n, t) =>
+      projected === null ? (result.final ?? false) : n >= projected[t],
+    );
+
     const best = Math.max(...raw);
     const atBest = raw.filter((n) => n === best).length;
+    // A level game crowns nobody, the same way an even split of picks does.
+    const leader =
+      atBest > 1 ? null : (game.teams[raw.indexOf(best)]?.name ?? null);
+
+    const final = (result.final ?? false) || done.every(Boolean);
+    // Everyone except the leader has to be finished for the result to be safe;
+    // whether the leader is still scoring is irrelevant, since their lead can
+    // only grow.
+    const chasersDone = done.every((d, t) => d || game.teams[t]?.name === leader);
 
     return {
       scores: raw,
-      // A level game crowns nobody, the same way an even split of picks does.
-      leader:
-        atBest > 1
-          ? null
-          : (game.teams[raw.indexOf(best)]?.name ?? null),
+      leader,
       total: raw.reduce((sum, n) => sum + n, 0),
-      final: result.final,
+      final,
+      winner: leader !== null && chasersDone ? leader : null,
     };
   });
 
@@ -347,10 +384,13 @@ export function buildScoreboard(data: PickemData): Scoreboard {
   const { games, entries } = data;
   const { scores, problems } = buildScores(data);
 
-  // A game in progress is not a game anyone can be wrong about yet, so only
-  // final scores decide a winner.
-  const winners = scores.map((s) => (s.final ? s.leader : null));
+  // Picks settle as soon as the result is beyond doubt, which is earlier than
+  // the final whistle: once the chasing team is out of players, the lead
+  // cannot be overturned no matter how many points the leader adds.
+  const winners = scores.map((s) => s.winner);
 
+  // The tiebreaker is a different question, and a stricter one. It is the sum
+  // of the real combined scores, so it has to wait for every last point.
   const everyGameFinal =
     games.length > 0 && scores.every((s) => s.final && s.total !== null);
   const actualTotal = everyGameFinal

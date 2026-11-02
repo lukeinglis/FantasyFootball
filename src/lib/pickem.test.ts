@@ -243,6 +243,29 @@ describe("buildScoreboard", () => {
     expect(board.rows.find((r) => r.name === "Cal")?.correct).toBe(0);
   });
 
+  it("marks picks on a settled game while withholding the tiebreaker", () => {
+    // Reds have won game 1 — Blues are out of players — but Reds are still
+    // scoring, so the week's combined total is not known yet.
+    const board = buildScoreboard(
+      withResults(threeCards(), [
+        { scores: [120, 60], projected: [150, 60] },
+        { scores: [90, 110], projected: [130, 140] },
+      ]),
+    );
+
+    expect(board.decided).toBe(1);
+    expect(board.rows.find((r) => r.name === "Ann")?.marks).toEqual([
+      true,
+      null,
+    ]);
+    expect(board.rows.find((r) => r.name === "Cal")?.marks).toEqual([
+      false,
+      null,
+    ]);
+    expect(board.actualTotal).toBeNull();
+    expect(board.complete).toBe(false);
+  });
+
   it("does not score a game that has a score but is still being played", () => {
     const board = buildScoreboard(
       withResults(threeCards(), [
@@ -372,7 +395,66 @@ describe("buildScores", () => {
       leader: null,
       total: null,
       final: false,
+      winner: null,
     });
+  });
+
+  it("settles the winner once the trailing team is out of players", () => {
+    // Reds lead and are still scoring; Blues have caught their projection,
+    // so Blues cannot add another point and cannot catch up.
+    const { scores } = live([
+      { scores: [120, 60], projected: [150, 60] },
+      { scores: [0, 0], projected: null },
+    ]);
+
+    expect(scores[0].winner).toBe("Reds");
+    // The result is safe, but the score is not done moving.
+    expect(scores[0].final).toBe(false);
+  });
+
+  it("does not settle a game while the trailing team can still score", () => {
+    // Reds are done and lead by 60; Blues only project to add 35 more, but a
+    // projection is not a ceiling, so the game is not beyond doubt.
+    const { scores } = live([
+      { scores: [120, 60], projected: [120, 95] },
+      { scores: [0, 0], projected: null },
+    ]);
+
+    expect(scores[0].winner).toBeNull();
+    expect(scores[0].leader).toBe("Reds");
+    expect(scores[0].final).toBe(false);
+  });
+
+  it("calls a game final only when both teams are out of players", () => {
+    const { scores } = live([
+      { scores: [120, 60], projected: [120, 60] },
+      { scores: [0, 0], projected: null },
+    ]);
+
+    expect(scores[0].final).toBe(true);
+    expect(scores[0].winner).toBe("Reds");
+  });
+
+  it("falls back to the manual flag when projections are missing", () => {
+    const { scores } = live([
+      { scores: [120, 60], final: true },
+      { scores: [90, 110], final: false },
+    ]);
+
+    expect(scores[0].final).toBe(true);
+    expect(scores[0].winner).toBe("Reds");
+    expect(scores[1].final).toBe(false);
+    expect(scores[1].winner).toBeNull();
+  });
+
+  it("flags projections that do not line up with the matchup", () => {
+    const { problems } = live([
+      { scores: [120, 60], projected: [150] },
+      { scores: null, projected: null },
+    ]);
+
+    expect(problems).toHaveLength(1);
+    expect(problems[0]).toContain("Game 1");
   });
 });
 

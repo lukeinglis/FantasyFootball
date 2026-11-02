@@ -2,7 +2,7 @@
   "season": 2026,
   "week": 8,
   "note": "Game order matches the Airtable form, which is not the order Yahoo lists matchups in. Keep it as-is so the labels on this page match the labels people filled in.",
-  "resultsNote": "One result per game, in the same order as games above. scores is [first team, second team] in that game's teams array, so order matters and there is no team name to misspell. Update scores as often as you like while games are being played; set final to true only when a game is over. The board shows every score; the scoreboard only marks people right or wrong on final games, and the tiebreaker stays hidden until all six are final.",
+  "resultsNote": "One result per game, in the same order as games above. scores and projected are [first team, second team] in that game's teams array, so order matters and there is no team name to misspell. Copy both straight off Yahoo as often as you like: the projection is the big number and the small italic one under it. Yahoo drops a team's projection onto its score once that team has nobody left to play, which is how this page knows a game is over. A pick is marked right or wrong as soon as the trailing team is out of players, since the lead can no longer be caught; the tiebreaker waits until every team in every game is done, because it needs the real combined totals. Set final true by hand only if you have scores without projections.",
   "roster": [
     "Austin",
     "Cody",
@@ -112,27 +112,27 @@
   "results": [
     {
       "scores": [186.4, 211.1],
-      "final": true
+      "projected": [186.4, 211.1]
     },
     {
       "scores": [234.43, 124.6],
-      "final": false
+      "projected": [251.88, 124.6]
     },
     {
       "scores": [159.37, 137.87],
-      "final": false
+      "projected": [183.11, 137.87]
     },
     {
       "scores": [112.0, 224.67],
-      "final": false
+      "projected": [185.39, 233.03]
     },
     {
       "scores": [204.7, 108.1],
-      "final": false
+      "projected": [204.7, 122.96]
     },
     {
       "scores": [173.07, 155.9],
-      "final": false
+      "projected": [173.07, 170.09]
     }
   ],
   "entries": [

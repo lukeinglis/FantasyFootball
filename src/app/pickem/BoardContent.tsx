@@ -6,14 +6,27 @@ import { buildBoard, type PickemData } from "@/lib/pickem";
 const data = pickemData as PickemData;
 const board = buildBoard(data);
 
+type Score = (typeof board)[number]["score"];
+
 /**
- * How the game stands, in words. A score that is in but not final has to say
- * so, since the picks beside it have not been settled by it yet.
+ * How the game stands, in words. "Clinched" is the state worth naming: the
+ * trailing team is out of players, so the picks are settled even though the
+ * winner is still running the score up.
  */
-function status(score: (typeof board)[number]["score"]): string | null {
+function status(score: Score): { label: string; hint: string } | null {
   if (score.scores === null) return null;
-  if (!score.final) return "In progress";
-  return score.leader === null ? "Final \u00B7 level" : "Final";
+  if (score.final) {
+    return score.leader === null
+      ? { label: "Final \u00B7 level", hint: "Finished all square" }
+      : { label: "Final", hint: "Both teams are out of players" };
+  }
+  if (score.winner !== null) {
+    return {
+      label: "Clinched",
+      hint: `${score.winner} has won it \u2014 the other side is out of players \u2014 but is still scoring`,
+    };
+  }
+  return { label: "In progress", hint: "Both teams still have players going" };
 }
 
 export default function BoardContent() {
@@ -34,11 +47,12 @@ export default function BoardContent() {
                 action={
                   state !== null ? (
                     <span
+                      title={state.hint}
                       className={`font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.12em] ${
-                        score.final ? "text-ink-muted" : "text-result"
+                        score.winner !== null ? "text-ink-muted" : "text-result"
                       }`}
                     >
-                      {state}
+                      {state.label}
                     </span>
                   ) : undefined
                 }
