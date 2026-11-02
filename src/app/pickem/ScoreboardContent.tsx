@@ -10,6 +10,12 @@ const { rows, decided, gameCount, actualTotal, complete, problems } =
 
 const leaders = rows.filter((r) => r.rank === 1);
 
+/**
+ * When a game goes against the whole room, every card is level and naming all
+ * twelve "leaders" says nothing. Call that out as level instead.
+ */
+const allLevel = rows.length > 1 && leaders.length === rows.length;
+
 /** A tick, a cross, or an en-dash for a game that has not finished. */
 function Mark({ value }: { value: boolean | null }) {
   if (value === null) {
@@ -35,8 +41,8 @@ export default function ScoreboardContent() {
     return (
       <Container>
         <EmptyState
-          title="No results yet"
-          description="Scores show up here as each game goes final."
+          title="Nothing final yet"
+          description="Picks get marked right or wrong here as each game goes final. Scores so far are on The Board."
         />
       </Container>
     );
@@ -65,14 +71,15 @@ export default function ScoreboardContent() {
       {leaders.length > 0 && decided > 0 && (
         <div className="mb-6 border-l-2 border-result bg-surface px-4 py-3">
           <p className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.14em] text-result">
-            {complete ? "Winner" : "Leading"}
+            {allLevel ? "All level" : complete ? "Winner" : "Leading"}
           </p>
           <p className="mt-1 font-[family-name:var(--wire-body)] text-[15px] text-ink">
-            {leaders.map((l) => l.name).join(", ")} at {leaders[0].correct} of{" "}
-            {decided}
+            {allLevel
+              ? `Every card is ${leaders[0].correct} of ${decided}`
+              : `${leaders.map((l) => l.name).join(", ")} at ${leaders[0].correct} of ${decided}`}
             {complete
-              ? `, with the real total at ${actualTotal}.`
-              : `, with ${gameCount - decided} still to play.`}
+              ? `, with the real total at ${actualTotal?.toFixed(2)}.`
+              : `, with ${gameCount - decided} still to play. Live scores are on The Board.`}
           </p>
         </div>
       )}
@@ -145,7 +152,7 @@ export default function ScoreboardContent() {
                     {row.predicted}
                     {row.tiebreakerDiff !== null && (
                       <span className="ml-2 text-ink-faint">
-                        off by {row.tiebreakerDiff}
+                        off by {row.tiebreakerDiff.toFixed(2)}
                       </span>
                     )}
                   </td>
@@ -157,7 +164,7 @@ export default function ScoreboardContent() {
         <div className="border-t border-rule px-3 py-2">
           <p className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.12em] text-ink-muted">
             {complete
-              ? `Final \u00B7 ties broken by whoever came closest to ${actualTotal}`
+              ? `Final \u00B7 ties broken by whoever came closest to ${actualTotal?.toFixed(2)}`
               : `${decided} of ${gameCount} games final \u00B7 the tiebreaker only counts once every game is in`}
           </p>
         </div>

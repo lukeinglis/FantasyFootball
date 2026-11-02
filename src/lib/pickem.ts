@@ -29,13 +29,17 @@ export interface PickemEntry {
 }
 
 /**
- * One game's outcome. Both fields stay null until the game is final, so
- * results can be filled in one game at a time as the weekend plays out.
+ * One game's score. `scores` is index-aligned with the game's own `teams`,
+ * which is why results carry no team names: there is nothing to misspell.
+ *
+ * Scores can be filled in while a game is still being played; `final` is what
+ * says the number will not move again. Only final games are ever scored, so a
+ * Sunday-afternoon update shows the state of play without declaring anyone
+ * right or wrong yet.
  */
 export interface PickemResult {
-  winner: string | null;
-  /** The actual combined score of both teams. */
-  total: number | null;
+  scores: number[] | null;
+  final: boolean;
 }
 
 export interface PickemData {
@@ -47,6 +51,72 @@ export interface PickemData {
   results?: PickemResult[];
 }
 
+/** A game's live or final score, with the winner derived rather than typed. */
+export interface GameScore {
+  /** Index-aligned with the game's teams; null when no score is in yet. */
+  scores: number[] | null;
+  /** Who is ahead. Null when the game is level or has no score yet. */
+  leader: string | null;
+  /** Combined score of both teams; null when no score is in yet. */
+  total: number | null;
+  final: boolean;
+}
+
+/**
+ * Reads the score slot for each game. A result whose `scores` do not line up
+ * with the matchup is reported rather than guessed at, and treated as no score
+ * at all, so one bad row cannot mark the whole league wrong.
+ */
+export function buildScores(data: PickemData): {
+  scores: GameScore[];
+  problems: string[];
+} {
+  const { games, results = [] } = data;
+  const problems: string[] = [];
+
+  const scores = games.map((game, i): GameScore => {
+    const result = results[i];
+    const blank: GameScore = {
+      scores: null,
+      leader: null,
+      total: null,
+      final: false,
+    };
+    if (result === undefined) return blank;
+
+    const raw = result.scores;
+    if (raw === null || raw === undefined) {
+      if (result.final) {
+        problems.push(`Game ${game.id} is marked final but has no score`);
+      }
+      return blank;
+    }
+
+    if (raw.length !== game.teams.length || raw.some((n) => !isFinite(n))) {
+      problems.push(
+        `Game ${game.id} needs ${game.teams.length} numeric scores, one per team`,
+      );
+      return blank;
+    }
+
+    const best = Math.max(...raw);
+    const atBest = raw.filter((n) => n === best).length;
+
+    return {
+      scores: raw,
+      // A level game crowns nobody, the same way an even split of picks does.
+      leader:
+        atBest > 1
+          ? null
+          : (game.teams[raw.indexOf(best)]?.name ?? null),
+      total: raw.reduce((sum, n) => sum + n, 0),
+      final: result.final,
+    };
+  });
+
+  return { scores, problems };
+}
+
 export interface GameBoard {
   game: PickemGame;
   tally: { team: PickemTeam; backers: string[] }[];
@@ -54,10 +124,13 @@ export interface GameBoard {
   averageTotal: number;
   /** Null when the room is split evenly, so a 4-4 game crowns nobody. */
   consensus: string | null;
+  /** Live or final score, so the board doubles as a scoreboard on Sunday. */
+  score: GameScore;
 }
 
 export function buildBoard(data: PickemData): GameBoard[] {
   const { games, entries } = data;
+  const { scores } = buildScores(data);
 
   return games.map((game, index) => {
     const tally = game.teams.map((team) => ({
@@ -88,6 +161,7 @@ export function buildBoard(data: PickemData): GameBoard[] {
           ? null
           : (tally.find((t) => t.backers.length === topCount)?.team.name ??
             null),
+      score: scores[index],
     };
   });
 }
@@ -262,36 +336,25 @@ export interface Scoreboard {
   actualTotal: number | null;
   complete: boolean;
   /**
-   * Results that name a team which is not in that matchup. Surfaced in the
-   * UI rather than thrown, so one typo entered mid-weekend cannot blank the
-   * page or quietly mark everybody wrong.
+   * Malformed result rows. Surfaced in the UI rather than thrown, so one bad
+   * entry made mid-weekend cannot blank the page or quietly mark everybody
+   * wrong.
    */
   problems: string[];
 }
 
 export function buildScoreboard(data: PickemData): Scoreboard {
-  const { games, entries, results = [] } = data;
-  const problems: string[] = [];
+  const { games, entries } = data;
+  const { scores, problems } = buildScores(data);
 
-  const winners = games.map((game, i) => {
-    const winner = results[i]?.winner ?? null;
-    if (winner === null) return null;
-    if (!game.teams.some((t) => t.name === winner)) {
-      problems.push(
-        `Game ${game.id} lists "${winner}" as the winner, which is not ${game.teams
-          .map((t) => `"${t.name}"`)
-          .join(" or ")}`,
-      );
-      return null;
-    }
-    return winner;
-  });
+  // A game in progress is not a game anyone can be wrong about yet, so only
+  // final scores decide a winner.
+  const winners = scores.map((s) => (s.final ? s.leader : null));
 
-  const totals = games.map((_, i) => results[i]?.total ?? null);
-  const everyTotalIn =
-    games.length > 0 && totals.every((t) => typeof t === "number");
-  const actualTotal = everyTotalIn
-    ? (totals as number[]).reduce((sum, t) => sum + t, 0)
+  const everyGameFinal =
+    games.length > 0 && scores.every((s) => s.final && s.total !== null);
+  const actualTotal = everyGameFinal
+    ? scores.reduce((sum, s) => sum + (s.total ?? 0), 0)
     : null;
 
   const scored = entries.map((entry) => {
@@ -341,7 +404,9 @@ export function buildScoreboard(data: PickemData): Scoreboard {
     decided,
     gameCount: games.length,
     actualTotal,
-    complete: decided === games.length && actualTotal !== null,
+    // Keyed off every game being final rather than off `decided`, so a final
+    // game that ended level does not leave the week permanently unfinished.
+    complete: everyGameFinal,
     problems,
   };
 }

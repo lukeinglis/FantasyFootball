@@ -2,7 +2,7 @@
   "season": 2026,
   "week": 8,
   "note": "Game order matches the Airtable form, which is not the order Yahoo lists matchups in. Keep it as-is so the labels on this page match the labels people filled in.",
-  "resultsNote": "Fill in each game as it goes final: winner is the exact team name from games above, total is the real combined score. Leave null until then. The scoreboard tab scores whatever is filled in.",
+  "resultsNote": "One result per game, in the same order as games above. scores is [first team, second team] in that game's teams array, so order matters and there is no team name to misspell. Update scores as often as you like while games are being played; set final to true only when a game is over. The board shows every score; the scoreboard only marks people right or wrong on final games, and the tiebreaker stays hidden until all six are final.",
   "roster": [
     "Austin",
     "Cody",
@@ -111,28 +111,28 @@
   ],
   "results": [
     {
-      "winner": null,
-      "total": null
+      "scores": [186.4, 211.1],
+      "final": true
     },
     {
-      "winner": null,
-      "total": null
+      "scores": [234.43, 124.6],
+      "final": false
     },
     {
-      "winner": null,
-      "total": null
+      "scores": [159.37, 137.87],
+      "final": false
     },
     {
-      "winner": null,
-      "total": null
+      "scores": [112.0, 224.67],
+      "final": false
     },
     {
-      "winner": null,
-      "total": null
+      "scores": [204.7, 108.1],
+      "final": false
     },
     {
-      "winner": null,
-      "total": null
+      "scores": [173.07, 155.9],
+      "final": false
     }
   ],
   "entries": [

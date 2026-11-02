@@ -6,6 +6,7 @@ import {
   buildContrarians,
   buildIdenticalGroups,
   buildScoreboard,
+  buildScores,
   buildSpreads,
   type PickemData,
   type PickemResult,
@@ -223,8 +224,8 @@ describe("buildScoreboard", () => {
   it("scores only the games that are final so far", () => {
     const board = buildScoreboard(
       withResults(threeCards(), [
-        { winner: "Reds", total: 180 },
-        { winner: null, total: null },
+        { scores: [120, 60], final: true },
+        { scores: null, final: false },
       ]),
     );
 
@@ -242,14 +243,17 @@ describe("buildScoreboard", () => {
     expect(board.rows.find((r) => r.name === "Cal")?.correct).toBe(0);
   });
 
-  it("holds the tiebreaker back until every total is known", () => {
+  it("does not score a game that has a score but is still being played", () => {
     const board = buildScoreboard(
       withResults(threeCards(), [
-        { winner: "Reds", total: 180 },
-        { winner: "Golds", total: null },
+        { scores: [120, 60], final: true },
+        // Golds are ahead, but the game is not over, so nobody is right yet.
+        { scores: [90, 110], final: false },
       ]),
     );
 
+    expect(board.decided).toBe(1);
+    expect(board.rows.every((r) => r.marks[1] === null)).toBe(true);
     expect(board.actualTotal).toBeNull();
     expect(board.rows.every((r) => r.tiebreakerDiff === null)).toBe(true);
     expect(board.complete).toBe(false);
@@ -261,8 +265,8 @@ describe("buildScoreboard", () => {
     // predicted 330 and Ann predicted 300, so Cal edges ahead.
     const board = buildScoreboard(
       withResults(threeCards(), [
-        { winner: "Reds", total: 190 },
-        { winner: "Golds", total: 200 },
+        { scores: [100, 90], final: true },
+        { scores: [90, 110], final: true },
       ]),
     );
 
@@ -283,8 +287,8 @@ describe("buildScoreboard", () => {
     ]);
     const board = buildScoreboard(
       withResults(data, [
-        { winner: "Reds", total: 100 },
-        { winner: "Greens", total: 100 },
+        { scores: [60, 40], final: true },
+        { scores: [60, 40], final: true },
       ]),
     );
 
@@ -293,11 +297,27 @@ describe("buildScoreboard", () => {
     expect(board.rows[2].rank).toBe(3);
   });
 
-  it("flags a misspelled winner instead of marking everyone wrong", () => {
+  it("crowns nobody in a game that finished level, but still calls it over", () => {
     const board = buildScoreboard(
       withResults(threeCards(), [
-        { winner: "Red", total: 180 },
-        { winner: null, total: null },
+        { scores: [100, 100], final: true },
+        { scores: [90, 110], final: true },
+      ]),
+    );
+
+    // A drawn game is nobody's to win, yet the week is finished and the
+    // tiebreaker is known, so the standings must not hang forever.
+    expect(board.decided).toBe(1);
+    expect(board.complete).toBe(true);
+    expect(board.actualTotal).toBe(400);
+    expect(board.rows.every((r) => r.marks[0] === null)).toBe(true);
+  });
+
+  it("flags a score that does not line up with the matchup", () => {
+    const board = buildScoreboard(
+      withResults(threeCards(), [
+        { scores: [180], final: true },
+        { scores: null, final: false },
       ]),
     );
 
@@ -305,6 +325,54 @@ describe("buildScoreboard", () => {
     expect(board.problems[0]).toContain("Game 1");
     expect(board.decided).toBe(0);
     expect(board.rows.every((r) => r.correct === 0)).toBe(true);
+  });
+
+  it("flags a game marked final with no score at all", () => {
+    const board = buildScoreboard(
+      withResults(threeCards(), [
+        { scores: null, final: true },
+        { scores: null, final: false },
+      ]),
+    );
+
+    expect(board.problems).toHaveLength(1);
+    expect(board.problems[0]).toContain("Game 1");
+    expect(board.decided).toBe(0);
+  });
+});
+
+describe("buildScores", () => {
+  const live = (results: PickemResult[]) =>
+    buildScores({
+      ...fixture([{ name: "Ann", picks: [["Reds", 100], ["Greens", 200]] }]),
+      results,
+    });
+
+  it("derives the leader and the combined total from the score", () => {
+    const { scores, problems } = live([
+      { scores: [120.5, 60.25], final: true },
+      { scores: [90, 110], final: false },
+    ]);
+
+    expect(problems).toEqual([]);
+    expect(scores[0].leader).toBe("Reds");
+    expect(scores[0].total).toBeCloseTo(180.75);
+    expect(scores[0].final).toBe(true);
+    // Still in progress, but the score is worth showing.
+    expect(scores[1].leader).toBe("Golds");
+    expect(scores[1].final).toBe(false);
+  });
+
+  it("leaves a game with no score blank rather than zeroed", () => {
+    const { scores, problems } = live([]);
+
+    expect(problems).toEqual([]);
+    expect(scores[0]).toEqual({
+      scores: null,
+      leader: null,
+      total: null,
+      final: false,
+    });
   });
 });
 
