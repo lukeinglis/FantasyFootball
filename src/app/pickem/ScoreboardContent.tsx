@@ -2,7 +2,12 @@ import Container from "@/components/Container";
 import { Card } from "@/components/Card";
 import EmptyState from "@/components/EmptyState";
 import pickemData from "@/data/pickem.json";
-import { buildOutlook, buildScoreboard, type PickemData } from "@/lib/pickem";
+import {
+  buildOutlook,
+  buildScoreboard,
+  type PickemData,
+  type Scenario,
+} from "@/lib/pickem";
 
 const data = pickemData as PickemData;
 const { rows, decided, gameCount, actualTotal, complete, problems } =
@@ -44,6 +49,24 @@ function Mark({ value }: { value: boolean | null }) {
       &#10007;
     </span>
   );
+}
+
+/**
+ * What the result would actually be. The tiebreaker settles most ties, but
+ * not one between cards that predicted the same total, so the grid must not
+ * promise a winner it cannot produce.
+ */
+function outcomeNote(scenario: Scenario): string {
+  if (scenario.winners.length === 1) return `${scenario.topCorrect} right`;
+
+  const stuck = scenario.deadHeat.map((g) => g.join(" & "));
+  if (stuck.length === 0) {
+    return `level on ${scenario.topCorrect}, tiebreaker decides`;
+  }
+  if (scenario.deadHeat.flat().length === scenario.winners.length) {
+    return `dead heat on ${scenario.topCorrect}, same tiebreaker \u2014 they share it`;
+  }
+  return `level on ${scenario.topCorrect}, and ${stuck.join(", ")} cannot be split`;
 }
 
 /**
@@ -120,9 +143,7 @@ function Outlook() {
                   <td className="px-3 py-2.5 font-[family-name:var(--wire-body)] text-[15px] text-ink">
                     {scenario.winners.join(", ")}
                     <span className="ml-2 font-[family-name:var(--wire-mono)] text-[12px] text-ink-faint">
-                      {scenario.winners.length > 1
-                        ? `level on ${scenario.topCorrect}, tiebreaker decides`
-                        : `${scenario.topCorrect} right`}
+                      {outcomeNote(scenario)}
                     </span>
                   </td>
                 </tr>
@@ -198,7 +219,13 @@ export default function ScoreboardContent() {
       {leaders.length > 0 && decided > 0 && (
         <div className="mb-6 border-l-2 border-result bg-surface px-4 py-3">
           <p className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.14em] text-result">
-            {allLevel ? "All level" : complete ? "Winner" : "Leading"}
+            {allLevel
+              ? "All level"
+              : complete
+                ? leaders.length > 1
+                  ? "Joint winners"
+                  : "Winner"
+                : "Leading"}
           </p>
           <p className="mt-1 font-[family-name:var(--wire-body)] text-[15px] text-ink">
             {allLevel
@@ -207,6 +234,13 @@ export default function ScoreboardContent() {
             {complete
               ? `, with the real total at ${actualTotal?.toFixed(2)}.`
               : `, with ${gameCount - decided} still to play. Live scores are on The Board.`}
+            {complete && leaders.length > 1 && (
+              <>
+                {" "}
+                They finished the same distance off it, so the tiebreaker
+                cannot separate them and they share the week.
+              </>
+            )}
           </p>
         </div>
       )}
@@ -301,7 +335,7 @@ export default function ScoreboardContent() {
         <div className="border-t border-rule px-3 py-2">
           <p className="font-[family-name:var(--wire-mono)] text-[10px] uppercase tracking-[0.12em] text-ink-muted">
             {complete
-              ? `Final \u00B7 ties broken by whoever came closest to ${actualTotal?.toFixed(2)}`
+              ? `Final \u00B7 ties go to whoever came closest to ${actualTotal?.toFixed(2)}, and stay ties if nobody is closer`
               : `${decided} of ${gameCount} games settled \u00B7 the tiebreaker only counts once every score is final`}
           </p>
         </div>

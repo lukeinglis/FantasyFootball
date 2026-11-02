@@ -457,6 +457,13 @@ export interface Scenario {
   /** Who would finish on the most games right, sharing it if tied. */
   winners: string[];
   topCorrect: number;
+  /**
+   * Groups of winners the tiebreaker cannot separate. Two cards predicting
+   * the same total are the same distance from whatever the real total turns
+   * out to be, so no result can ever split them: they finish dead level and
+   * share the week.
+   */
+  deadHeat: string[][];
 }
 
 export interface Outlook {
@@ -521,14 +528,26 @@ export function buildOutlook(data: PickemData): Outlook {
           .length,
     );
     const topCorrect = totals.length > 0 ? Math.max(...totals) : 0;
+    const top = entries.filter((_entry, e) => totals[e] === topCorrect);
+
+    // Cards predicting the same tiebreaker total can never be separated by
+    // it, however the week finishes.
+    const byPredicted = new Map<number, string[]>();
+    for (const entry of top) {
+      const same = byPredicted.get(entry.total);
+      if (same) same.push(entry.name);
+      else byPredicted.set(entry.total, [entry.name]);
+    }
 
     return {
       outcome,
       topCorrect,
-      winners: entries
-        .filter((_entry, e) => totals[e] === topCorrect)
+      winners: top
         .map((entry) => entry.name)
         .sort((a, b) => a.localeCompare(b)),
+      deadHeat: [...byPredicted.values()]
+        .filter((group) => group.length > 1)
+        .map((group) => [...group].sort((a, b) => a.localeCompare(b))),
     };
   });
 

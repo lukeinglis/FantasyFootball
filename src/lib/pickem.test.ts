@@ -536,6 +536,35 @@ describe("buildOutlook", () => {
     expect(outlook.alive).toEqual(["Ann", "Bob"]);
   });
 
+  it("spots leaders the tiebreaker could never separate", () => {
+    // Ann and Bob have the same card and the same predicted total, so they
+    // are equally far from whatever the real total turns out to be. Cal
+    // matches their card but predicted differently, so he can be split off.
+    const outlook = buildOutlook(
+      fixture([
+        { name: "Ann", picks: [["Reds", 100], ["Greens", 200]], total: 300 },
+        { name: "Bob", picks: [["Reds", 150], ["Greens", 150]], total: 300 },
+        { name: "Cal", picks: [["Reds", 180], ["Greens", 140]], total: 320 },
+      ]),
+    );
+
+    // Game 1 and game 2 are both unanimous, so there is a single branch.
+    const [only] = outlook.scenarios;
+    expect(only.winners).toEqual(["Ann", "Bob", "Cal"]);
+    expect(only.deadHeat).toEqual([["Ann", "Bob"]]);
+  });
+
+  it("reports no dead heat when every leader predicted differently", () => {
+    const outlook = buildOutlook(
+      fixture([
+        { name: "Ann", picks: [["Reds", 100], ["Greens", 200]], total: 300 },
+        { name: "Bob", picks: [["Reds", 150], ["Greens", 170]], total: 320 },
+      ]),
+    );
+
+    expect(outlook.scenarios.every((s) => s.deadHeat.length === 0)).toBe(true);
+  });
+
   it("has nothing left to enumerate once every game is settled", () => {
     const data = fixture([
       { name: "Ann", picks: [["Reds", 100], ["Greens", 200]] },
